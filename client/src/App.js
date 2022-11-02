@@ -1,11 +1,9 @@
 import React from "react";
+import SignUp from "./screens/Sign-Up/SignUp";
 
 const App = () => {
     return (
-        <div>
-            <h1>App</h1>
-            <p>Reacttan nefret ediyorum</p>
-        </div>
+        <SignUp />
     );
 }
 

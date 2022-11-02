@@ -3,7 +3,8 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import authRoutes from './routes/auth.js';
+import userRoutes from './routes/userRoutes.js';
+import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
 
 const app = express();
 dotenv.config();
@@ -11,12 +12,12 @@ dotenv.config();
 app.use(bodyParser.json({limit: "30mb", extended: true}));
 app.use(bodyParser.urlencoded({limit: "30mb", extended: true}));
 app.use(cors());
+app.use(express.json());
 
-app.use('/auth', authRoutes);
-app.get('/', (req, res) => {
-    console.log("Request geldi");
-    res.send("Hello");
-});
+app.use('/api/users', userRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
 
 const CONNECTION_URL = process.env.CONNECTION_URL;
 const PORT = process.env.PORT || 5000;
