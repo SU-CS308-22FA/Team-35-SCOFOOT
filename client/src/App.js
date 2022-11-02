@@ -1,10 +1,10 @@
 import React from "react";
+import Login from "./components/Login.js";
 
 const App = () => {
     return (
         <div>
-            <h1>App</h1>
-            <p>Reacttan nefret ediyorum</p>
+            <Login></Login>
         </div>
     );
 }
