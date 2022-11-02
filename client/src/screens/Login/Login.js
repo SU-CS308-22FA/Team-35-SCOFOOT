@@ -17,6 +17,7 @@ import axios from 'axios';
 import {Routes, Route, useNavigate} from 'react-router-dom';
 
 
+
 const theme = createTheme();
 
 
@@ -103,11 +104,11 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <nav>
-                  <Link to="/api/users/signup" variant="body2" >
+                
+                  <Link href="/signup" variant="body2" >
                     {"Don't have an account? Sign Up"}
                   </Link> 
-                </nav>
+                
                         
               </Grid>
             </Grid>
@@ -118,4 +119,3 @@ export default function Login() {
     </ThemeProvider>
   );
 };
-

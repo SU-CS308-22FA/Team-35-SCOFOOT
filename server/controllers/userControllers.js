@@ -54,25 +54,19 @@ const loginUser = asyncHandler(async(req,res,next) => {
         const user = await User.findOne({ email: email });
       
         const match = await bcrypt.compare(password, user.password);
-        console.log(match);
         if (user && match) {
           // Create token
-          console.log("aa");
-          const token = jwt.sign(
-            { user_id: user._id, email },
-            process.env.TOKEN_KEY,
-            {
-              expiresIn: "2h",
-            }
-          );
-    
+          const token = generateToken();
           // save user token
           user.token = token;
     
           // user
           res.json(user);
         }
-        res.send("Invalid Credentials");
+        else {
+            res.send("Invalid Credentials");
+        }
+        
       } catch (err) {
         console.log(err);
       }
