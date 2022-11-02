@@ -14,21 +14,23 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import axios from 'axios';
-
+import {Routes, Route, useNavigate} from 'react-router-dom';
 
 
 const theme = createTheme();
 
+
 export default function Login() {
+
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    setEmail(data.get('email'));
-    setPassword(data.get('password'));
-    axios.post('/auth/login', {
+    
+    console.log(password);
+    axios.post('/api/users/login', {
       "email": email,
       "password": password
     }).then( res => {
@@ -66,6 +68,8 @@ export default function Login() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -76,6 +80,8 @@ export default function Login() {
               label="Password"
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
             />
             <FormControlLabel
@@ -97,9 +103,12 @@ export default function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
+                <nav>
+                  <Link to="/api/users/signup" variant="body2" >
+                    {"Don't have an account? Sign Up"}
+                  </Link> 
+                </nav>
+                        
               </Grid>
             </Grid>
           </Box>

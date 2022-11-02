@@ -66,7 +66,7 @@ export default function SignUp() {
             console.log({name, surname, email, password });
 
             const { data } = await axios.post(
-                "http://localhost:5000/api/users",
+                "/api/users/signup",
                 { name, surname, email, password }
             );
             

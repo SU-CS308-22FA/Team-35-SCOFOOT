@@ -1,12 +1,11 @@
 import React from "react";
-import Login from "./components/Login.js";
+import Login from "./screens/Login/Login";
 import SignUp from "./screens/Sign-Up/SignUp";
+import { Routes, Route } from "react-router-dom";
 
 const App = () => {
     return (
-        <div>
-            <Login></Login>
-        </div>
+        <Login></Login>
     );
 }
 
