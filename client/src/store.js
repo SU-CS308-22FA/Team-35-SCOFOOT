@@ -3,6 +3,7 @@ import { legacy_createStore as createStore } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import {
+	userDeleteReducer,
 	userLoginReducer,
 	userRegisterReducer,
 	userUpdateReducer,
@@ -11,6 +12,7 @@ const reducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
 	userUpdate: userUpdateReducer,
+	userDelete: userDeleteReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
