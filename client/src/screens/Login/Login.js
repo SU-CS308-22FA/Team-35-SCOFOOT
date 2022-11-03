@@ -8,6 +8,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -16,6 +17,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/userActions";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../components/Loading";
 
 const theme = createTheme();
 
@@ -28,6 +30,7 @@ export default function Login() {
 
 	const userLogin = useSelector((state) => state.userLogin);
 	const { loading, error, userInfo } = userLogin;
+	
 
 	useEffect(() => {
 		if (userInfo) {
@@ -44,6 +47,7 @@ export default function Login() {
 		<ThemeProvider theme={theme}>
 			<Container component="main" maxWidth="xs">
 				<CssBaseline />
+				{loading && <Loading size={55}/>}
 				<Box
 					sx={{
 						marginTop: 8,
@@ -94,11 +98,24 @@ export default function Login() {
 							}
 							label="Remember me"
 						/>
+						<Box
+						>
+							<Paper>
+								<Box 
+									textAlign="center"
+									color="red"
+								>
+								{error && error}
+								</Box>
+							</Paper>
+
+						</Box>
 						<Button
 							type="submit"
 							fullWidth
 							variant="contained"
 							sx={{ mt: 3, mb: 2 }}
+							disabled={loading}
 						>
 							Sign In
 						</Button>
