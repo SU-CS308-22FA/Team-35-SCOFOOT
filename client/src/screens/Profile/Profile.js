@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Row, Col } from "react-bootstrap";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import MainScreen from "../../components/MainScreen";
 import "./Profile.css";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProfile } from "../../actions/userActions";
+import { updateProfile, deleteUser } from "../../actions/userActions";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +21,8 @@ const Profile = () => {
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
 
+	const [open, setOpen] = React.useState(false);
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -23,6 +31,9 @@ const Profile = () => {
 
 	const userUpdate = useSelector((state) => state.userUpdate);
 	const { loading, error, success } = userUpdate;
+
+	const userDelete = useSelector((state) => state.userDelete);
+	const { loadingUserDelete, errorUserDelete, successUserDelete } = userDelete;
 
 	useEffect(() => {
 		if (!userInfo) {
@@ -36,8 +47,19 @@ const Profile = () => {
 
 	const submitHandler = (e) => {
 		e.preventDefault();
-
 		dispatch(updateProfile({ name, surname, email, password }));
+	};
+
+	const deleteUserHandler = () => {
+		dispatch(deleteUser());
+	};
+
+	const handleClickOpen = () => {
+		setOpen(true);
+	};
+
+	const handleClose = () => {
+		setOpen(false);
 	};
 
 	return (
@@ -55,6 +77,17 @@ const Profile = () => {
 							{error && (
 								<ErrorMessage variant="danger">
 									{error}
+								</ErrorMessage>
+							)}
+							{loadingUserDelete && <Loading />}
+							{successUserDelete && (
+								<ErrorMessage variant="success">
+									Updated Successfully
+								</ErrorMessage>
+							)}
+							{errorUserDelete && (
+								<ErrorMessage variant="danger">
+									{errorUserDelete}
 								</ErrorMessage>
 							)}
 							<Form.Group controlId="name">
@@ -106,10 +139,40 @@ const Profile = () => {
 									}
 								></Form.Control>
 							</Form.Group>
-							<Button type="submit" varient="primary">
-								Update
-							</Button>
+							<Row>
+							<Col md={12}>
+								<Button sx={{ mt: 2, mb: 2, mr: 2}} variant="contained" color="primary" type="submit" varient="primary">
+									Update
+								</Button>
+								<Button sx={{ mt: 2, mb: 2}} variant="contained" color="error" onClick={handleClickOpen}>
+									Delete Account
+								</Button>
+								<Dialog
+									open={open}
+									onClose={handleClose}
+									aria-labelledby="alert-dialog-title"
+									aria-describedby="alert-dialog-description"
+								>
+									<DialogTitle id="alert-dialog-title">
+									{"Delete account?"}
+									</DialogTitle>
+									<DialogContent>
+									<DialogContentText id="alert-dialog-description">
+									Are you sure you want to delete the account?
+									</DialogContentText>
+									</DialogContent>
+									<DialogActions>
+									<Button onClick={handleClose}>No</Button>
+									<Button onClick={deleteUserHandler} autoFocus>
+										Yes
+									</Button>
+									</DialogActions>
+								</Dialog>
+								</Col>
+							</Row>
+							
 						</Form>
+						
 					</Col>
 				</Row>
 			</div>

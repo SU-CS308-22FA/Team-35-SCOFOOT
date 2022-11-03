@@ -1,8 +1,7 @@
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import asyncHandler from "express-async-handler";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+
 
 const registerUser = asyncHandler(async (req, res, next) => {
 	const { name, surname, email, password } = req.body;
@@ -56,28 +55,51 @@ const loginUser = asyncHandler(async (req, res, next) => {
 	}
 });
 
-const updateUserProfile = asyncHandler(async (req, res) => {
+const updateUserProfile = asyncHandler(async (req, res, next) => {
 	const user = await User.findById(req.user._id);
 	if (user) {
-		user.name = req.body.name || user.name;
-		user.surname = req.body.surname || user.surname;
-		user.email = req.body.email || user.email;
-		if (req.body.password) {
-			user.password = req.body.password;
-		}
-		const updatedUser = await user.save();
+		try {
+			user.name = req.body.name || user.name;
+			user.surname = req.body.surname || user.surname;
+			user.email = req.body.email || user.email;
+			if (req.body.password) {
+				user.password = req.body.password;
+			}
+			const updatedUser = await user.save();
 
-		res.json({
-			_id: updatedUser._id,
-			name: updatedUser.name,
-			surname: updatedUser.surname,
-			email: updatedUser.email,
-			token: generateToken(updatedUser._id),
-		});
+			res.json({
+				_id: updatedUser._id,
+				name: updatedUser.name,
+				surname: updatedUser.surname,
+				email: updatedUser.email,
+				token: generateToken(updatedUser._id),
+			});
+		} catch (error) {
+			// 11000 error code is DuplicateKey error
+			if (error.code === 11000) {
+				res.status(401);
+				throw new Error("Email already in use!");
+			}
+		}
+		
 	} else {
 		res.status(404);
 		throw new Error("User not found!");
 	}
 });
 
-export { registerUser, loginUser, updateUserProfile };
+const deleteUser = asyncHandler(async (req, res, next) => {
+	const user = await User.findById(req.user._id);
+	if (user) {
+		user.remove();
+		res.json({
+			message: "User deleted"
+		});
+
+	} else {
+		res.status(404);
+		throw new Error("User not found!");
+	}
+});
+
+export { registerUser, loginUser, updateUserProfile, deleteUser };

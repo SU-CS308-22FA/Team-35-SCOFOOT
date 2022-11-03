@@ -1,4 +1,7 @@
 import {
+	USER_DELETE_FAIL,
+	USER_DELETE_REQUEST,
+	USER_DELETE_SUCCESS,
 	USER_LOGIN_FAIL,
 	USER_LOGIN_REQUEST,
 	USER_LOGIN_SUCCESS,
@@ -33,7 +36,7 @@ export const userRegisterReducer = (state = {}, action) => {
 		case USER_REGISTER_SUCCESS:
 			return { loading: false, userInfo: action.payload };
 		case USER_REGISTER_FAIL:
-			return { loading: false };
+			return { loading: false, error: action.payload };
 		default:
 			return state;
 	}
@@ -46,7 +49,20 @@ export const userUpdateReducer = (state = {}, action) => {
 		case USER_UPDATE_SUCCESS:
 			return { loading: false, userInfo: action.payload, success: true };
 		case USER_UPDATE_FAIL:
-			return { loading: false, success: false };
+			return { loading: false, success: false, error: action.payload };
+		default:
+			return state;
+	}
+};
+
+export const userDeleteReducer = (state = {}, action) => {
+	switch (action.type) {
+		case USER_DELETE_REQUEST:
+			return { loading: true };
+		case USER_DELETE_SUCCESS:
+			return { loading: false};
+		case USER_DELETE_FAIL:
+			return { loading: false, success: false, error: action.payload };
 		default:
 			return state;
 	}

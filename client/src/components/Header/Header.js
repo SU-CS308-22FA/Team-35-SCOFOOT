@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import {
 	Container,
-	Form,
-	FormControl,
 	Nav,
 	Navbar,
 	NavDropdown,
@@ -11,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../actions/userActions";
 
-function Header({ setSearch }) {
+function Header() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const userLogin = useSelector((state) => state.userLogin);
