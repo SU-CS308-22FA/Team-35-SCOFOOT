@@ -1,7 +1,5 @@
 import React from "react";
-
+import MainScreen from "../../components/MainScreen";
 export default function Home() {
-    return (
-        <div>Hey</div>
-    );
-};
+	return <MainScreen title="HOME PAGE"></MainScreen>;
+}
