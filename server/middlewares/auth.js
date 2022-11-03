@@ -1,21 +1,29 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import asyncHandler from "express-async-handler";
 
-const config = process.env;
+const protect = asyncHandler(async (req, res, next) => {
+	let token;
 
-const verifyToken = (req, res, next) => {
-  const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
+	if (
+		req.headers.authorization &&
+		req.headers.authorization.startsWith("Bearer")
+	) {
+		try {
+			token = req.headers.authorization.split(" ")[1];
+			const decoded = jwt.verify(token, process.env.JWT_SECRET);
+			req.user = await User.findById(decoded.id).select("-password");
+			next();
+		} catch (error) {
+			res.status(401);
+			throw new Error("Not authorized, token failed");
+		}
+	}
 
-  if (!token) {
-    return res.status(403).send("A token is required for authentication");
-  }
-  try {
-    const decoded = jwt.verify(token, config.TOKEN_KEY);
-    req.user = decoded;
-  } catch (err) {
-    return res.status(401).send("Invalid Token");
-  }
-  return next();
-};
+	if (!token) {
+		res.status(401);
+		throw new Error("Not authorized, token failed");
+	}
+});
 
-module.exports = verifyToken;
+export { protect };
