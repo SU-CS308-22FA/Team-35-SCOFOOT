@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import asyncHandler from "express-async-handler";
-
+import Requests from "../models/Requests.js"
 
 const registerUser = asyncHandler(async (req, res, next) => {
 	const { name, surname, email, password } = req.body;
@@ -102,4 +102,24 @@ const deleteUser = asyncHandler(async (req, res, next) => {
 	}
 });
 
-export { registerUser, loginUser, updateUserProfile, deleteUser };
+
+
+
+const showRequests = asyncHandler(async (req, res, next) => {
+ 	const requests = await Requests.find() ;
+ 	if(requests){
+		res.json(requests);
+  	}
+
+	else {
+		res.status(404);
+		throw new Error("Requests not found!");
+	}
+ 
+
+
+});
+
+
+
+export { showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

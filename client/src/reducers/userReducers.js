@@ -12,6 +12,9 @@ import {
 	USER_UPDATE_FAIL,
 	USER_UPDATE_REQUEST,
 	USER_UPDATE_SUCCESS,
+	ADMIN_VERIFICATION_REQUEST_FAIL,
+	ADMIN_VERIFICATION_REQUEST_SUCCESS,
+	INBOX_AFTER_DELETION_SUCCESS
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -67,3 +70,23 @@ export const userDeleteReducer = (state = {}, action) => {
 			return state;
 	}
 };
+
+export const seeVerificationReducer = (state = {}, action) => {  // all verification requests are here
+	switch (action.type) {
+		case  ADMIN_VERIFICATION_REQUEST_SUCCESS:
+			return { RequestInfo: action.payload };
+		
+		case ADMIN_VERIFICATION_REQUEST_FAIL:
+			return { error: action.payload };
+
+
+		case INBOX_AFTER_DELETION_SUCCESS:
+			return { RequestInfo: action.payload};
+
+
+		default:
+			return state;
+	}
+};
+
+
