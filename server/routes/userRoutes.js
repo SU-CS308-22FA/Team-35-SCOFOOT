@@ -5,7 +5,8 @@ import {
 	updateUserProfile,
 	deleteUser,
 	showRequests,
-	deleteRequest
+	deleteRequest,
+	approveRequest
 } from "../controllers/userControllers.js";
 import { protect } from "../middlewares/auth.js";
 
@@ -17,4 +18,5 @@ router.post("/profile", protect, updateUserProfile);
 router.post("/profile/delete", protect, deleteUser);
 router.get("/requests", showRequests);
 router.post("/deleteRequest", deleteRequest);
+router.post("/approveRequest", approveRequest);
 export default router;

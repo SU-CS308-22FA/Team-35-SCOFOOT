@@ -37,7 +37,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 
 const loginUser = asyncHandler(async (req, res, next) => {
 	const { email, password } = req.body;
-
+    console.log(email);
 	const user = await User.findOne({ email });
 
 	if (user && (await user.matchPassword(password))) {
@@ -137,5 +137,32 @@ const deleteRequest = asyncHandler(async (req, res, next) => {
 });
 
 
+const approveRequest = asyncHandler(async (req, res, next) => { // first delete it from the requests and then change isVerified feature of the User to true
+	
+	const request = await Requests.findById(req.body._id); // the request info ( name, surname, email) that will be deleted from requests map
+	console.log(request);
+	const email = request.email;	
+	console.log(email);
+	const deletedRequest = await request.remove();
 
-export { deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+	const requests = await Requests.find() ;
+	console.log(requests);
+    const user = await User.findOne({email: email});
+	user.isVerified = true; // useri verified olacak sekilde guncelledik
+	const updatedUser = await user.save(); // user updatelendi
+
+
+
+ 	if(requests){
+		res.json(requests);
+  	}
+
+	else {
+		res.status(404);
+		throw new Error("Requests not found!");
+	}
+
+});
+
+
+export { approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

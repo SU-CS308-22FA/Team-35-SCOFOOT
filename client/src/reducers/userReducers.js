@@ -83,7 +83,7 @@ export const seeVerificationReducer = (state = {}, action) => {  // all verifica
 		case INBOX_AFTER_DELETION_SUCCESS:
 			return { RequestInfo: action.payload};
 
-
+		
 		default:
 			return state;
 	}

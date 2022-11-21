@@ -142,6 +142,26 @@ export const deleteVerificationRequest = (_id) => async(dispatch) =>{
 }
 
 
+export const approveVerificationRequest = (_id) => async(dispatch) =>{
+	try{
+		
+		
+		const {data} = await axios.post("api/users/approveRequest",  {_id});
+		console.log(data);
+		dispatch({type: INBOX_AFTER_DELETION_SUCCESS , payload: data}); // burada delete yaptiktan sonra geri kalan datayi dondur
+		// login yapmıs userin bilgilerini eklemelisin
+		
+
+	}
+	catch (error) {
+		
+	}
+
+}
+
+
+
+
 
 export const deleteUser = (user) => async (dispatch, getState) => {
 	try {

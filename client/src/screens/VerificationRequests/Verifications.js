@@ -4,7 +4,7 @@ import '../../screens/VerificationRequests/verification.css'
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
-import { deleteVerificationRequest } from "../../actions/userActions";
+import { deleteVerificationRequest, approveVerificationRequest } from "../../actions/userActions";
 
 const Verifications = () => {
 
@@ -24,6 +24,13 @@ const Verifications = () => {
     
   }
 
+  const approveRequest = (_id) => {
+    //console.log(_id);
+    dispatch(approveVerificationRequest(_id));
+    
+  }
+  
+
 
   
     return (
@@ -34,7 +41,7 @@ const Verifications = () => {
           </div>
           <div>
             {(RequestInfo?.map((single) => {
-              return <Request key = {single._id}{...single} removeRequest={removeRequest} />;
+              return <Request key = {single._id}{...single} removeRequest={removeRequest} approveRequest = {approveRequest} />;
             }))}
 
             
