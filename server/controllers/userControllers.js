@@ -27,6 +27,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 			surname: user.surname,
 			email: user.email,
 			isAdmin: user.isAdmin,
+			isVerified: user.isVerified,
 			token: generateToken(user._id),
 		});
 	} else {
@@ -37,7 +38,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 
 const loginUser = asyncHandler(async (req, res, next) => {
 	const { email, password } = req.body;
-    console.log(email);
+    
 	const user = await User.findOne({ email });
 
 	if (user && (await user.matchPassword(password))) {
@@ -48,6 +49,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			email: user.email,
 			isAdmin: user.isAdmin,
 			token: generateToken(user._id),
+			isVerified: user.isVerified
 		});
 	} else {
 		res.status(401);

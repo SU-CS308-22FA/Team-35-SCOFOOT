@@ -13,6 +13,8 @@ import { updateProfile, deleteUser } from "../../actions/userActions";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import '../../screens/VerificationRequests/verification.css'
 
 const Profile = () => {
 	const [name, setName] = useState("");
@@ -34,6 +36,8 @@ const Profile = () => {
 
 	const userDelete = useSelector((state) => state.userDelete);
 	const { loadingUserDelete, errorUserDelete, successUserDelete } = userDelete;
+
+	const verified = userInfo.isVerified;
 
 	useEffect(() => {
 		if (!userInfo) {
@@ -64,6 +68,14 @@ const Profile = () => {
 
 	return (
 		<MainScreen title="EDIT PROFILE">
+			{verified && 
+			<div style={{ display: "flex", justifyContent: 'flex-end'}}>
+			<VerifiedUserIcon />
+	  		 </div>
+			 }
+			 
+			
+
 			<div>
 				<Row className="profileContainer">
 					<Col md={12}>

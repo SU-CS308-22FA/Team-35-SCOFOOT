@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import InboxIcon from '@mui/icons-material/Inbox';
 import IconButton from '@mui/material/IconButton';
 
+
 const Profile = () => {
 	const [name, setName] = useState("");
 	const [surname, setSurname] = useState("");

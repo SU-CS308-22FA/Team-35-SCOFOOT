@@ -8,13 +8,15 @@ import {
 	userRegisterReducer,
 	userUpdateReducer,
 	seeVerificationReducer,
+	
 } from "./reducers/userReducers";
 const reducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
 	userUpdate: userUpdateReducer,
 	userDelete: userDeleteReducer,
-	seeVerification : seeVerificationReducer
+	seeVerification : seeVerificationReducer,
+
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

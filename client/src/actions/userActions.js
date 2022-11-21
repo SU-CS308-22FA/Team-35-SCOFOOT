@@ -15,14 +15,15 @@ import {
 	USER_UPDATE_SUCCESS,
 	ADMIN_VERIFICATION_REQUEST_FAIL,
 	ADMIN_VERIFICATION_REQUEST_SUCCESS,
-	INBOX_AFTER_DELETION_SUCCESS
+	INBOX_AFTER_DELETION_SUCCESS,
+	VERIFICATION_STATUS_UPDATE,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
 	try {
 		dispatch({ type: USER_LOGIN_REQUEST });
 
-		const { data } = await axios.post("/api/users/login", {
+		const { data } = await axios.post("/api/users/login", { // userin butun verileri geldi isVerified dahil
 			email,
 			password,
 		});
@@ -158,7 +159,6 @@ export const approveVerificationRequest = (_id) => async(dispatch) =>{
 	}
 
 }
-
 
 
 

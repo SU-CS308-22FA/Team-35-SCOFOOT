@@ -14,7 +14,8 @@ import {
 	USER_UPDATE_SUCCESS,
 	ADMIN_VERIFICATION_REQUEST_FAIL,
 	ADMIN_VERIFICATION_REQUEST_SUCCESS,
-	INBOX_AFTER_DELETION_SUCCESS
+	INBOX_AFTER_DELETION_SUCCESS,
+	VERIFICATION_STATUS_UPDATE
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -88,5 +89,7 @@ export const seeVerificationReducer = (state = {}, action) => {  // all verifica
 			return state;
 	}
 };
+
+
 
 
