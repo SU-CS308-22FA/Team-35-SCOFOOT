@@ -115,11 +115,27 @@ const showRequests = asyncHandler(async (req, res, next) => {
 		res.status(404);
 		throw new Error("Requests not found!");
 	}
- 
 
+});
+
+const deleteRequest = asyncHandler(async (req, res, next) => {
+	
+	const request = await Requests.findById(req.body._id);
+	console.log(request);
+	const deletedRequest = await request.remove();
+	const requests = await Requests.find() ;
+	console.log(requests);
+ 	if(requests){
+		res.json(requests);
+  	}
+
+	else {
+		res.status(404);
+		throw new Error("Requests not found!");
+	}
 
 });
 
 
 
-export { showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+export { deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

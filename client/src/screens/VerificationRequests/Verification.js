@@ -5,6 +5,7 @@ const Request = ({ _id, name, surname, email, removeRequest }) => {
   let nameAndsurname = name.concat(" ");
   nameAndsurname = nameAndsurname.concat(surname);
   console.log(name);
+  
   return (
     <article className="single-tour">
       <footer>

@@ -125,9 +125,12 @@ export const seeVerificationRequest = () => async (dispatch) => {
 }
 
 
-export const deleteVerificationRequest = (id) => async(dispatch) =>{
+export const deleteVerificationRequest = (_id) => async(dispatch) =>{
 	try{
-		const {data} = await axios.get("api/users/deleteRequest", {id});
+		
+		
+		const {data} = await axios.post("api/users/deleteRequest",  {_id});
+		console.log(data);
 		dispatch({type: INBOX_AFTER_DELETION_SUCCESS , payload: data}); // burada delete yaptiktan sonra geri kalan datayi dondur
 		
 

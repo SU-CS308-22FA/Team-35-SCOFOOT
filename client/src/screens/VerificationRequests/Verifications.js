@@ -11,23 +11,20 @@ const Verifications = () => {
 
   const verificationInbox = useSelector((state) => state.seeVerification);
 	const { error, RequestInfo } = verificationInbox; // requestInfo butun mesajlar
-  const [requests, setRequests] = useState(RequestInfo);
-  const [isEmpty, setEmpty ] = useState(false);
+  
 
-  useEffect(() => {
-		setRequests(RequestInfo);
-    if(requests?.length === 0){
-      setEmpty(true);
-    }
-	}, [RequestInfo]);
+
+  
   
   const dispatch = useDispatch();
 
-  const removeRequest = (id) => {
-    dispatch(deleteVerificationRequest({id}));
+  const removeRequest = (_id) => {
+    //console.log(_id);
+    dispatch(deleteVerificationRequest(_id));
+    
   }
 
-  console.log(requests);
+
   
     return (
         <section>
@@ -36,7 +33,7 @@ const Verifications = () => {
             <div className="underline"></div>
           </div>
           <div>
-            {isEmpty? (<p> no request</p>) : (requests?.map((single) => {
+            {(RequestInfo?.map((single) => {
               return <Request key = {single._id}{...single} removeRequest={removeRequest} />;
             }))}
 
