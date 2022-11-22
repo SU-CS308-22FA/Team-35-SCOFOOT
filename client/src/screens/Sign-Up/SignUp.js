@@ -14,15 +14,19 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../actions/userActions";
+import { Form } from "react-bootstrap";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const theme = createTheme();
 
 export default function SignUp() {
 	const [name, setName] = useState("");
+	const [picMessage, setPicMessage] = useState("");
 	const [surname, setSurname] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
+	const [profile_pic,setProfile_pic] = useState("");
 	const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] =
 		useState("");
 	const [isConfirmPasswordInvalid, setIsConfirmPasswordInvalid] =
@@ -56,8 +60,34 @@ export default function SignUp() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		dispatch(register(name, surname, email, password));
+		dispatch(register(name, surname, email, password, profile_pic));
 	};
+
+	const postDetails = (profile_pic) => {
+		if(!profile_pic){
+			return setPicMessage("Please Select an Image");
+		}
+		setPicMessage (null)
+
+		if(profile_pic.type === "image/png" || profile_pic.type === "image/jpeg"){
+			const data = new FormData();
+			data.append('file',profile_pic)
+			data.append("upload_preset","cs308tff")
+			data.append("cloud_name","dgmg4b0wl")
+			fetch("https://api.cloudinary.com/v1_1/dgmg4b0wl/image/upload", {
+				method: "post",
+				body: data,
+			}).then((res) =>res.json()).then((data)=>{
+				console.log();
+				setProfile_pic(data.url.toString());
+			})
+			.catch((err)=>{
+				console.log(err);
+			});
+		}	else {
+			return setPicMessage("Please Select an Image")
+		}
+	}
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -83,6 +113,7 @@ export default function SignUp() {
 						sx={{ mt: 3 }}
 					>
 						<Grid container spacing={2}>
+
 							<Grid item xs={12} sm={6}>
 								<TextField
 									autoComplete="given-name"
@@ -158,6 +189,20 @@ export default function SignUp() {
 									}
 								/>
 							</Grid>
+
+							{picMessage && (
+            				<ErrorMessage variant="danger">{picMessage}</ErrorMessage>
+       						   )}
+							<Form.Group controlId="profile_pic">
+								<Form.Label>Change Profile Picture</Form.Label>
+								<Form.File
+									onChange= {(e) =>postDetails(e.target.files[0])}
+									id= "custom-file"
+									type="image/png"
+									label ="Select Your Profile Photo"
+									custom
+								/>
+							</Form.Group>
 						</Grid>
 						<Box
 						>

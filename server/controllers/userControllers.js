@@ -18,6 +18,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 		surname,
 		email,
 		password,
+		profile_pic
 	});
 
 	if (user) {
@@ -26,6 +27,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 			name: user.name,
 			surname: user.surname,
 			email: user.email,
+			profile_pic: user.profile_pic,
 			isAdmin: user.isAdmin,
 			token: generateToken(user._id),
 		});
@@ -46,6 +48,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			name: user.name,
 			surname: user.surname,
 			email: user.email,
+			profile_pic: user.profile_pic,
 			isAdmin: user.isAdmin,
 			token: generateToken(user._id),
 		});
@@ -62,6 +65,7 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
 			user.name = req.body.name || user.name;
 			user.surname = req.body.surname || user.surname;
 			user.email = req.body.email || user.email;
+			user.profile_pic = req.body.profile_pic || user.profile_pic;
 			if (req.body.password) {
 				user.password = req.body.password;
 			}
@@ -72,6 +76,7 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
 				name: updatedUser.name,
 				surname: updatedUser.surname,
 				email: updatedUser.email,
+				profile_pic: updatedUser.profile_pic,
 				token: generateToken(updatedUser._id),
 			});
 		} catch (error) {
