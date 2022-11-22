@@ -6,19 +6,27 @@ import Profile from "./screens/Profile/Profile";
 import Header from "./components/Header/Header";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Players from "./screens/Players/Players";
+import Teams from "./screens/Teams/Teams";
 
 const App = () => {
-	return (
-		<Router>
-			<Header />
-			<Routes>
-				<Route path="/login" element={<Login />} />
-				<Route path="/signup" element={<SignUp />} />
-				<Route path="/profile" element={<Profile />} />
-				<Route path="/" element={<Home />} />
-			</Routes>
-		</Router>
-	);
+  return (
+    // <div>
+    //   <Teams></Teams>
+    //   {/* <Players></Players> */}
+    // </div>
+    <Router>
+      <Header />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/teams" element={<Teams />} />
+        <Route path="/players" element={<Players />} />
+        <Route path="/" element={<Home />} />
+      </Routes>
+    </Router>
+  );
 };
 
 export default App;
