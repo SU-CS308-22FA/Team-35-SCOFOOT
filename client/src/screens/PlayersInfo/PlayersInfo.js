@@ -25,9 +25,9 @@ function PlayersInfo() {
       >
         <Container maxWidth={false}>
           <Grid container spacing={2}>
-            {/* <GoalKeeperInfo></GoalKeeperInfo> */}
-            {/* <DefenseInfo></DefenseInfo> */}
-            {/* <StrikerInfo></StrikerInfo> */}
+            <GoalKeeperInfo></GoalKeeperInfo>
+            <DefenseInfo></DefenseInfo>
+            <StrikerInfo></StrikerInfo>
             <MidfielderInfo></MidfielderInfo>
           </Grid>
         </Container>

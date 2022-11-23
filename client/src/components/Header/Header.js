@@ -6,6 +6,7 @@ import { logout } from "../../actions/userActions";
 import { theme } from "../../theme";
 import { ThemeProvider } from "@mui/system";
 import { lightGreen } from "@mui/material/colors";
+import { Box } from "@mui/material";
 
 function Header() {
   const dispatch = useDispatch();
@@ -22,45 +23,49 @@ function Header() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
-        <Container>
-          <Navbar.Brand href="/">SCOFOOT</Navbar.Brand>
+      <Navbar
+        className="px-4"
+        collapseOnSelect
+        expand="lg"
+        bg="light"
+        variant="light"
+      >
+        <Navbar.Brand href="/">SCOFOOT</Navbar.Brand>
 
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="m-auto"></Nav>
-            <Nav>
-              {userInfo ? (
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="m-auto"></Nav>
+          <Nav>
+            {userInfo ? (
+              <>
                 <>
-                  <>
-                    <Nav.Link href="/teams">Teams</Nav.Link>
-                    <Nav.Link href="/players">Players</Nav.Link>
-                    <Nav.Link href="/teaminfo">Team Info</Nav.Link>
-                    <Nav.Link href="/playerinfo">Player Info</Nav.Link>
-                  </>
-                  <NavDropdown
-                    title={`${userInfo.name}`}
-                    id="collasible-nav-dropdown"
-                  >
-                    <NavDropdown.Item href="/profile">
-                      My Profile
-                    </NavDropdown.Item>
+                  <Nav.Link href="/teams">Teams</Nav.Link>
+                  <Nav.Link href="/players">Players</Nav.Link>
+                  <Nav.Link href="/teaminfo">Team Info</Nav.Link>
+                  <Nav.Link href="/playerinfo">Player Info</Nav.Link>
+                </>
+                <NavDropdown
+                  title={`${userInfo.name}`}
+                  id="collasible-nav-dropdown"
+                >
+                  <NavDropdown.Item href="/profile">
+                    My Profile
+                  </NavDropdown.Item>
 
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item onClick={logoutHandler}>
-                      Logout
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                </>
-              ) : (
-                <>
-                  <Nav.Link href="/login">Login</Nav.Link>
-                  <Nav.Link href="/signup">Sign Up</Nav.Link>
-                </>
-              )}
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={logoutHandler}>
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </>
+            ) : (
+              <>
+                <Nav.Link href="/login">Login</Nav.Link>
+                <Nav.Link href="/signup">Sign Up</Nav.Link>
+              </>
+            )}
+          </Nav>
+        </Navbar.Collapse>
       </Navbar>
     </ThemeProvider>
   );

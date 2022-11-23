@@ -11,6 +11,22 @@ import { players } from "../../components/players/players_mock";
 import { theme } from "../../theme";
 
 function Players() {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const playerGet = useSelector((state) => state.playerGet);
+  const { loading, error, playerInfo } = playerGet;
+
+  useEffect(() => {
+    if (playerInfo) {
+    }
+  }, [navigate, playerInfo]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    dispatch(playerGet());
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div>

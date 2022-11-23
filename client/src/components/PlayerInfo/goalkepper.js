@@ -9,7 +9,10 @@ import {
   Typography,
   useTheme,
   Avatar,
+  Tabs,
+  Tab,
 } from "@mui/material";
+import PropTypes from "prop-types";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import PublicIcon from "@mui/icons-material/Public";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -17,41 +20,90 @@ import PersonIcon from "@mui/icons-material/Person";
 import React, { useState } from "react";
 import fenerlogo from "/Users/ruyadinmezel/Team-35-SCOFOOT-1/client/src/images/teamlogos/Fenerbahçe_SK.png";
 import { GoalKeeper } from "./playerdata_mock";
+import { teamdata } from "../TeamInfo/teamdata_mock";
+import Diversity3Icon from "@mui/icons-material/Diversity3";
+import SportsHandballIcon from "@mui/icons-material/SportsHandball";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import HeightIcon from "@mui/icons-material/Height";
+import CakeIcon from "@mui/icons-material/Cake";
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 export const GoalKeeperInfo = (props) => {
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   const theme = useTheme();
 
   const info = [
     {
       title: "Club",
       value: GoalKeeper.club,
-      icon: PublicIcon,
+      icon: Diversity3Icon,
       color: "#3F51B5",
     },
     {
       title: "Position",
       value: GoalKeeper.position,
-      icon: StadiumIcon,
+      icon: SportsHandballIcon,
       color: "#3F51B5",
     },
-    {
-      title: "Birthday",
-      value: GoalKeeper.bday,
-      icon: GroupsIcon,
-      color: "#3F51B5",
-    },
-  ];
-  const info2 = [
     {
       title: "Height(cm)",
       value: GoalKeeper.height,
-      icon: PersonIcon,
+      icon: HeightIcon,
       color: "#3F51B5",
     },
     {
       title: "Weight(kg)",
       value: GoalKeeper.weight,
-      icon: PersonIcon,
+      icon: FitnessCenterIcon,
+      color: "#3F51B5",
+    },
+  ];
+  const info2 = [
+    {
+      title: "Country",
+      value: GoalKeeper.nationality,
+      icon: PublicIcon,
+      color: "#3F51B5",
+    },
+    {
+      title: "Birthday",
+      value: GoalKeeper.bday,
+      icon: CakeIcon,
       color: "#3F51B5",
     },
   ];
@@ -105,7 +157,16 @@ export const GoalKeeperInfo = (props) => {
           <Grid container spacing={2}>
             <Grid item lg={6} sm={12} xl={3} xs={12}>
               <Card {...props}>
-                <CardHeader title={GoalKeeper.name} />
+                <CardHeader
+                  avatar={
+                    <Avatar
+                      src={teamdata.teamImage}
+                      sx={{ width: 40, height: 40 }}
+                    ></Avatar>
+                  }
+                  title={GoalKeeper.name}
+                  titleTypographyProps={{ variant: "h6", component: "span" }}
+                />
                 <Divider />
                 <CardContent>
                   <Box
@@ -139,6 +200,7 @@ export const GoalKeeperInfo = (props) => {
                           textAlign: "center",
                         }}
                       >
+                        <Icon color="action" />
                         <Typography color="textSecondary" variant="body1">
                           {title}
                         </Typography>
@@ -164,6 +226,7 @@ export const GoalKeeperInfo = (props) => {
                           textAlign: "center",
                         }}
                       >
+                        <Icon color="action" />
                         <Typography color="textSecondary" variant="body1">
                           {title}
                         </Typography>
@@ -183,71 +246,91 @@ export const GoalKeeperInfo = (props) => {
                 <CardHeader title={"Player Information"} />
                 <Divider />
                 <CardContent>
-                  <Grid item lg={6} sm={12} xl={1.5} xs={12}>
-                    <Typography color="#3F51B5">STATS</Typography>
-                  </Grid>
-                  <Divider />
+                  <Box sx={{ width: "100%" }}>
+                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                      <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        aria-label="basic tabs example"
+                      >
+                        <Tab label="STATS" {...a11yProps(0)} />
+                        <Tab label="CLUB CAREER" {...a11yProps(1)} />
+                      </Tabs>
+                    </Box>
+                    <TabPanel value={value} index={0}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          pt: 2,
+                        }}
+                      >
+                        {stats.map(({ title, value }) => (
+                          <Grid item lg={6} sm={12} xl={1.5} xs={12}>
+                            <Box
+                              key={title}
+                              sx={{
+                                p: 1,
+                                textAlign: "center",
+                              }}
+                            >
+                              <Typography color="textSecondary" variant="body1">
+                                {title}
+                              </Typography>
+
+                              <Typography color="#3F51B5" variant="h6">
+                                {value}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        ))}
+                      </Box>
+                    </TabPanel>
+                    <TabPanel value={value} index={1}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          pt: 2,
+                        }}
+                      >
+                        {clubCareer.map(({ title, value }) => (
+                          <Grid item lg={6} sm={12} xl={1.5} xs={12}>
+                            <Box
+                              key={title}
+                              sx={{
+                                p: 0,
+                                textAlign: "center",
+                              }}
+                            >
+                              <Typography color="textSecondary" variant="body1">
+                                {title}
+                              </Typography>
+
+                              <Typography color="#3F51B5" variant="h6">
+                                {value}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                        ))}
+                      </Box>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          pt: 5,
+                        }}
+                      ></Box>
+                    </TabPanel>
+                  </Box>
+
                   <Box
                     sx={{
                       display: "flex",
                       justifyContent: "center",
-                      pt: 2,
+                      pt: 18.75,
                     }}
-                  >
-                    {stats.map(({ title, value }) => (
-                      <Grid item lg={6} sm={12} xl={1.5} xs={12}>
-                        <Box
-                          key={title}
-                          sx={{
-                            p: 1,
-                            textAlign: "center",
-                          }}
-                        >
-                          <Typography color="textSecondary" variant="body1">
-                            {title}
-                          </Typography>
-
-                          <Typography color="#3F51B5" variant="h6">
-                            {value}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    ))}
-                  </Box>
-
-                  <Grid item lg={6} sm={12} xl={1} xs={12}></Grid>
-                  <Grid item lg={6} sm={12} xl={1.5} xs={12}>
-                    <Typography color="#3F51B5">CLUB CAREER</Typography>
-                  </Grid>
-
-                  <Divider />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      pt: 2,
-                    }}
-                  >
-                    {clubCareer.map(({ title, value }) => (
-                      <Grid item lg={6} sm={12} xl={2} xs={12}>
-                        <Box
-                          key={title}
-                          sx={{
-                            p: 0,
-                            textAlign: "center",
-                          }}
-                        >
-                          <Typography color="textSecondary" variant="body1">
-                            {title}
-                          </Typography>
-
-                          <Typography color="#3F51B5" variant="h6">
-                            {value}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                    ))}
-                  </Box>
+                  ></Box>
                 </CardContent>
               </Card>
             </Grid>
