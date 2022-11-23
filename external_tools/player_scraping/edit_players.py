@@ -12,8 +12,4 @@ def repairAllPlayers(allPlayers):
                     allPlayers[i]["height"] = None
 
 
-    for player in allPlayers:
-        if "position" in allPlayers[player] and allPlayers[player]["position"]:
-            allPlayers[player]["position"] = get_players.translate(allPlayers[player]["position"])
-
     return allPlayers
