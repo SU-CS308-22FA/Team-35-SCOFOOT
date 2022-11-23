@@ -176,6 +176,17 @@ export const sendRequest = (email) => async(dispatch) =>{
 };
 
 
+export const changeIsSent = (email) => async(dispatch) => {
+		const {data} = await axios.post("/api/users/isSent", {email});
+		dispatch({ type: USER_LOGIN_SUCCESS, payload: data });		
+
+}
+
+
+
+
+
+
 
 export const deleteUser = (user) => async (dispatch, getState) => {
 	try {

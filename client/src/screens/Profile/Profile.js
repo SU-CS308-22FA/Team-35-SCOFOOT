@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import MainScreen from "../../components/MainScreen";
 import "./Profile.css";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProfile, deleteUser , sendRequest} from "../../actions/userActions";
+import { updateProfile, deleteUser , sendRequest, changeIsSent} from "../../actions/userActions";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
@@ -38,6 +38,7 @@ const Profile = () => {
 	const { loadingUserDelete, errorUserDelete, successUserDelete } = userDelete;
 
 	const verified = userInfo.isVerified;
+	const isSent = userInfo.isRequestSent;
 
 	useEffect(() => {
 		if (!userInfo) {
@@ -69,6 +70,7 @@ const Profile = () => {
 	const sendVerificationRequest =(email) => {
 		console.log(email);
 		dispatch(sendRequest(email));
+		dispatch(changeIsSent(email));
 
 	}
 
@@ -79,10 +81,16 @@ const Profile = () => {
 			<VerifiedUserIcon />
 	  		 </div>
 			 }
-			 {!verified && 
+			 {!verified && !isSent &&
 			 	<button className="request-btn" onClick={() => sendVerificationRequest(userInfo.email)}>
           			Send Verification Request
        		    </button>
+			 }
+
+            {!verified && isSent &&
+			 	<p> Verification Request Is Sent</p>
+          			
+       		    
 			 }
 			 
 			

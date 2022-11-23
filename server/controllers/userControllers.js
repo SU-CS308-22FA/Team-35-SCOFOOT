@@ -49,7 +49,8 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			email: user.email,
 			isAdmin: user.isAdmin,
 			token: generateToken(user._id),
-			isVerified: user.isVerified
+			isVerified: user.isVerified,
+			isRequestSent : user.isRequestSent
 		});
 	} else {
 		res.status(401);
@@ -191,5 +192,24 @@ const sendRequest = asyncHandler(async (req, res, next) => {
 
 });
 
+const changeIsSent = asyncHandler(async (req, res, next) => {
+	const {email} = req.body;
+	const user = await User.findOne({email});
+	user.isRequestSent = !user.isRequestSent;
+	const updatedUser = await user.save();
 
-export { sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+		
+	res.json({
+			_id: updatedUser._id,
+			name: updatedUser.name,
+			surname: updatedUser.surname,
+			email: updatedUser.email,
+			isAdmin: updatedUser.isAdmin,
+			token: generateToken(updatedUser._id),
+			isVerified: updatedUser.isVerified,
+			isRequestSent : updatedUser.isRequestSent
+		});
+	
+}); 
+
+export { changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
