@@ -209,6 +209,18 @@
   .single-tour footer {
     padding: 1.5rem 2rem;
   }
+
+  .request-btn{
+    display: block;
+    width: 200px;
+    margin: 1rem auto 0 auto;
+    color: var(--clr-black);
+    letter-spacing: var(--spacing);
+    background: transparent;
+    border: 1px solid var(--clr-green-dark);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius);
+  }
   .single-tour .delete-btn {
     display: block;
     width: 200px;

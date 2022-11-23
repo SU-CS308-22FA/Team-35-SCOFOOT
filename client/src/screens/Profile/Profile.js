@@ -9,12 +9,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import MainScreen from "../../components/MainScreen";
 import "./Profile.css";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProfile, deleteUser } from "../../actions/userActions";
+import { updateProfile, deleteUser , sendRequest} from "../../actions/userActions";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import '../../screens/VerificationRequests/verification.css'
+import '../../screens/VerificationRequests/verification.css';
 
 const Profile = () => {
 	const [name, setName] = useState("");
@@ -66,12 +66,23 @@ const Profile = () => {
 		setOpen(false);
 	};
 
+	const sendVerificationRequest =(email) => {
+		console.log(email);
+		dispatch(sendRequest(email));
+
+	}
+
 	return (
 		<MainScreen title="EDIT PROFILE">
 			{verified && 
 			<div style={{ display: "flex", justifyContent: 'flex-end'}}>
 			<VerifiedUserIcon />
 	  		 </div>
+			 }
+			 {!verified && 
+			 	<button className="request-btn" onClick={() => sendVerificationRequest(userInfo.email)}>
+          			Send Verification Request
+       		    </button>
 			 }
 			 
 			

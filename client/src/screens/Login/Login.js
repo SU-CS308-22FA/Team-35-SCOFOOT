@@ -34,7 +34,13 @@ export default function Login() {
 
 	useEffect(() => {
 		if (userInfo) {
-			navigate("/profile");
+			if(userInfo.isAdmin === true){
+				navigate("/admin_profile");
+			}
+			else{
+				navigate("/profile");
+			}
+		
 		}
 	}, [navigate, userInfo]);
 

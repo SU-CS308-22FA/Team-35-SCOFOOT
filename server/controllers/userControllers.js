@@ -166,5 +166,30 @@ const approveRequest = asyncHandler(async (req, res, next) => { // first delete 
 
 });
 
+const sendRequest = asyncHandler(async (req, res, next) => { 
+	const {email} = req.body;
+	const user = await User.findOne({email}); 
+	console.log(user.name);
+	const name = user.name;
+	const surname = user.surname;
+	
+	const request  = await Requests.create({
+		name,
+		surname,
+		email
+	});
 
-export { approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+	const requests = await Requests.find();
+
+	if (request) {
+		res.json(requests) ;
+	} else {
+		res.status(400);
+		throw new Error("Error occured.");
+	}
+
+
+});
+
+
+export { sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

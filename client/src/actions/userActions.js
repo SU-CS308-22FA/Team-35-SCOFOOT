@@ -123,7 +123,7 @@ export const seeVerificationRequest = () => async (dispatch) => {
 					: error.message,
 		});
 	}
-}
+};
 
 
 export const deleteVerificationRequest = (_id) => async(dispatch) =>{
@@ -140,7 +140,7 @@ export const deleteVerificationRequest = (_id) => async(dispatch) =>{
 		
 	}
 
-}
+};
 
 
 export const approveVerificationRequest = (_id) => async(dispatch) =>{
@@ -150,7 +150,22 @@ export const approveVerificationRequest = (_id) => async(dispatch) =>{
 		const {data} = await axios.post("api/users/approveRequest",  {_id});
 		console.log(data);
 		dispatch({type: INBOX_AFTER_DELETION_SUCCESS , payload: data}); // burada delete yaptiktan sonra geri kalan datayi dondur
-		// login yapmıs userin bilgilerini eklemelisin
+	}
+	catch (error) {
+		
+	}
+
+};
+
+
+export const sendRequest = (email) => async(dispatch) =>{
+	try{
+		
+		console.log(email);
+		const {data} = await axios.post("api/users/sendRequest",  {email});
+		console.log(data);
+		dispatch({type: INBOX_AFTER_DELETION_SUCCESS, payload: data});
+		
 		
 
 	}
@@ -158,8 +173,7 @@ export const approveVerificationRequest = (_id) => async(dispatch) =>{
 		
 	}
 
-}
-
+};
 
 
 
