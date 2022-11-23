@@ -9,12 +9,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import MainScreen from "../../components/MainScreen";
 import "./Profile.css";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProfile, deleteUser , sendRequest, changeIsSent} from "../../actions/userActions";
+import { updateProfile, deleteUser, seeVerificationRequest } from "../../actions/userActions";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
-import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import '../../screens/VerificationRequests/verification.css';
+import InboxIcon from '@mui/icons-material/Inbox';
+import IconButton from '@mui/material/IconButton';
+
 
 const Profile = () => {
 	const [name, setName] = useState("");
@@ -29,16 +30,13 @@ const Profile = () => {
 	const navigate = useNavigate();
 
 	const userLogin = useSelector((state) => state.userLogin);
-	const { userInfo } = userLogin;
+	const { userInfo } = userLogin; // userlogin.userInfo
 
 	const userUpdate = useSelector((state) => state.userUpdate);
 	const { loading, error, success } = userUpdate;
 
 	const userDelete = useSelector((state) => state.userDelete);
 	const { loadingUserDelete, errorUserDelete, successUserDelete } = userDelete;
-
-	const verified = userInfo.isVerified;
-	const isSent = userInfo.isRequestSent;
 
 	useEffect(() => {
 		if (!userInfo) {
@@ -67,34 +65,24 @@ const Profile = () => {
 		setOpen(false);
 	};
 
-	const sendVerificationRequest =(email) => {
-		console.log(email);
-		dispatch(sendRequest(email));
-		dispatch(changeIsSent(email));
 
-	}
+    const handleInputClick = () => {
+        dispatch(seeVerificationRequest());
+        navigate("/verification", {replace:true}) ;
+    }
+
 
 	return (
 		<MainScreen title="EDIT PROFILE">
-			{verified && 
-			<div style={{ display: "flex", justifyContent: 'flex-end'}}>
-			<VerifiedUserIcon />
-	  		 </div>
-			 }
-			 {!verified && !isSent &&
-			 	<button className="request-btn" onClick={() => sendVerificationRequest(userInfo.email)}>
-          			Send Verification Request
-       		    </button>
-			 }
+            
 
-            {!verified && isSent &&
-			 	<p> Verification Request Is Sent</p>
-          			
-       		    
-			 }
-			 
-			
+            <div style={{ display: "flex", justifyContent: 'flex-end'}}>
 
+            <IconButton aria-label="input" onClick={handleInputClick}>
+                 <InboxIcon />
+            </IconButton>
+
+            </div>
 			<div>
 				<Row className="profileContainer">
 					<Col md={12}>

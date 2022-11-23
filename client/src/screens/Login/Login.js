@@ -34,7 +34,13 @@ export default function Login() {
 
 	useEffect(() => {
 		if (userInfo) {
-			navigate("/profile");
+			if(userInfo.isAdmin === true){
+				navigate("/admin_profile");
+			}
+			else{
+				navigate("/profile");
+			}
+		
 		}
 	}, [navigate, userInfo]);
 
@@ -42,6 +48,10 @@ export default function Login() {
 		event.preventDefault();
 		dispatch(login(email, password));
 	};
+
+
+	
+
 
 	return (
 		<ThemeProvider theme={theme}>
