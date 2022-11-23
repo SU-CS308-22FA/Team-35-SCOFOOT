@@ -35,6 +35,7 @@ function Header() {
                   <>
                     <Nav.Link href="/teams">Teams</Nav.Link>
                     <Nav.Link href="/players">Players</Nav.Link>
+                    <Nav.Link href="/teaminfo">Team Info</Nav.Link>
                     <Nav.Link href="/playerinfo">Player Info</Nav.Link>
                   </>
                   <NavDropdown

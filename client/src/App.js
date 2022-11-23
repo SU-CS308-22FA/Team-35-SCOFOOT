@@ -8,6 +8,8 @@ import Header from "./components/Header/Header";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Players from "./screens/Players/Players";
 import Teams from "./screens/Teams/Teams";
+import TeamsInfo from "./screens/TeamsInfo/TeamsInfo";
+import PlayersInfo from "./screens/PlayersInfo/PlayersInfo";
 
 const App = () => {
   return (
@@ -23,6 +25,8 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/teams" element={<Teams />} />
         <Route path="/players" element={<Players />} />
+        <Route path="/teaminfo" element={<TeamsInfo />} />
+        <Route path="/playerinfo" element={<PlayersInfo />} />
         <Route path="/" element={<Home />} />
       </Routes>
     </Router>

@@ -19,7 +19,7 @@ import {
   Typography,
 } from "@mui/material";
 
-export const TeamListResults = ({ teams, ...rest }) => {
+export const TeamPlayers = ({ players, ...rest }) => {
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -49,7 +49,7 @@ export const TeamListResults = ({ teams, ...rest }) => {
     };
   }
 
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(0);
 
   const handleLimitChange = (event) => {
@@ -63,54 +63,49 @@ export const TeamListResults = ({ teams, ...rest }) => {
   return (
     <Card {...rest}>
       <PerfectScrollbar>
-        <Box sx={{ minWidth: 1050 }}>
+        <Box sx={{ minWidth: 100 }}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox"></TableCell>
-
-                <TableCell>Clubs</TableCell>
-                <TableCell>Match</TableCell>
-                <TableCell>Win</TableCell>
-                <TableCell>Tie</TableCell>
-                <TableCell>Loss</TableCell>
-                <TableCell>Win Ratio</TableCell>
-                <TableCell>Ranking</TableCell>
+                <TableCell>Team Players</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {teams.slice(page * limit, page * limit + limit).map((team) => (
-                <TableRow hover key={team.id}>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        alignItems: "center",
-                        display: "flex",
-                      }}
-                    >
-                      <Avatar src={team.teamImage} sx={{ mr: 2 }}></Avatar>
-                      {/* <Typography color="textPrimary" variant="body1">
+              {players
+                .slice(page * limit, page * limit + limit)
+                .map((player) => (
+                  <TableRow hover key={player.id}>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        {/* <Avatar src={player.avatarUrl} sx={{ mr: 2 }}>
+                        
+                      </Avatar> */}
+
+                        <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
+
+                        {/* <Typography color="textPrimary" variant="body1">
                         {player.name}
                       </Typography> */}
-                    </Box>
-                  </TableCell>
+                      </Box>
+                    </TableCell>
+                    <TableCell>{player.name}</TableCell>
 
-                  <TableCell>{team.club}</TableCell>
-                  <TableCell>{team.match}</TableCell>
-                  <TableCell>{team.win}</TableCell>
-                  <TableCell>{team.tie}</TableCell>
-                  <TableCell>{team.loss}</TableCell>
-                  <TableCell>{team.winratio}</TableCell>
-                  <TableCell>{team.ranking}</TableCell>
-                </TableRow>
-              ))}
+                    {/* <TableCell>{format(player.bday, "dd/MM/yyyy")}</TableCell> */}
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </Box>
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={teams.length}
+        count={players.length}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -120,7 +115,6 @@ export const TeamListResults = ({ teams, ...rest }) => {
     </Card>
   );
 };
-
-TeamListResults.propTypes = {
-  teams: PropTypes.array.isRequired,
+TeamPlayers.propTypes = {
+  players: PropTypes.array.isRequired,
 };

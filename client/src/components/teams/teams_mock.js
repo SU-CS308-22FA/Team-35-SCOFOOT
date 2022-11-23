@@ -18,6 +18,10 @@ export const teams = [
     winratio: "69,2%",
     ranking: 1,
     match: 13,
+    country: "Türkiye",
+    stadyum: "Ülker Stadyumu",
+    capacity: 53586,
+    technic_director: "Jorge Jesus",
   },
 
   {

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { React } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import PropTypes from "prop-types";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useState } from "react";
 
 //import { format } from "date-fns";
 //import { getInitials } from "../../utils/get-initials";
@@ -53,13 +54,6 @@ export const PlayerListResults = ({ players, ...rest }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handleChangeRowsPerPage = (event) => {
-    const { data } = this.props;
-    const value = event.target.value;
-    const rowsPerPage = value === "All" ? data.length : value;
-    this.setState({ rowsPerPage });
-  };
-
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
   };
@@ -67,7 +61,6 @@ export const PlayerListResults = ({ players, ...rest }) => {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
-
   return (
     <Card {...rest}>
       <PerfectScrollbar>
@@ -88,35 +81,37 @@ export const PlayerListResults = ({ players, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {players.slice(0, limit).map((player) => (
-                <TableRow hover key={player.id}>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        alignItems: "center",
-                        display: "flex",
-                      }}
-                    >
-                      {/* <Avatar src={player.avatarUrl} sx={{ mr: 2 }}>
+              {players
+                .slice(page * limit, page * limit + limit)
+                .map((player) => (
+                  <TableRow hover key={player.id}>
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: "center",
+                          display: "flex",
+                        }}
+                      >
+                        {/* <Avatar src={player.avatarUrl} sx={{ mr: 2 }}>
                         
                       </Avatar> */}
 
-                      <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
+                        <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
 
-                      {/* <Typography color="textPrimary" variant="body1">
+                        {/* <Typography color="textPrimary" variant="body1">
                         {player.name}
                       </Typography> */}
-                    </Box>
-                  </TableCell>
-                  <TableCell>{player.name}</TableCell>
-                  <TableCell>{player.club}</TableCell>
-                  <TableCell>{player.position}</TableCell>
-                  <TableCell>{player.nationality}</TableCell>
-                  <TableCell>{player.bday}</TableCell>
+                      </Box>
+                    </TableCell>
+                    <TableCell>{player.name}</TableCell>
+                    <TableCell>{player.club}</TableCell>
+                    <TableCell>{player.position}</TableCell>
+                    <TableCell>{player.nationality}</TableCell>
+                    <TableCell>{player.bday}</TableCell>
 
-                  {/* <TableCell>{format(player.bday, "dd/MM/yyyy")}</TableCell> */}
-                </TableRow>
-              ))}
+                    {/* <TableCell>{format(player.bday, "dd/MM/yyyy")}</TableCell> */}
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </Box>
@@ -128,7 +123,7 @@ export const PlayerListResults = ({ players, ...rest }) => {
         onRowsPerPageChange={handleLimitChange}
         page={page}
         rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[5, 10, 15]}
       />
     </Card>
   );
