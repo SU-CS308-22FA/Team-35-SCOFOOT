@@ -1,7 +1,7 @@
 import React from "react";
 import MainScreen from "../../components/MainScreen";
 
-import scofootlogo from "/Users/ruyadinmezel/Team-35-SCOFOOT-1/client/src/images/scofootlogo.png";
+import scofootlogo from "../../images/scofootlogo.png";
 import { Grid, Container, Box } from "@mui/material";
 import { Form, Row, Col } from "react-bootstrap";
 import { First } from "./first";

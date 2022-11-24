@@ -1,5 +1,4 @@
 import { v4 as uuid } from "uuid";
-import fenerlogo from "/Users/ruyadinmezel/Team-35-SCOFOOT-1/client/src/images/teamlogos/Fenerbahçe_SK.png";
 
 export const Midfielder = {
   _id: { $oid: "6373cfd0728c8855454507fd" },

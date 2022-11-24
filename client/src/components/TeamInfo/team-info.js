@@ -14,7 +14,7 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import PersonIcon from "@mui/icons-material/Person";
 import React, { useState } from "react";
 import { teamdata } from "./teamdata_mock";
-import fenerlogo from "/Users/ruyadinmezel/Team-35-SCOFOOT-1/client/src/images/teamlogos/Fenerbahçe_SK.png";
+import fenerlogo from "../../images/teamlogos/Fenerbahçe_SK.png";
 export const TeamInfo = (props) => {
   const theme = useTheme();
 

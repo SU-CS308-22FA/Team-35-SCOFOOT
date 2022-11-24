@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import fenerlogo from "/Users/ruyadinmezel/Team-35-SCOFOOT-1/client/src/images/teamlogos/Fenerbahçe_SK.png";
+import fenerlogo from "../../images/teamlogos/Fenerbahçe_SK.png";
 
 export const teamdata = {
   id: uuid(),

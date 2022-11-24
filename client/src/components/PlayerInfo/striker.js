@@ -18,7 +18,6 @@ import PublicIcon from "@mui/icons-material/Public";
 import GroupsIcon from "@mui/icons-material/Groups";
 import PersonIcon from "@mui/icons-material/Person";
 import React, { useState } from "react";
-import fenerlogo from "/Users/ruyadinmezel/Team-35-SCOFOOT-1/client/src/images/teamlogos/Fenerbahçe_SK.png";
 import { Striker } from "./playerdata_mock";
 import { teamdata } from "../TeamInfo/teamdata_mock";
 import Diversity3Icon from "@mui/icons-material/Diversity3";

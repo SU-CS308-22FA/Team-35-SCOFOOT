@@ -1,7 +1,6 @@
 import { Int32 } from "mongodb";
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
-import Player from "./Player";
+import Player from "./Player.js";
 
 const teamSchema = mongoose.Schema({
   _id: { type: String },
@@ -12,30 +11,74 @@ const teamSchema = mongoose.Schema({
   capacity: { type: String },
   technic_director: { type: String },
 
-  stats: [
+  stats: 
     {
-      match: { type: Int32 },
-      win: { type: Int32 },
-      tie: { type: Int32 },
-      loss: { type: Int32 },
-      ranking: { type: Int32 },
-      goals_c: { type: Int32 },
-      penalty: { type: Int32 },
-      totalpass: { type: Int32 },
-      sucpass: { type: Int32 },
-      shot: { type: Int32 },
-      sucshot: { type: Int32 },
-      goal_attack: { type: Int32 },
-      cross: { type: Int32 },
-      succross: { type: Int32 },
-      foulteam: { type: Int32 },
-      foul: { type: Int32 },
-      yellowcard: { type: Int32 },
-      redcard: { type: Int32 },
+      match: { type: Number },
+      win: { type: Number },
+      tie: { type: Number },
+      loss: { type: Number },
+      ranking: { type: Number },
+      goals_c: { type: Number },
+      penalty: { type: Number },
+      totalpass: { type: Number },
+      sucpass: { type: Number },
+      shot: { type: Number },
+      sucshot: { type: Number },
+      goal_attack: { type: Number },
+      cross: { type: Number },
+      succross: { type: Number },
+      foulteam: { type: Number },
+      foul: { type: Number },
+      yellowcard: { type: Number },
+      redcard: { type: Number },
     },
-  ],
+  
 
-  players: [Player],
+  players: [
+      {
+        name: { type: String },
+        playerImage: { type: String },
+        club: { type: String },
+        bday: { type: String },
+        height: { type: String },
+        weight: { type: String },
+        position: { type: String },
+        contrEnd: { type: String },
+        nationality: { type: String },
+        bplace: { type: String },
+        value: { type: String },
+
+      stats: 
+        {
+          matchCount: { type: String },
+          matchesNotConceded: { type: String },
+          bpSuccess: { type: String },
+          concedes: { type: String },
+          concedesSavesPA: { type: String },
+          concedesSavesNPA: { type: String },
+          goal: { type: String },
+          asists: { type: String },
+          shotsPerMatch: { type: String },
+          firstShotPerMatch: { type: String },
+          passPercentage: { type: String },
+          dripPerMatch: { type: String },
+          winBallPerMatch: { type: String },
+          winAirBallPerMatch: { type: String },
+          winDuelPercentage: { type: String },
+          successPass: { type: String },
+          succesCrossPerMatch: { type: String },
+        },
+      
+
+        clubCareer: 
+          {
+            matchCount: { type: String },
+            goals: { type: String },
+            yellowCards: { type: String },
+            redCards: { type: String },
+          },
+      }
+  ],
 });
 
 const Team = mongoose.model("Team", teamSchema);

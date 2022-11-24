@@ -19,7 +19,6 @@ import PropTypes from "prop-types";
 import Link from "@mui/material";
 import React, { useState } from "react";
 import { Row } from "react-bootstrap";
-import fenerlogo from "/Users/ruyadinmezel/Team-35-SCOFOOT-1/client/src/images/teamlogos/Fenerbahçe_SK.png";
 import {
   AttackTeamInfo,
   defenseTeamInfo,

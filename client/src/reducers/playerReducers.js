@@ -9,7 +9,7 @@ export const playerGetReducer = (state = {}, action) => {
     case PLAYER_GET_REQUEST:
       return { loading: true };
     case PLAYER_GET_SUCCESS:
-      return { loading: true, playerInfo: action.payload };
+      return { loading: false, playerInfo: action.payload };
     case PLAYER_GET_FAIL:
       return { loading: false, error: action.payload };
 
