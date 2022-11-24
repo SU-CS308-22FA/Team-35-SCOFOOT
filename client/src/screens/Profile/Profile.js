@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Row, Col } from "react-bootstrap";
+import { Form, Row, Col, Container } from "react-bootstrap";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -22,14 +22,18 @@ const Profile = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-	const [profile_pic, setProfile_pic] = useState("");
-	const [picMessage, setPicMessage] = useState();
+	
+	const [pic, setPic] = useState("https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg");
+	
 
+	const [picMessage, setPicMessage] = useState("");
+	const [profile_type, setProfile_type] =useState("");
 	const [open, setOpen] = React.useState(false);
 
+	
+	
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 
@@ -46,37 +50,15 @@ const Profile = () => {
 			setName(userInfo.name);
 			setSurname(userInfo.surname);
 			setEmail(userInfo.email);
-			setProfile_pic(userInfo.profile_pic)
+			setProfile_type(userInfo.profile_type)
+			setPic(userInfo.pic)
 		}
 	}, [navigate, userInfo]);
 
-	const postDetails = (pics) => {
-		setPicMessage(null);
-		if (pics.type === "image/jpeg" || pics.type === "image/png") {
-		  const data = new FormData();
-		  data.append("file", pics);
-		  data.append("upload_preset", "cs308tff");
-		  data.append("cloud_name", "dgmg4b0wl");
-		  fetch("https://api.cloudinary.com/v1_1/dgmg4b0wl/image/upload", {
-			method: "post",
-			body: data,
-		  })
-			.then((res) => res.json())
-			.then((data) => {
-			  setProfile_pic(data.url.toString());
-			  console.log(profile_pic);
-			})
-			.catch((err) => {
-			  console.log(err);
-			});
-		} else {
-		  return setPicMessage("Please Select an Image");
-		}
-	  };
 
 	const submitHandler = (e) => {
 		e.preventDefault();
-		dispatch(updateProfile({ name, surname, email, password }));
+		dispatch(updateProfile({ name, surname, email, password, profile_type,pic }));
 	};
 
 	const deleteUserHandler = () => {
@@ -90,7 +72,36 @@ const Profile = () => {
 	const handleClose = () => {
 		setOpen(false);
 	};
-
+	{/*
+	const postDetails = (pics) => {
+		if (
+		  pics ===
+		  "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+		) {
+		  return setPicMessage("Please Select an Image");
+		}
+		setPicMessage(null);
+		if (pics.type === "image/jpeg" || pics.type === "image/png") {
+		  const data = new FormData();
+		  data.append("file", pics);
+		  data.append("upload_preset", "cs308tff");
+		  data.append("cloud_name", "dgmg4b0wl");
+		  fetch("https://api.cloudinary.com/v1_1/dgmg4b0wl/image/upload", {
+			method: "post",
+			body: data,
+		  })
+			.then((res) => res.json())
+			.then((data) => {
+			  setPic(data.url.toString());
+			})
+			.catch((err) => {
+			  console.log(err);
+			});
+		} else {
+		  return setPicMessage("Please Select an Image");
+		}
+	  }
+	  */}
 	return (
 		<MainScreen title="My Account">
 			<div>
@@ -129,6 +140,8 @@ const Profile = () => {
 									{errorUserDelete}
 								</ErrorMessage>
 							)}
+							
+
 							<Form.Group controlId="name">
 								<Form.Label>Name</Form.Label>
 								<Form.Control
@@ -156,23 +169,60 @@ const Profile = () => {
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
 								></Form.Control>
+								 
 							</Form.Group>
-							<Form.Label>Profile type</Form.Label>
-							<ToggleButtonGroup type="radio" name="options" defaultValue={1}>
+							
+							<Form.Group controlId="profile_type">
+								<Form.Label>Account Type</Form.Label>
+								<Form.Control
+									disabled
+									type="profile_type"
+									placeholder="Please Select Account Type"
+									value={profile_type}
+									onChange={(e) => setProfile_type(e.target.value)}
+								></Form.Control>
+								
+							</Form.Group>
+							<ToggleButtonGroup type="radio" name="options" >
 								
 								
-								<ToggleButton id="tbg-radio-1" value={1}>
+								<ToggleButton style={{mt:10}} id="Player" name = "Player" value={"Player"} onChange={(e) =>
+									setProfile_type(e.target.value) 
+								}checked>
 								Player
 								</ToggleButton>
-								<ToggleButton id="tbg-radio-2" value={2}>
+								<ToggleButton style={{mt:10}} id="Scout" name = "Scout" value={"Scout"} onChange={(e) =>
+									setProfile_type(e.target.value)
+								}>
 								Scout
 								</ToggleButton>
-								<ToggleButton id="tbg-radio-3" value={3}>
+								<ToggleButton style={{mt:10}} id="Manager" name = "Manager" value={"Manager"} onChange={(e) =>
+									setProfile_type(e.target.value)
+								}>
 								Manager
 								</ToggleButton>
 								
-							</ToggleButtonGroup>
+								
+								
+							</ToggleButtonGroup>						
+							
+							{/*
+							{picMessage && (
+								<ErrorMessage variant="danger">{picMessage}</ErrorMessage>
+							)}
+							<Form.Group controlId="pic">
+								<Form.Label>Profile Picture</Form.Label>
+								<Form.File
+								onChange={(e) => postDetails(e.target.files[0])}
+								id="custom-file"
+								type="image/png"
+								label="Upload Profile Picture"
+								custom
+								/>
+							</Form.Group>*/}
 
+							
+							
 							<Form.Group controlId="password">
 								<Form.Label>Change Password</Form.Label>
 								<Form.Control
@@ -194,26 +244,8 @@ const Profile = () => {
 										setConfirmPassword(e.target.value)
 									}
 								></Form.Control>
-							</Form.Group>{""} 
-							{/*
-							{picMessage && (
-                			<ErrorMessage variant="danger">{picMessage}</ErrorMessage>
-             				 )}
-							<Form.Group controlId="profile_pic">
-								<Form.Label>Change Profile Picture</Form.Label>
-
-								<Form.File
-								
-									onChange= {(e) =>postDetails(e.target.files[0])}
-									id= "custom-file"
-									type="image/png"
-									label ="Select Your Profile Photo"
-									custom
-								/>
-							<img src={profile_pic} alt={name} className="profilePic" />
-							
 							</Form.Group>
-							*/}
+							<img src={pic} alt={name} className="profilePic" />
 							<Row>
 							<Col md={12}>
 								<Button sx={{ mt: 2, mb: 2, mr: 2}} variant="contained" color="primary" type="submit" varient="primary">
@@ -251,6 +283,7 @@ const Profile = () => {
 					</Col>
 				</Row>
 			</div>
+			
 		</MainScreen>
 	);
 };
