@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 import Requests from "../models/Requests.js"
 
 const registerUser = asyncHandler(async (req, res, next) => {
-	const { name, surname, email, password } = req.body;
+	const { name, surname, email, password, profile_type, pic } = req.body;
 
 	const userExists = await User.findOne({ email });
 
@@ -18,6 +18,8 @@ const registerUser = asyncHandler(async (req, res, next) => {
 		surname,
 		email,
 		password,
+		pic,
+		profile_type 
 	});
 
 	if (user) {
@@ -26,6 +28,8 @@ const registerUser = asyncHandler(async (req, res, next) => {
 			name: user.name,
 			surname: user.surname,
 			email: user.email,
+			profile_type: user.profile_type,
+			pic: user.pic,
 			isAdmin: user.isAdmin,
 			isVerified: user.isVerified,
 			token: generateToken(user._id),
@@ -47,6 +51,8 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			name: user.name,
 			surname: user.surname,
 			email: user.email,
+			profile_type: user.profile_type,
+			pic: user.pic,
 			isAdmin: user.isAdmin,
 			token: generateToken(user._id),
 			isVerified: user.isVerified,
@@ -65,6 +71,8 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
 			user.name = req.body.name || user.name;
 			user.surname = req.body.surname || user.surname;
 			user.email = req.body.email || user.email;
+			user.profile_type = req.body.profile_type || user.profile_type;
+			user.pic = req.body.pic || user.pic;
 			if (req.body.password) {
 				user.password = req.body.password;
 			}
@@ -75,6 +83,8 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
 				name: updatedUser.name,
 				surname: updatedUser.surname,
 				email: updatedUser.email,
+				pic: updatedUser.pic,
+				profile_type: user.profile_type,
 				token: generateToken(updatedUser._id),
 			});
 		} catch (error) {

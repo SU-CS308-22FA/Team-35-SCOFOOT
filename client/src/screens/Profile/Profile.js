@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Row, Col } from "react-bootstrap";
+import { Form, Row, Col, Container } from "react-bootstrap";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,6 +13,8 @@ import { updateProfile, deleteUser , sendRequest, changeIsSent} from "../../acti
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { useNavigate } from "react-router-dom";
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import '../../screens/VerificationRequests/verification.css';
 
@@ -22,12 +24,18 @@ const Profile = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
+	
+	const [pic, setPic] = useState("https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg");
+	
 
+	const [picMessage, setPicMessage] = useState("");
+	const [profile_type, setProfile_type] =useState("");
 	const [open, setOpen] = React.useState(false);
 
+	
+	
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-
 	const userLogin = useSelector((state) => state.userLogin);
 	const { userInfo } = userLogin;
 
@@ -47,12 +55,15 @@ const Profile = () => {
 			setName(userInfo.name);
 			setSurname(userInfo.surname);
 			setEmail(userInfo.email);
+			setProfile_type(userInfo.profile_type)
+			setPic(userInfo.pic)
 		}
 	}, [navigate, userInfo]);
 
+
 	const submitHandler = (e) => {
 		e.preventDefault();
-		dispatch(updateProfile({ name, surname, email, password }));
+		dispatch(updateProfile({ name, surname, email, password, profile_type,pic }));
 	};
 
 	const deleteUserHandler = () => {
@@ -66,6 +77,7 @@ const Profile = () => {
 	const handleClose = () => {
 		setOpen(false);
 	};
+
 
 	const sendVerificationRequest =(email) => {
 		console.log(email);
@@ -93,11 +105,19 @@ const Profile = () => {
        		    
 			 }
 			 
-			
-
 			<div>
+				
 				<Row className="profileContainer">
-					<Col md={12}>
+					<Col md={6}>My Information</Col>
+					<Col
+					style={{
+						display: "flex",
+						alignItems: "center",
+						justifyContent: "center"
+					}}>
+					</Col>
+						
+					<Col md={6}>
 						<Form onSubmit={submitHandler}>
 							{loading && <Loading />}
 							{success && (
@@ -121,6 +141,8 @@ const Profile = () => {
 									{errorUserDelete}
 								</ErrorMessage>
 							)}
+							
+
 							<Form.Group controlId="name">
 								<Form.Label>Name</Form.Label>
 								<Form.Control
@@ -130,6 +152,7 @@ const Profile = () => {
 									onChange={(e) => setName(e.target.value)}
 								></Form.Control>
 							</Form.Group>
+							
 							<Form.Group controlId="surname">
 								<Form.Label>Surname</Form.Label>
 								<Form.Control
@@ -147,12 +170,65 @@ const Profile = () => {
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
 								></Form.Control>
+								 
 							</Form.Group>
+							
+							<Form.Group controlId="profile_type">
+								<Form.Label>Account Type</Form.Label>
+								<Form.Control
+									disabled
+									type="profile_type"
+									placeholder="Please Select Account Type"
+									value={profile_type}
+									onChange={(e) => setProfile_type(e.target.value)}
+								></Form.Control>
+								
+							</Form.Group>
+							<ToggleButtonGroup type="radio" name="options" >
+								
+								
+								<ToggleButton style={{mt:10}} id="Player" name = "Player" value={"Player"} onChange={(e) =>
+									setProfile_type(e.target.value) 
+								}checked>
+								Player
+								</ToggleButton>
+								<ToggleButton style={{mt:10}} id="Scout" name = "Scout" value={"Scout"} onChange={(e) =>
+									setProfile_type(e.target.value)
+								}>
+								Scout
+								</ToggleButton>
+								<ToggleButton style={{mt:10}} id="Manager" name = "Manager" value={"Manager"} onChange={(e) =>
+									setProfile_type(e.target.value)
+								}>
+								Manager
+								</ToggleButton>
+								
+								
+								
+							</ToggleButtonGroup>						
+							
+							{/*
+							{picMessage && (
+								<ErrorMessage variant="danger">{picMessage}</ErrorMessage>
+							)}
+							<Form.Group controlId="pic">
+								<Form.Label>Profile Picture</Form.Label>
+								<Form.File
+								onChange={(e) => postDetails(e.target.files[0])}
+								id="custom-file"
+								type="image/png"
+								label="Upload Profile Picture"
+								custom
+								/>
+							</Form.Group>*/}
+
+							
+							
 							<Form.Group controlId="password">
-								<Form.Label>Password</Form.Label>
+								<Form.Label>Change Password</Form.Label>
 								<Form.Control
 									type="password"
-									placeholder="Enter Password"
+									placeholder="Enter New Password"
 									value={password}
 									onChange={(e) =>
 										setPassword(e.target.value)
@@ -170,6 +246,7 @@ const Profile = () => {
 									}
 								></Form.Control>
 							</Form.Group>
+							<img src={pic} alt={name} className="profilePic" />
 							<Row>
 							<Col md={12}>
 								<Button sx={{ mt: 2, mb: 2, mr: 2}} variant="contained" color="primary" type="submit" varient="primary">
@@ -207,6 +284,7 @@ const Profile = () => {
 					</Col>
 				</Row>
 			</div>
+			
 		</MainScreen>
 	);
 };
