@@ -10,29 +10,30 @@ import {
 	seeVerificationReducer,
 	
 } from "./reducers/userReducers";
+import { playerGetReducer } from "./reducers/playerReducers";
 const reducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
 	userUpdate: userUpdateReducer,
 	userDelete: userDeleteReducer,
 	seeVerification : seeVerificationReducer,
-
+  playerGet: playerGetReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
-	? JSON.parse(localStorage.getItem("userInfo"))
-	: null;
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : null;
 
 const initialState = {
-	userLogin: { userInfo: userInfoFromStorage },
+  userLogin: { userInfo: userInfoFromStorage },
 };
 
 const middleware = [thunk];
 
 const store = createStore(
-	reducer,
-	initialState,
-	composeWithDevTools(applyMiddleware(...middleware))
+  reducer,
+  initialState,
+  composeWithDevTools(applyMiddleware(...middleware))
 );
 
 export default store;
