@@ -17,7 +17,7 @@ const reducer = combineReducers({
 	userUpdate: userUpdateReducer,
 	userDelete: userDeleteReducer,
 	seeVerification : seeVerificationReducer,
-  playerGet: playerGetReducer,
+  	playerGet: playerGetReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
