@@ -2,7 +2,10 @@ import { React } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import PropTypes from "prop-types";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { playerGet } from "../../actions/playerActions";
 
 //import { format } from "date-fns";
 //import { getInitials } from "../../utils/get-initials";
@@ -11,6 +14,7 @@ import {
   Box,
   Card,
   Checkbox,
+  Link,
   Table,
   TableBody,
   TableCell,
@@ -18,9 +22,10 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  CircularProgress
 } from "@mui/material";
 
-export const PlayerListResults = ({ players, ...rest }) => {
+export const PlayerListResults = ({...rest }) => {
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -42,17 +47,25 @@ export const PlayerListResults = ({ players, ...rest }) => {
   }
 
   function stringAvatar(name) {
+    var splittedName = name.split(" ");
     return {
       sx: {
         bgcolor: stringToColor(name),
       },
-      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+      children: splittedName.length >= 2 ? `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`: name[0],
     };
   }
 
-  //const [selectedPlayerIds, setSelectedPlayerIds] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [players, setPlayers] = useState(null);
+  const [playerSize, setPlayerSize] = useState(page * limit + limit);
+
+  const playerResponse = useSelector((state) => state.playerGet);
+  const { loading, error, playerInfo } = playerResponse;
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -61,8 +74,32 @@ export const PlayerListResults = ({ players, ...rest }) => {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
+
+  useEffect(() => {
+    if (!playerInfo) {
+      dispatch(playerGet(page * limit, limit));
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    if (playerInfo) {
+      setPlayerSize(playerInfo.size);
+      setPlayers(playerInfo.players);
+      
+    }
+  }, [playerInfo]);
+
+  useEffect(() => {
+    console.log(page, limit);
+    dispatch(playerGet(page * limit, limit));
+  }, [page, limit]);
+
   return (
     <Card {...rest}>
+    {
+      players &&
+      <>
+    
       <PerfectScrollbar>
         <Box sx={{ minWidth: 1050 }}>
           <Table>
@@ -82,9 +119,8 @@ export const PlayerListResults = ({ players, ...rest }) => {
             </TableHead>
             <TableBody>
               {players
-                .slice(page * limit, page * limit + limit)
                 .map((player) => (
-                  <TableRow hover key={player.id}>
+                  <TableRow hover key={player._id}>
                     <TableCell>
                       <Box
                         sx={{
@@ -103,8 +139,24 @@ export const PlayerListResults = ({ players, ...rest }) => {
                       </Typography> */}
                       </Box>
                     </TableCell>
-                    <TableCell>{player.name}</TableCell>
-                    <TableCell>{player.club}</TableCell>
+                    <TableCell><Link
+                      underline="hover"
+                      component="button"
+                      variant="body2"
+                      onClick={() => {
+                        console.info("I'm a button.");
+                      }}
+                    >{player.name}</Link></TableCell>
+                    <TableCell><Link
+                      underline="hover"
+                      component="button"
+                      variant="body2"
+                      onClick={() => {
+                        console.info("I'm a button.");
+                      }}
+                    >
+                      {player.club.name}
+                    </Link></TableCell>
                     <TableCell>{player.position}</TableCell>
                     <TableCell>{player.nationality}</TableCell>
                     <TableCell>{player.bday}</TableCell>
@@ -118,17 +170,20 @@ export const PlayerListResults = ({ players, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={players.length}
+        count={playerSize}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
         rowsPerPage={limit}
         rowsPerPageOptions={[5, 10, 15]}
       />
+      </>
+      }
+
+      {
+        loading && <CircularProgress />
+      }
     </Card>
   );
 };
 
-PlayerListResults.propTypes = {
-  players: PropTypes.array.isRequired,
-};
