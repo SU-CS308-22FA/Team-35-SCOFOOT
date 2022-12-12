@@ -43,6 +43,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 const loginUser = asyncHandler(async (req, res, next) => {
 	const { email, password } = req.body;
     
+	const users = await User.find()
 	const user = await User.findOne({ email });
 
 	if (user && (await user.matchPassword(password))) {
@@ -222,4 +223,17 @@ const changeIsSent = asyncHandler(async (req, res, next) => {
 	
 }); 
 
-export { changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+const getAllUsers = asyncHandler(async(req,res,next) => {
+   const users = await User.find();
+   console.log('USERS: ', users);
+   if(users){
+	res.json(users);
+  }
+
+else {
+	res.status(404);
+	throw new Error("Users not found!");
+}
+});
+
+export { getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

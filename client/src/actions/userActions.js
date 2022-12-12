@@ -17,6 +17,7 @@ import {
 	ADMIN_VERIFICATION_REQUEST_SUCCESS,
 	INBOX_AFTER_DELETION_SUCCESS,
 	VERIFICATION_STATUS_UPDATE,
+	ALL_USERS_SUCCESS
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -125,6 +126,16 @@ export const seeVerificationRequest = () => async (dispatch) => {
 	}
 };
 
+export const seeAllUsers = () => async(dispatch) => {
+	try{
+		const {data} = await axios.get("/api/users/allUsers");
+		dispatch({ type: ALL_USERS_SUCCESS , payload: data});
+	}
+	catch(error){
+
+	}
+}
+
 
 export const deleteVerificationRequest = (_id) => async(dispatch) =>{
 	try{
@@ -181,11 +192,6 @@ export const changeIsSent = (email) => async(dispatch) => {
 		dispatch({ type: USER_LOGIN_SUCCESS, payload: data });		
 
 }
-
-
-
-
-
 
 
 export const deleteUser = (user) => async (dispatch, getState) => {

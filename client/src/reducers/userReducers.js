@@ -15,7 +15,7 @@ import {
 	ADMIN_VERIFICATION_REQUEST_FAIL,
 	ADMIN_VERIFICATION_REQUEST_SUCCESS,
 	INBOX_AFTER_DELETION_SUCCESS,
-	VERIFICATION_STATUS_UPDATE
+	ALL_USERS_SUCCESS
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -89,6 +89,15 @@ export const seeVerificationReducer = (state = {}, action) => {  // all verifica
 			return state;
 	}
 };
+
+export const allUsersReducer = (state = {}, action) => {
+	switch(action.type) {
+		case ALL_USERS_SUCCESS:
+			return {usersData : action.payload};
+		default:
+			return state;
+	}
+}
 
 
 
