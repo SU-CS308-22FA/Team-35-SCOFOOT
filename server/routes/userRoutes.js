@@ -8,7 +8,8 @@ import {
 	deleteRequest,
 	approveRequest,
 	sendRequest,
-	changeIsSent
+	changeIsSent,
+	getAllUsers
 } from "../controllers/userControllers.js";
 import { protect } from "../middlewares/auth.js";
 
@@ -23,4 +24,5 @@ router.post("/deleteRequest", deleteRequest);
 router.post("/approveRequest", approveRequest);
 router.post("/sendRequest", sendRequest);
 router.post("/isSent", changeIsSent );
+router.get("/allUsers", getAllUsers);
 export default router;

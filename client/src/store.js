@@ -8,6 +8,7 @@ import {
 	userRegisterReducer,
 	userUpdateReducer,
 	seeVerificationReducer,
+	allUsersReducer,
 	
 } from "./reducers/userReducers";
 import { playerGetReducer } from "./reducers/playerReducers";
@@ -17,7 +18,8 @@ const reducer = combineReducers({
 	userUpdate: userUpdateReducer,
 	userDelete: userDeleteReducer,
 	seeVerification : seeVerificationReducer,
-  	playerGet: playerGetReducer,
+	allUsers: allUsersReducer,
+  playerGet: playerGetReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

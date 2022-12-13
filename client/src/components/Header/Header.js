@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect , useState } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -7,13 +7,28 @@ import { theme } from "../../theme";
 import { ThemeProvider } from "@mui/system";
 import { lightGreen } from "@mui/material/colors";
 import { Box } from "@mui/material";
+import { Input } from '@mui/material';
+import SearchBar from "../../components/SearchBar/SearchBar";
+import { seeAllUsers } from "../../actions/userActions";
 
 function Header() {
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+  
+  const allUsers = useSelector((state) => state.allUsers );
+  console.log('ALLUSERS: ', allUsers.usersData)
 
+  useEffect(()=>{
+    dispatch(seeAllUsers())
+  },[])
+
+
+  console.log(userInfo);
+  
   const logoutHandler = () => {
     dispatch(logout());
     navigate("/");
@@ -21,7 +36,11 @@ function Header() {
 
   useEffect(() => {}, [navigate, userInfo]);
 
+  
+  
+
   return (
+    
     <ThemeProvider theme={theme}>
       <Navbar
         className="px-4"
@@ -38,6 +57,8 @@ function Header() {
           <Nav>
             {userInfo ? (
               <>
+                  <SearchBar placeholder="Enter a User..." data={allUsers.usersData} />       
+                  
                 <>
                   <Nav.Link href="/teams">Teams</Nav.Link>
                   <Nav.Link href="/players">Players</Nav.Link>
