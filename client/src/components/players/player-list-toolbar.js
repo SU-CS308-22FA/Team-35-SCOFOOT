@@ -32,7 +32,7 @@ export const PlayerListToolbar = (props) => (
     <Box sx={{ mt: 3 }}>
       <Card>
         <CardContent>
-          <Box sx={{ maxWidth: 500 }}>
+          <Box sx={{ minWidth: 500 }}>
             <TextField
               fullWidth
               InputProps={{

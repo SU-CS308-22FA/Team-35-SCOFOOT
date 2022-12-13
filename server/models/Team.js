@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import Player from "./Player.js";
 
 const teamSchema = mongoose.Schema({
-  _id: { type: String },
   club: { type: String },
   teamImage: { type: String },
   country: { type: String },

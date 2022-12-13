@@ -5,12 +5,12 @@ import {
   PLAYER_GET_REQUEST,
 } from "../constants/playerConstants";
 
-export const playerGet = (email, password) => async (dispatch) => {
+export const playerGet = (start, stop) => async (dispatch) => {
   try {
     dispatch({ type: PLAYER_GET_REQUEST });
 
-    const { data } = await axios.get("/api/players/all");
-
+    console.log(start, stop);
+    const { data } = await axios.get(`/api/players/all?start=${start}&stop=${stop}`);
     dispatch({ type: PLAYER_GET_SUCCESS, payload: data });
 
     localStorage.setItem("playerInfo", JSON.stringify(data));
