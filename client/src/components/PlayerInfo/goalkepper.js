@@ -11,8 +11,12 @@ import {
   Avatar,
   Tabs,
   Tab,
+  Button,
+  CardActions,
 } from "@mui/material";
+import { pink } from "@mui/material/colors";
 import PropTypes from "prop-types";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import StadiumIcon from "@mui/icons-material/Stadium";
 import PublicIcon from "@mui/icons-material/Public";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -147,7 +151,6 @@ export const GoalKeeperInfo = (props) => {
   return (
     <>
       <Box
-        component="main"
         sx={{
           flexGrow: 1,
           py: 3,
@@ -238,6 +241,18 @@ export const GoalKeeperInfo = (props) => {
                     ))}
                   </Box>
                 </CardContent>
+                <Divider />
+                <CardActions>
+                  <Button
+                    color="primary"
+                    fullWidth
+                    variant="text"
+                    href="/profile"
+                    startIcon={<FavoriteIcon />}
+                  >
+                    Add to Favorites
+                  </Button>
+                </CardActions>
               </Card>
             </Grid>
 

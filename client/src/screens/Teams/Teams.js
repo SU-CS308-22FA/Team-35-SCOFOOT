@@ -9,13 +9,13 @@ import { ThemeProvider } from "@mui/material";
 import { teams } from "../../components/teams/teams_mock";
 import { theme } from "../../theme";
 import Header from "../../components/Header/Header";
+import FavPlayers from "../../components/ProfilePage/fav-players";
 
 function Teams() {
   return (
     <ThemeProvider theme={theme}>
       <div>
         <Box
-          component="main"
           sx={{
             flexGrow: 1,
             py: 8,

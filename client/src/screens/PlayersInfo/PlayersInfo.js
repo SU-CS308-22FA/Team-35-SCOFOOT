@@ -17,7 +17,6 @@ function PlayersInfo() {
   return (
     <>
       <Box
-        component="main"
         sx={{
           flexGrow: 1,
           py: 3,
@@ -26,9 +25,9 @@ function PlayersInfo() {
         <Container maxWidth={false}>
           <Grid container spacing={2}>
             <GoalKeeperInfo></GoalKeeperInfo>
-            <DefenseInfo></DefenseInfo>
+            {/* <DefenseInfo></DefenseInfo>
             <StrikerInfo></StrikerInfo>
-            <MidfielderInfo></MidfielderInfo>
+            <MidfielderInfo></MidfielderInfo> */}
           </Grid>
         </Container>
       </Box>

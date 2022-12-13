@@ -11,6 +11,7 @@ import Teams from "./screens/Teams/Teams";
 import TeamsInfo from "./screens/TeamsInfo/TeamsInfo";
 import PlayersInfo from "./screens/PlayersInfo/PlayersInfo";
 import Verifications from "./screens/VerificationRequests/Verifications";
+import ProfilePage from "./screens/ProfilePage/ProfilePage";
 
 const App = () => {
   return (
@@ -25,11 +26,12 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin_profile" element={<AdminProfile />} />
-				<Route path="/verification" element={<Verifications />} />
+        <Route path="/verification" element={<Verifications />} />
         <Route path="/teams" element={<Teams />} />
         <Route path="/players" element={<Players />} />
         <Route path="/teaminfo" element={<TeamsInfo />} />
         <Route path="/playerinfo" element={<PlayersInfo />} />
+        <Route path="/profilepage" element={<ProfilePage />} />
         <Route path="/" element={<Home />} />
       </Routes>
     </Router>

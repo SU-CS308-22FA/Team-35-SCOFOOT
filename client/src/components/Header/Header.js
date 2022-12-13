@@ -43,14 +43,13 @@ function Header() {
                   <Nav.Link href="/players">Players</Nav.Link>
                   <Nav.Link href="/teaminfo">Team Info</Nav.Link>
                   <Nav.Link href="/playerinfo">Player Info</Nav.Link>
+                  <Nav.Link href="/profilepage">My Profile </Nav.Link>
                 </>
                 <NavDropdown
                   title={`${userInfo.name}`}
                   id="collasible-nav-dropdown"
                 >
-                  <NavDropdown.Item href="/profile">
-                    My Profile
-                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/profile">Settings</NavDropdown.Item>
 
                   <NavDropdown.Divider />
                   <NavDropdown.Item onClick={logoutHandler}>
