@@ -6,9 +6,7 @@ import { TeamListToolbar } from "../../components/teams/team-list-toolbar";
 
 import { ThemeProvider } from "@mui/material";
 // import { DashboardLayout } from "../components/dashboard-layout";
-import { teams } from "../../components/teams/teams_mock";
 import { theme } from "../../theme";
-import Header from "../../components/Header/Header";
 
 function Teams() {
   return (

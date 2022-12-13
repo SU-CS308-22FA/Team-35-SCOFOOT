@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { playerGet } from "../../actions/playerActions";
-
 //import { format } from "date-fns";
 //import { getInitials } from "../../utils/get-initials";
 import {
@@ -58,6 +57,8 @@ export const PlayerListResults = ({...rest }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const baseImageUrl = "images/players/";
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -131,9 +132,17 @@ export const PlayerListResults = ({...rest }) => {
                         {/* <Avatar src={player.avatarUrl} sx={{ mr: 2 }}>
                         
                       </Avatar> */}
-
-                        <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
-
+                        {
+                          player.playerImage ? 
+                          (
+                            <Avatar sx={{ mr: 2 }} src={`${baseImageUrl}${player.playerImage}`} />
+                          )
+                          :
+                          (
+                            <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
+                          )
+                        }
+                        
                         {/* <Typography color="textPrimary" variant="body1">
                         {player.name}
                       </Typography> */}
