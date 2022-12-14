@@ -12,6 +12,7 @@ import {
 	
 } from "./reducers/userReducers";
 import { playerGetReducer } from "./reducers/playerReducers";
+
 const reducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,

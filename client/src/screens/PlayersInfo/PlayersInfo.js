@@ -17,7 +17,7 @@ function PlayersInfo() {
   return (
     <>
       <Box
-        component="main"
+      
         sx={{
           flexGrow: 1,
           py: 3,

@@ -2,6 +2,8 @@ import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import asyncHandler from "express-async-handler";
 import Requests from "../models/Requests.js"
+import Player from "../models/Player.js"
+
 
 const registerUser = asyncHandler(async (req, res, next) => {
 	const { name, surname, email, password, profile_type, pic } = req.body;
@@ -32,6 +34,8 @@ const registerUser = asyncHandler(async (req, res, next) => {
 			pic: user.pic,
 			isAdmin: user.isAdmin,
 			isVerified: user.isVerified,
+			isRequestSent: user.isRequestSent,
+			favorites_list: user.favorites_list,
 			token: generateToken(user._id),
 		});
 	} else {
@@ -43,9 +47,9 @@ const registerUser = asyncHandler(async (req, res, next) => {
 const loginUser = asyncHandler(async (req, res, next) => {
 	const { email, password } = req.body;
     
-	const users = await User.find()
+	
 	const user = await User.findOne({ email });
-
+	console.log(user);
 	if (user && (await user.matchPassword(password))) {
 		res.json({
 			_id: user._id,
@@ -57,7 +61,8 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			isAdmin: user.isAdmin,
 			token: generateToken(user._id),
 			isVerified: user.isVerified,
-			isRequestSent : user.isRequestSent
+			isRequestSent : user.isRequestSent,
+			favorites_list: user.favorites_list
 		});
 	} else {
 		res.status(401);
@@ -86,6 +91,10 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
 				email: updatedUser.email,
 				pic: updatedUser.pic,
 				profile_type: user.profile_type,
+				favorites_list : user.favorites_list,
+				isRequestSent: user.isRequestSent,
+		        isVerified: user.isVerified, 
+				isAdmin: user.isAdmin,
 				token: generateToken(updatedUser._id),
 			});
 		} catch (error) {
@@ -154,17 +163,16 @@ const deleteRequest = asyncHandler(async (req, res, next) => {
 const approveRequest = asyncHandler(async (req, res, next) => { // first delete it from the requests and then change isVerified feature of the User to true
 	
 	const request = await Requests.findById(req.body._id); // the request info ( name, surname, email) that will be deleted from requests map
-	console.log(request);
+	
 	const email = request.email;	
-	console.log(email);
 	const deletedRequest = await request.remove();
 
 	const requests = await Requests.find() ;
-	console.log(requests);
+	//console.log(requests);
     const user = await User.findOne({email: email});
 	user.isVerified = true; // useri verified olacak sekilde guncelledik
 	const updatedUser = await user.save(); // user updatelendi
-
+  
 
 
  	if(requests){
@@ -181,7 +189,6 @@ const approveRequest = asyncHandler(async (req, res, next) => { // first delete 
 const sendRequest = asyncHandler(async (req, res, next) => { 
 	const {email} = req.body;
 	const user = await User.findOne({email}); 
-	console.log(user.name);
 	const name = user.name;
 	const surname = user.surname;
 	
@@ -201,6 +208,18 @@ const sendRequest = asyncHandler(async (req, res, next) => {
 	}
 
 
+});
+
+const getUser = asyncHandler(async(req,res,next) => {
+	console.log(req.body);
+	const {email} = req.body;
+    const user = await User.findOne({email});
+    console.log(user);
+	if(user){
+		console.log("210", user)
+		res.json(user);
+		console.log("212", user)
+	}
 });
 
 const changeIsSent = asyncHandler(async (req, res, next) => {
@@ -225,7 +244,6 @@ const changeIsSent = asyncHandler(async (req, res, next) => {
 
 const getAllUsers = asyncHandler(async(req,res,next) => {
    const users = await User.find();
-   console.log('USERS: ', users);
    if(users){
 	res.json(users);
   }
@@ -236,4 +254,71 @@ else {
 }
 });
 
-export { getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+const addFavorites = asyncHandler(async(req,res,next) => {
+	const {goalkeeper_id, user_id} = req.body ;
+	
+	const goal_keeper_id = goalkeeper_id.$oid;
+
+	const player = await Player.findOne({_id: goal_keeper_id});
+	console.log(player);
+	const user = await User.findOne({_id: user_id});
+	console.log(user);
+	user.favorites_list.push(player._id);
+	const updatedUser = await user.save();
+	console.log(updatedUser);
+	res.json({
+		_id: updatedUser._id,
+		name: updatedUser.name,
+		surname: updatedUser.surname,
+		email: updatedUser.email,
+		pic: updatedUser.pic,
+		profile_type: updatedUser.profile_type,
+		favorites_list : updatedUser.favorites_list,
+		isRequestSent: updatedUser.isRequestSent,
+		isVerified: updatedUser.isVerified, 
+		isAdmin: updatedUser.isAdmin,
+		token: generateToken(updatedUser._id),
+	});
+
+})
+
+
+const deleteFavorites = asyncHandler(async(req,res,next) => {
+	console.log("a");
+	const {goalkeeper_id, user_id} = req.body ;
+	
+	const goal_keeper_id = goalkeeper_id.$oid;
+    
+	const player = await Player.findOne({_id: goal_keeper_id});
+	console.log(player);
+	const user = await User.findOne({_id: user_id});
+	console.log(user);
+
+	console.log(player._id);
+	var ab = user.favorites_list.filter(function (letter) {
+		console.log(letter);
+		console.log(player._id);
+		console.log(letter != player._id);
+		return (letter == player._id);
+	});
+	console.log(ab);
+	user.favorites_list = ab ;
+	const updatedUser = await user.save();
+	console.log(updatedUser);
+	res.json({
+		_id: updatedUser._id,
+		name: updatedUser.name,
+		surname: updatedUser.surname,
+		email: updatedUser.email,
+		pic: updatedUser.pic,
+		profile_type: updatedUser.profile_type,
+		favorites_list : updatedUser.favorites_list,
+		isRequestSent: updatedUser.isRequestSent,
+		isVerified: updatedUser.isVerified, 
+		isAdmin: updatedUser.isAdmin,
+		token: generateToken(updatedUser._id),
+	});
+
+})
+
+export { deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

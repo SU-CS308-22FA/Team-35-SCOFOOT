@@ -17,7 +17,7 @@ import StadiumIcon from "@mui/icons-material/Stadium";
 import PublicIcon from "@mui/icons-material/Public";
 import GroupsIcon from "@mui/icons-material/Groups";
 import PersonIcon from "@mui/icons-material/Person";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Striker } from "./playerdata_mock";
 import { teamdata } from "../TeamInfo/teamdata_mock";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
@@ -25,6 +25,12 @@ import SportsHandballIcon from "@mui/icons-material/SportsHandball";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import HeightIcon from "@mui/icons-material/Height";
 import CakeIcon from "@mui/icons-material/Cake";
+import { addToFavorites, deleteFromFavorites, login } from "../../actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useNavigate } from "react-router-dom";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import IconButton from '@mui/material/IconButton';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,10 +67,27 @@ function a11yProps(index) {
 
 export const StrikerInfo = (props) => {
   const [value, setValue] = React.useState(0);
+  const navigate =useNavigate();
+  const dispatch = useDispatch();
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
+  
+  useEffect(() => {
+		
+	}, [navigate, userInfo]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const addFavorites = (striker_id , user_id) => {
+    dispatch(addToFavorites(striker_id, user_id));
+
+};
+
+const deleteFavorites = (striker_id , user_id) => {
+  dispatch(deleteFromFavorites(striker_id, user_id));
+
+};
 
   const theme = useTheme();
 
@@ -156,7 +179,7 @@ export const StrikerInfo = (props) => {
   return (
     <>
       <Box
-        component="main"
+  
         sx={{
           flexGrow: 1,
           py: 3,
@@ -189,6 +212,15 @@ export const StrikerInfo = (props) => {
                       // src={Striker.playerImage}
                       sx={{ width: 100, height: 100 }}
                     ></Avatar>
+                    {userInfo.favorites_list !== null && userInfo.favorites_list.includes(Striker._id.$oid) ?
+                    <IconButton onClick={() => deleteFavorites(Striker._id, Striker._id)}>
+                       <FavoriteIcon>
+                        </FavoriteIcon></IconButton>:
+                    <IconButton onClick ={() => addFavorites(Striker._id, Striker._id)} >
+                    <FavoriteBorderIcon>
+                      
+                    </FavoriteBorderIcon>
+                    </IconButton>  }
                     {/* <Typography color="textPrimary" variant="body1">
             {Striker.name}
           </Typography> */}

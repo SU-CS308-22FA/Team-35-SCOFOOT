@@ -1,5 +1,4 @@
 import React from "react";
-
 import { Box, Container } from "@mui/material";
 import { PlayerListResults } from "../../components/players/player-list-results";
 import { PlayerListToolbar } from "../../components/players/player-list-toolbar";

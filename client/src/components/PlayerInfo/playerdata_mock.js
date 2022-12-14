@@ -106,7 +106,7 @@ export const Defense = {
 };
 
 export const GoalKeeper = {
-  _id: { $oid: "6373cfd0728c8855454507ec" },
+  _id: { $oid: "6395ce388dd9ce6eaf42d1ac" },
   name: "Altay Bayındır",
   playerImage: "385166_01.jpg",
   club: "Fenerbahçe",

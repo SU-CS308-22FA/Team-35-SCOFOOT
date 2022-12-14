@@ -9,7 +9,10 @@ import {
 	approveRequest,
 	sendRequest,
 	changeIsSent,
-	getAllUsers
+	getAllUsers,
+	getUser,
+	addFavorites,
+	deleteFavorites
 } from "../controllers/userControllers.js";
 import { protect } from "../middlewares/auth.js";
 
@@ -25,4 +28,7 @@ router.post("/approveRequest", approveRequest);
 router.post("/sendRequest", sendRequest);
 router.post("/isSent", changeIsSent );
 router.get("/allUsers", getAllUsers);
+router.post("/getUser", getUser);
+router.post("/addFavorites", addFavorites);
+router.post("/deleteFavorites", deleteFavorites);
 export default router;

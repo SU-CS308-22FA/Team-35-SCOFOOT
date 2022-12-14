@@ -18,7 +18,7 @@ import StadiumIcon from "@mui/icons-material/Stadium";
 import PublicIcon from "@mui/icons-material/Public";
 import GroupsIcon from "@mui/icons-material/Groups";
 import PersonIcon from "@mui/icons-material/Person";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import fenerlogo from "../../images/teamlogos/Fenerbahçe_SK.png";
 import { Midfielder } from "./playerdata_mock";
 import { teamdata } from "../TeamInfo/teamdata_mock";
@@ -27,6 +27,12 @@ import SportsHandballIcon from "@mui/icons-material/SportsHandball";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import HeightIcon from "@mui/icons-material/Height";
 import CakeIcon from "@mui/icons-material/Cake";
+import { addToFavorites, deleteFromFavorites, login } from "../../actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useNavigate } from "react-router-dom";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import IconButton from '@mui/material/IconButton';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,9 +70,28 @@ function a11yProps(index) {
 export const MidfielderInfo = (props) => {
   const [value, setValue] = React.useState(0);
 
+  const navigate =useNavigate();
+  const dispatch = useDispatch();
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
+  
+  useEffect(() => {
+		
+	}, [navigate, userInfo]);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  const addFavorites = (Midfielder_id , user_id) => {
+    dispatch(addToFavorites(Midfielder_id, user_id));
+
+};
+
+const deleteFavorites = (Midfielder_id , user_id) => {
+  dispatch(deleteFromFavorites(Midfielder_id, user_id));
+
+};
 
   const theme = useTheme();
 
@@ -158,7 +183,7 @@ export const MidfielderInfo = (props) => {
   return (
     <>
       <Box
-        component="main"
+        
         sx={{
           flexGrow: 1,
           py: 3,
@@ -191,6 +216,16 @@ export const MidfielderInfo = (props) => {
                       // src={Midfielder.playerImage}
                       sx={{ width: 100, height: 100 }}
                     ></Avatar>
+
+                    {userInfo.favorites_list !== null && userInfo.favorites_list.includes(Midfielder._id.$oid) ?
+                    <IconButton onClick={() => deleteFavorites(Midfielder._id, userInfo._id)}>
+                       <FavoriteIcon>
+                        </FavoriteIcon></IconButton>:
+                    <IconButton onClick ={() => addFavorites(Midfielder._id, userInfo._id)} >
+                    <FavoriteBorderIcon>
+                      
+                    </FavoriteBorderIcon>
+                    </IconButton>  }
                     {/* <Typography color="textPrimary" variant="body1">
             {Midfielder.name}
           </Typography> */}

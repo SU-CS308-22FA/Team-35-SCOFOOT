@@ -17,7 +17,7 @@ import StadiumIcon from "@mui/icons-material/Stadium";
 import PublicIcon from "@mui/icons-material/Public";
 import GroupsIcon from "@mui/icons-material/Groups";
 import PersonIcon from "@mui/icons-material/Person";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import fenerlogo from "../../images/teamlogos/Fenerbahçe_SK.png";
 import { GoalKeeper } from "./playerdata_mock";
 import { teamdata } from "../TeamInfo/teamdata_mock";
@@ -26,8 +26,22 @@ import SportsHandballIcon from "@mui/icons-material/SportsHandball";
 import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import HeightIcon from "@mui/icons-material/Height";
 import CakeIcon from "@mui/icons-material/Cake";
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useDispatch, useSelector } from "react-redux";
+import { addToFavorites, deleteFromFavorites, login } from "../../actions/userActions";
+import { useNavigate } from "react-router-dom";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import IconButton from '@mui/material/IconButton';
+
+
+
+
+
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
+  
+  
 
   return (
     <div
@@ -66,6 +80,27 @@ export const GoalKeeperInfo = (props) => {
   };
 
   const theme = useTheme();
+  const navigate =useNavigate();
+  const dispatch = useDispatch();
+	const userLogin = useSelector((state) => state.userLogin);
+	const { userInfo } = userLogin;
+  
+  useEffect(() => {
+		
+	}, [navigate, userInfo]);
+
+  
+
+  const addFavorites = (goalKeeper_id , user_id) => {
+    dispatch(addToFavorites(goalKeeper_id, user_id));
+
+};
+
+const deleteFavorites = (goalKeeper_id , user_id) => {
+  dispatch(deleteFromFavorites(goalKeeper_id, user_id));
+
+};
+
 
   const info = [
     {
@@ -147,7 +182,7 @@ export const GoalKeeperInfo = (props) => {
   return (
     <>
       <Box
-        component="main"
+        
         sx={{
           flexGrow: 1,
           py: 3,
@@ -166,6 +201,7 @@ export const GoalKeeperInfo = (props) => {
                   }
                   title={GoalKeeper.name}
                   titleTypographyProps={{ variant: "h6", component: "span" }}
+                  
                 />
                 <Divider />
                 <CardContent>
@@ -180,6 +216,16 @@ export const GoalKeeperInfo = (props) => {
                       // src={GoalKeeper.playerImage}
                       sx={{ width: 100, height: 100 }}
                     ></Avatar>
+                    {userInfo.favorites_list !== null && userInfo.favorites_list.includes(GoalKeeper._id.$oid) ?
+                    <IconButton onClick={() => deleteFavorites(GoalKeeper._id, userInfo._id)}>
+                       <FavoriteIcon>
+                        </FavoriteIcon></IconButton>:
+                    <IconButton onClick ={() => addFavorites(GoalKeeper._id, userInfo._id)} >
+                    <FavoriteBorderIcon>
+                      
+                    </FavoriteBorderIcon>
+                    </IconButton>  }
+                    
                     {/* <Typography color="textPrimary" variant="body1">
             {GoalKeeper.name}
           </Typography> */}

@@ -23,7 +23,7 @@ function Header() {
   console.log('ALLUSERS: ', allUsers.usersData)
 
   useEffect(()=>{
-    dispatch(seeAllUsers())
+    dispatch(seeAllUsers());
   },[])
 
 
