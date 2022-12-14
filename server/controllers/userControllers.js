@@ -1,8 +1,9 @@
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import asyncHandler from "express-async-handler";
-import Requests from "../models/Requests.js"
-import Player from "../models/Player.js"
+import Requests from "../models/Requests.js";
+import Player from "../models/Player.js";
+import mongoose from "mongoose";
 
 
 const registerUser = asyncHandler(async (req, res, next) => {
@@ -62,7 +63,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			token: generateToken(user._id),
 			isVerified: user.isVerified,
 			isRequestSent : user.isRequestSent,
-			favorites_list: user.favorites_list
+			favorites_list: await Player.find({_id: { $in: user.favorites_list}})
 		});
 	} else {
 		res.status(401);
@@ -253,13 +254,13 @@ else {
 const addFavorites = asyncHandler(async(req,res,next) => {
 	const {goalkeeper_id, user_id} = req.body ;
 	
-	const goal_keeper_id = goalkeeper_id.$oid;
+	const goal_keeper_id = goalkeeper_id;
 
 	const player = await Player.findOne({_id: goal_keeper_id});
 	console.log(player);
 	const user = await User.findOne({_id: user_id});
 	console.log(user);
-	user.favorites_list.push(player);
+	user.favorites_list.push(mongoose.Types.ObjectId(player._id));
 	const updatedUser = await user.save();
 	console.log(updatedUser);
 	res.json({
@@ -269,7 +270,7 @@ const addFavorites = asyncHandler(async(req,res,next) => {
 		email: updatedUser.email,
 		pic: updatedUser.pic,
 		profile_type: updatedUser.profile_type,
-		favorites_list : updatedUser.favorites_list,
+		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
 		isRequestSent: updatedUser.isRequestSent,
 		isVerified: updatedUser.isVerified, 
 		isAdmin: updatedUser.isAdmin,
@@ -280,25 +281,13 @@ const addFavorites = asyncHandler(async(req,res,next) => {
 
 
 const deleteFavorites = asyncHandler(async(req,res,next) => {
-	console.log("a");
 	const {goalkeeper_id, user_id} = req.body ;
 	
-	const goal_keeper_id = goalkeeper_id.$oid;
+	const goal_keeper_id = goalkeeper_id;
     
-	const player = await Player.findOne({_id: goal_keeper_id});
-	console.log(player);
+	const player = await Player.findById(mongoose.Types.ObjectId(goal_keeper_id));
 	const user = await User.findOne({_id: user_id});
-	console.log(user);
-
-	console.log(player._id);
-	var ab = user.favorites_list.filter(function (letter) {
-		console.log(letter);
-		console.log(player._id);
-		console.log(letter != player);
-		return (letter == player);
-	});
-	console.log(ab);
-	user.favorites_list = ab ;
+	user.favorites_list.pull(player._id);
 	const updatedUser = await user.save();
 	console.log(updatedUser);
 	res.json({
@@ -308,7 +297,7 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 		email: updatedUser.email,
 		pic: updatedUser.pic,
 		profile_type: updatedUser.profile_type,
-		favorites_list : updatedUser.favorites_list,
+		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
 		isRequestSent: updatedUser.isRequestSent,
 		isVerified: updatedUser.isVerified, 
 		isAdmin: updatedUser.isAdmin,

@@ -34,7 +34,6 @@ export const playerGet = (id) => async (dispatch) => {
 
     const { data } = await axios.get(`/api/players/playerInfo?id=${id}`);
     dispatch({ type: PLAYER_GET_SUCCESS, payload: data });
-    console.log(data);
     localStorage.setItem("playerInfo", JSON.stringify(data));
   } catch (error) {
     console.log(error);
