@@ -1,11 +1,8 @@
-import { React } from "react";
+import { useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import PropTypes from "prop-types";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { allPlayersGet } from "../../actions/playerActions";
+
 //import { format } from "date-fns";
 //import { getInitials } from "../../utils/get-initials";
 import {
@@ -13,7 +10,6 @@ import {
   Box,
   Card,
   Checkbox,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -21,11 +17,11 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  CircularProgress,
-  Stack
+  Link
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-export const PlayerListResults = ({...rest }) => {
+export const TeamPlayers = ({ players, ...rest }) => {
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -47,27 +43,21 @@ export const PlayerListResults = ({...rest }) => {
   }
 
   function stringAvatar(name) {
-    var splittedName = name.split(" ");
     return {
       sx: {
         bgcolor: stringToColor(name),
       },
-      children: splittedName.length >= 2 ? `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`: name[0],
+      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
     };
   }
 
-  const dispatch = useDispatch();
+
+  const [limit, setLimit] = useState(5);
+  const [page, setPage] = useState(0);
+
   const navigate = useNavigate();
 
   const baseImageUrl = "images/players/";
-
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(0);
-  const [players, setPlayers] = useState(null);
-  const [playerSize, setPlayerSize] = useState(page * limit + limit);
-
-  const playerResponse = useSelector((state) => state.allPlayersGet);
-  const { loading, error, playerInfo } = playerResponse;
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -77,57 +67,24 @@ export const PlayerListResults = ({...rest }) => {
     setPage(newPage);
   };
 
-  useEffect(() => {
-    if (!playerInfo) {
-      dispatch(allPlayersGet(page * limit, limit));
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    if (playerInfo) {
-      setPlayerSize(playerInfo.size);
-      setPlayers(playerInfo.players);
-      
-    }
-  }, [playerInfo]);
-
-  useEffect(() => {
-    dispatch(allPlayersGet(page * limit, limit));
-  }, [page, limit]);
-
   const handleInfo = (id) => {
     navigate("/playerInfo", {state: {id}});
   }
 
-  const handleTeamInfo = (id) => {
-    navigate("/teamInfo", {state: {id}});
-  }
-
   return (
     <Card {...rest}>
-    {
-      players &&
-      <>
-    
       <PerfectScrollbar>
-        <Box sx={{ minWidth: 400 }}>
+        <Box sx={{ minWidth: 100 }}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox"></TableCell>
-                <TableCell>Name</TableCell>
-
-                <TableCell>Club</TableCell>
-
-                <TableCell>Position</TableCell>
-
-                <TableCell>Nationality</TableCell>
-
-                <TableCell>Birthday</TableCell>
+                <TableCell>Team Players</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {players
+                .slice(page * limit, page * limit + limit)
                 .map((player) => (
                   <TableRow hover key={player._id}>
                     <TableCell>
@@ -137,9 +94,6 @@ export const PlayerListResults = ({...rest }) => {
                           display: "flex",
                         }}
                       >
-                        {/* <Avatar src={player.avatarUrl} sx={{ mr: 2 }}>
-                        
-                      </Avatar> */}
                         {
                           player.playerImage ? 
                           (
@@ -150,10 +104,6 @@ export const PlayerListResults = ({...rest }) => {
                             <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
                           )
                         }
-                        
-                        {/* <Typography color="textPrimary" variant="body1">
-                        {player.name}
-                      </Typography> */}
                       </Box>
                     </TableCell>
                     <TableCell><Link
@@ -164,19 +114,6 @@ export const PlayerListResults = ({...rest }) => {
                         handleInfo(player._id);
                       }}
                     >{player.name}</Link></TableCell>
-                    <TableCell><Link
-                      underline="hover"
-                      component="button"
-                      variant="body2"
-                      onClick={() => {
-                        handleTeamInfo(player.club._id)
-                      }}
-                    >
-                      {player.club.name}
-                    </Link></TableCell>
-                    <TableCell>{player.position}</TableCell>
-                    <TableCell>{player.nationality}</TableCell>
-                    <TableCell>{player.bday}</TableCell>
 
                     {/* <TableCell>{format(player.bday, "dd/MM/yyyy")}</TableCell> */}
                   </TableRow>
@@ -187,20 +124,16 @@ export const PlayerListResults = ({...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={playerSize}
+        count={players.length}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
         rowsPerPage={limit}
         rowsPerPageOptions={[5, 10, 15]}
       />
-      </>
-      }
-
-      {
-        loading && <Stack alignItems="center"><CircularProgress /></Stack>
-      }
     </Card>
   );
 };
-
+TeamPlayers.propTypes = {
+  players: PropTypes.array.isRequired,
+};

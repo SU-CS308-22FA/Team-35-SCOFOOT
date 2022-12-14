@@ -12,6 +12,7 @@ import {
 	
 } from "./reducers/userReducers";
 import { allPlayersGetReducer, playerGetReducer } from "./reducers/playerReducers";
+import { allTeamsGetReducer, teamGetReducer } from "./reducers/teamReducers";
 const reducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
@@ -20,7 +21,9 @@ const reducer = combineReducers({
 	seeVerification : seeVerificationReducer,
 	allUsers: allUsersReducer,
   	allPlayersGet: allPlayersGetReducer,
-	playerGet: playerGetReducer
+	playerGet: playerGetReducer,
+	allTeamsGet: allTeamsGetReducer,
+	teamGet: teamGetReducer
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

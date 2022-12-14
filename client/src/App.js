@@ -6,8 +6,7 @@ import Home from "./screens/Home/Home";
 import Profile from "./screens/Profile/Profile";
 import Header from "./components/Header/Header";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Players from "./screens/Players/Players";
-import Teams from "./screens/Teams/Teams";
+import PlayersAndTeams from "./screens/Players/PlayersAndTeams";
 import TeamsInfo from "./screens/TeamsInfo/TeamsInfo";
 import PlayersInfo from "./screens/PlayersInfo/PlayersInfo";
 import Verifications from "./screens/VerificationRequests/Verifications";
@@ -26,9 +25,8 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin_profile" element={<AdminProfile />} />
 				<Route path="/verification" element={<Verifications />} />
-        <Route path="/teams" element={<Teams />} />
-        <Route path="/players" element={<Players />} />
-        <Route path="/teaminfo" element={<TeamsInfo />} />
+        <Route path="/database" element={<PlayersAndTeams />} />
+        <Route path="/teamInfo" element={<TeamsInfo />} />
         <Route path="/playerInfo" element={<PlayersInfo />} />
         <Route path="/" element={<Home />} />
       </Routes>
