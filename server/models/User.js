@@ -11,7 +11,8 @@ const userSchema = mongoose.Schema(
 		isAdmin: { type: Boolean, required: true, default: false },
 		profile_type: {type: String, required: true, default: 'Player'},
 		isVerified: {type: Boolean, required: true, default: false},
-		isRequestSent : {type: Boolean, required: true, default: false}
+		isRequestSent : {type: Boolean, required: true, default: false},
+		favorites_list : {type : Array , required:true, default: []}
 	},
 
 	{

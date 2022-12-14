@@ -22,7 +22,7 @@ function Header() {
   const allUsers = useSelector((state) => state.allUsers );
 
   useEffect(()=>{
-    dispatch(seeAllUsers())
+    dispatch(seeAllUsers());
   },[])
 
 

@@ -5,7 +5,8 @@ import {
   ALL_PLAYERS_GET_REQUEST,
   PLAYER_GET_REQUEST,
   PLAYER_GET_SUCCESS,
-  PLAYER_GET_FAIL
+  PLAYER_GET_FAIL,
+  FAVORITES_GET_SUCCESS
 } from "../constants/playerConstants";
 
 export const allPlayersGet = (start, stop) => async (dispatch) => {
@@ -46,3 +47,5 @@ export const playerGet = (id) => async (dispatch) => {
     });
   }
 };
+
+

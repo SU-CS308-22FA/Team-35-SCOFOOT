@@ -112,7 +112,7 @@ export const updateProfile = (user) => async (dispatch, getState) => {
 export const seeVerificationRequest = () => async (dispatch) => {
 	try{
 		const { data } = await axios.get("/api/users/requests"); 
-		console.log(data);
+		//console.log(data);
 		dispatch({ type: ADMIN_VERIFICATION_REQUEST_SUCCESS , payload: data});
 	}
 	catch (error) {
@@ -142,7 +142,7 @@ export const deleteVerificationRequest = (_id) => async(dispatch) =>{
 		
 		
 		const {data} = await axios.post("api/users/deleteRequest",  {_id});
-		console.log(data);
+		//console.log(data);
 		dispatch({type: INBOX_AFTER_DELETION_SUCCESS , payload: data}); // burada delete yaptiktan sonra geri kalan datayi dondur
 		
 
@@ -154,19 +154,27 @@ export const deleteVerificationRequest = (_id) => async(dispatch) =>{
 };
 
 
-export const approveVerificationRequest = (_id) => async(dispatch) =>{
+export const approveVerificationRequest = (_id, email) => async(dispatch) =>{
 	try{
 		
+		console.log("111222");
 		
 		const {data} = await axios.post("api/users/approveRequest",  {_id});
-		console.log(data);
+        
 		dispatch({type: INBOX_AFTER_DELETION_SUCCESS , payload: data}); // burada delete yaptiktan sonra geri kalan datayi dondur
+		console.log("abbbbbbbbbbb");
+
+		//const user = await axios.post("api/users/getUser", {email});
+		//const x = user.data ;
+		//dispatch({type: USER_LOGIN_SUCCESS, payload: x});
+	
 	}
 	catch (error) {
 		
 	}
 
 };
+
 
 
 export const sendRequest = (email) => async(dispatch) =>{
@@ -174,8 +182,10 @@ export const sendRequest = (email) => async(dispatch) =>{
 		
 		console.log(email);
 		const {data} = await axios.post("api/users/sendRequest",  {email});
-		console.log(data);
+		//console.log(data);
+		
 		dispatch({type: INBOX_AFTER_DELETION_SUCCESS, payload: data});
+		
 		
 		
 
@@ -185,6 +195,8 @@ export const sendRequest = (email) => async(dispatch) =>{
 	}
 
 };
+
+
 
 
 export const changeIsSent = (email) => async(dispatch) => {
@@ -228,3 +240,33 @@ export const deleteUser = (user) => async (dispatch, getState) => {
 };
 
 
+export const addToFavorites = (goalkeeper_id , user_id) => async(dispatch, getState) => {
+	try{
+		const {data} = await axios.post("/api/users/addFavorites", {goalkeeper_id, user_id});
+		dispatch({ type: USER_LOGIN_SUCCESS, payload: data});
+	}
+	catch(error){
+
+	}
+};
+
+export const deleteFromFavorites = (goalkeeper_id , user_id) => async(dispatch, getState) => {
+	try{
+		const {data} = await axios.post("/api/users/deleteFavorites", {goalkeeper_id, user_id});
+		dispatch({ type: USER_LOGIN_SUCCESS, payload: data});
+	}
+	catch(error){
+
+	}
+};
+
+export const getFavorites = (_id) => async (dispatch) => {
+	try{
+		
+		const {data} = await axios.get("api/users/favorites");
+		dispatch({type: FAVORITES_GET_SUCCESS, payload:data});
+  
+	}
+	catch(error){}
+
+}; 

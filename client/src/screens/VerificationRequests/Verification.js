@@ -14,11 +14,11 @@ const Request = ({ _id, name, surname, email, removeRequest , approveRequest }) 
         </div>
         <p> {email} </p>
          
-         <button className="approve-btn" onClick={() => approveRequest(_id)}>
+         <button className="approve-btn" onClick={() => approveRequest(_id, email)}>
           Approve
         </button>
 
-        <button className="delete-btn" onClick={() => removeRequest(_id)}>
+        <button className="delete-btn" onClick={() => removeRequest(_id, email)}>
           Decline
         </button>
          
