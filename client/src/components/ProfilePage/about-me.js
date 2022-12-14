@@ -124,7 +124,7 @@ function AboutMe() {
           }}
         >
           <Col md={12}>
-            <Typography>{aboutme}</Typography>
+            {!EditAboutme && <Typography>{aboutme}</Typography>}
 
             {EditAboutme && (
               <Form onSubmit={submitHandler}>
@@ -146,13 +146,7 @@ function AboutMe() {
                     {errorUserDelete}
                   </ErrorMessage>
                 )}
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "center",
-                    pt: 7.7,
-                  }}
-                ></Box>
+
                 <Form.Group controlId="aboutme">
                   <Form.Control
                     type="text"
@@ -172,6 +166,13 @@ function AboutMe() {
                     >
                       SAVE
                     </Button>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        pt: 10.7,
+                      }}
+                    ></Box>
                   </Col>
                 </Row>
               </Form>
