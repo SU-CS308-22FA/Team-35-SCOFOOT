@@ -17,7 +17,9 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Link
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const TeamPlayers = ({ players, ...rest }) => {
   function stringToColor(string) {
@@ -49,8 +51,13 @@ export const TeamPlayers = ({ players, ...rest }) => {
     };
   }
 
+
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState(0);
+
+  const navigate = useNavigate();
+
+  const baseImageUrl = "images/players/";
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -59,6 +66,10 @@ export const TeamPlayers = ({ players, ...rest }) => {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
+
+  const handleInfo = (id) => {
+    navigate("/playerInfo", {state: {id}});
+  }
 
   return (
     <Card {...rest}>
@@ -75,7 +86,7 @@ export const TeamPlayers = ({ players, ...rest }) => {
               {players
                 .slice(page * limit, page * limit + limit)
                 .map((player) => (
-                  <TableRow hover key={player.id}>
+                  <TableRow hover key={player._id}>
                     <TableCell>
                       <Box
                         sx={{
@@ -83,18 +94,26 @@ export const TeamPlayers = ({ players, ...rest }) => {
                           display: "flex",
                         }}
                       >
-                        {/* <Avatar src={player.avatarUrl} sx={{ mr: 2 }}>
-                        
-                      </Avatar> */}
-
-                        <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
-
-                        {/* <Typography color="textPrimary" variant="body1">
-                        {player.name}
-                      </Typography> */}
+                        {
+                          player.playerImage ? 
+                          (
+                            <Avatar sx={{ mr: 2 }} src={`${baseImageUrl}${player.playerImage}`} />
+                          )
+                          :
+                          (
+                            <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
+                          )
+                        }
                       </Box>
                     </TableCell>
-                    <TableCell>{player.name}</TableCell>
+                    <TableCell><Link
+                      underline="hover"
+                      component="button"
+                      variant="body2"
+                      onClick={() => {
+                        handleInfo(player._id);
+                      }}
+                    >{player.name}</Link></TableCell>
 
                     {/* <TableCell>{format(player.bday, "dd/MM/yyyy")}</TableCell> */}
                   </TableRow>

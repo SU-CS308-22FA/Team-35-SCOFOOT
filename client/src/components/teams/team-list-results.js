@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import PropTypes from "prop-types";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -17,9 +17,13 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Link
 } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { allTeamsGet } from "../../actions/teamActions";
 
-export const TeamListResults = ({ teams, ...rest }) => {
+export const TeamListResults = ({...rest}) => {
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -48,9 +52,17 @@ export const TeamListResults = ({ teams, ...rest }) => {
       children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
     };
   }
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+
+  const baseImageUrl = "images/teams/";
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [teams, setTeams] = useState(null);
+  const [teamSize, setTeamSize] = useState(page * limit + limit);
+  const teamResponse = useSelector((state) => state.allTeamsGet);
+  const { loading, error, teamInfo } = teamResponse;
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -59,28 +71,49 @@ export const TeamListResults = ({ teams, ...rest }) => {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
+  useEffect(() => {
+    if (!teamInfo) {
+      dispatch(allTeamsGet(page * limit, limit));
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    if (teamInfo) {
+      
+      setTeams(teamInfo);
+      
+    }
+  }, [teamInfo]);
+
+  useEffect(() => {
+    dispatch(allTeamsGet(page * limit, limit));
+  }, [page, limit]);
+
+  const handleInfo = (id) => {
+    navigate("/teamInfo", {state: {id}});
+  }
+  
 
   return (
     <Card {...rest}>
+      {teams && 
       <PerfectScrollbar>
-        <Box sx={{ minWidth: 1050 }}>
+        <Box>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox"></TableCell>
 
                 <TableCell>Clubs</TableCell>
-                <TableCell>Match</TableCell>
                 <TableCell>Win</TableCell>
                 <TableCell>Tie</TableCell>
                 <TableCell>Loss</TableCell>
-                <TableCell>Win Ratio</TableCell>
                 <TableCell>Ranking</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {teams.slice(page * limit, page * limit + limit).map((team) => (
-                <TableRow hover key={team.id}>
+                <TableRow hover key={team._id}>
                   <TableCell>
                     <Box
                       sx={{
@@ -88,26 +121,41 @@ export const TeamListResults = ({ teams, ...rest }) => {
                         display: "flex",
                       }}
                     >
-                      <Avatar src={team.teamImage} sx={{ mr: 2 }}></Avatar>
-                      {/* <Typography color="textPrimary" variant="body1">
-                        {player.name}
-                      </Typography> */}
+                      {
+                          team.teamImage ? 
+                          (
+                            <Avatar sx={{ mr: 2 }} src={`${baseImageUrl}${team.teamImage}`} />
+                          )
+                          :
+                          (
+                            <Avatar sx={{ mr: 2 }} {...stringAvatar(team.club)} />
+                          )
+                        }
                     </Box>
                   </TableCell>
 
-                  <TableCell>{team.club}</TableCell>
-                  <TableCell>{team.match}</TableCell>
-                  <TableCell>{team.win}</TableCell>
-                  <TableCell>{team.tie}</TableCell>
-                  <TableCell>{team.loss}</TableCell>
-                  <TableCell>{team.winratio}</TableCell>
-                  <TableCell>{team.ranking}</TableCell>
+                  <TableCell><Link
+                      underline="hover"
+                      component="button"
+                      variant="body2"
+                      onClick={() => {
+                        handleInfo(team._id)
+                      }}
+                    >
+                      {team.club}
+                    </Link></TableCell>
+                  <TableCell>{team.stats.win}</TableCell>
+                  <TableCell>{team.stats.tie}</TableCell>
+                  <TableCell>{team.stats.loss}</TableCell>
+                  <TableCell>{team.stats.ranking}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </Box>
       </PerfectScrollbar>
+    }
+    {teams &&
       <TablePagination
         component="div"
         count={teams.length}
@@ -117,10 +165,8 @@ export const TeamListResults = ({ teams, ...rest }) => {
         rowsPerPage={limit}
         rowsPerPageOptions={[5, 10, 15]}
       />
+      }
     </Card>
+    
   );
-};
-
-TeamListResults.propTypes = {
-  teams: PropTypes.array.isRequired,
 };

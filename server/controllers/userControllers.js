@@ -135,10 +135,8 @@ const showRequests = asyncHandler(async (req, res, next) => {
 const deleteRequest = asyncHandler(async (req, res, next) => {
 	
 	const request = await Requests.findById(req.body._id);
-	console.log(request);
 	const deletedRequest = await request.remove();
 	const requests = await Requests.find() ;
-	console.log(requests);
  	if(requests){
 		res.json(requests);
   	}
@@ -154,13 +152,10 @@ const deleteRequest = asyncHandler(async (req, res, next) => {
 const approveRequest = asyncHandler(async (req, res, next) => { // first delete it from the requests and then change isVerified feature of the User to true
 	
 	const request = await Requests.findById(req.body._id); // the request info ( name, surname, email) that will be deleted from requests map
-	console.log(request);
 	const email = request.email;	
-	console.log(email);
 	const deletedRequest = await request.remove();
 
 	const requests = await Requests.find() ;
-	console.log(requests);
     const user = await User.findOne({email: email});
 	user.isVerified = true; // useri verified olacak sekilde guncelledik
 	const updatedUser = await user.save(); // user updatelendi
@@ -181,7 +176,6 @@ const approveRequest = asyncHandler(async (req, res, next) => { // first delete 
 const sendRequest = asyncHandler(async (req, res, next) => { 
 	const {email} = req.body;
 	const user = await User.findOne({email}); 
-	console.log(user.name);
 	const name = user.name;
 	const surname = user.surname;
 	
@@ -225,7 +219,6 @@ const changeIsSent = asyncHandler(async (req, res, next) => {
 
 const getAllUsers = asyncHandler(async(req,res,next) => {
    const users = await User.find();
-   console.log('USERS: ', users);
    if(users){
 	res.json(users);
   }

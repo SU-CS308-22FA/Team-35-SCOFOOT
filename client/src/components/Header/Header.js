@@ -20,14 +20,12 @@ function Header() {
   const { userInfo } = userLogin;
   
   const allUsers = useSelector((state) => state.allUsers );
-  console.log('ALLUSERS: ', allUsers.usersData)
 
   useEffect(()=>{
     dispatch(seeAllUsers())
   },[])
 
 
-  console.log(userInfo);
   
   const logoutHandler = () => {
     dispatch(logout());
@@ -55,16 +53,12 @@ function Header() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="m-auto"></Nav>
           <Nav>
+          <SearchBar placeholder="Enter a User..." data={allUsers.usersData} /> 
+          <Nav.Link href="/database">Players & Teams</Nav.Link>
             {userInfo ? (
               <>
-                  <SearchBar placeholder="Enter a User..." data={allUsers.usersData} />       
+                        
                   
-                <>
-                  <Nav.Link href="/teams">Teams</Nav.Link>
-                  <Nav.Link href="/players">Players</Nav.Link>
-                  <Nav.Link href="/teaminfo">Team Info</Nav.Link>
-                  <Nav.Link href="/playerinfo">Player Info</Nav.Link>
-                </>
                 <NavDropdown
                   title={`${userInfo.name}`}
                   id="collasible-nav-dropdown"
@@ -85,6 +79,7 @@ function Header() {
                 <Nav.Link href="/signup">Sign Up</Nav.Link>
               </>
             )}
+            
           </Nav>
         </Navbar.Collapse>
       </Navbar>

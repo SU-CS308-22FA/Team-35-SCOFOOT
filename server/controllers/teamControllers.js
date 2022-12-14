@@ -27,7 +27,6 @@ const getAllPlayers = asyncHandler(async (req, res, next) => {
       }
       players[i] = players[i].toObject();
       players[i].club = clubInfo;
-      console.log(players[i].club);
     }
 
     res.status(200).json({size: count, players: players});
@@ -35,8 +34,60 @@ const getAllPlayers = asyncHandler(async (req, res, next) => {
     res.status(500).json(error);
   }
   
-  
-
 });
 
-export { getAllPlayers };
+const getPlayer = asyncHandler(async (req, res, next) => {
+
+  const id = mongoose.Types.ObjectId(req.query.id);
+
+  try {
+    
+    // Fetch data starting from the 10th to the 50th
+    let player = await Player.findById(mongoose.Types.ObjectId(id));
+    const team = await Team.findById(mongoose.Types.ObjectId(player.club));
+    player = player.toObject();
+    player.club = team;
+    player.stats = player.stats[0];
+    player.clubCareer = player.clubCareer[0];
+    
+    res.status(200).json(player);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+  
+});
+
+const getAllTeams = asyncHandler(async (req, res, next) => {
+
+  try {
+    const teams = await Team.find().sort('ranking');
+
+    res.status(200).json(teams);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+  
+});
+
+
+const getTeam = asyncHandler(async (req, res, next) => {
+
+  const id = mongoose.Types.ObjectId(req.query.id);
+
+  try {
+    
+    let team = await Team.findById(mongoose.Types.ObjectId(id));
+    team = team.toObject();
+    team.players = await Player.find({_id: { $in: team.players}});
+    res.status(200).json(team);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+  
+});
+
+
+export { getAllPlayers, getPlayer, getAllTeams, getTeam };

@@ -5,8 +5,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { playerGet } from "../../actions/playerActions";
-
+import { allPlayersGet } from "../../actions/playerActions";
 //import { format } from "date-fns";
 //import { getInitials } from "../../utils/get-initials";
 import {
@@ -22,7 +21,8 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  CircularProgress
+  CircularProgress,
+  Stack
 } from "@mui/material";
 
 export const PlayerListResults = ({...rest }) => {
@@ -59,12 +59,14 @@ export const PlayerListResults = ({...rest }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const baseImageUrl = "images/players/";
+
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [players, setPlayers] = useState(null);
   const [playerSize, setPlayerSize] = useState(page * limit + limit);
 
-  const playerResponse = useSelector((state) => state.playerGet);
+  const playerResponse = useSelector((state) => state.allPlayersGet);
   const { loading, error, playerInfo } = playerResponse;
 
   const handleLimitChange = (event) => {
@@ -77,7 +79,7 @@ export const PlayerListResults = ({...rest }) => {
 
   useEffect(() => {
     if (!playerInfo) {
-      dispatch(playerGet(page * limit, limit));
+      dispatch(allPlayersGet(page * limit, limit));
     }
   }, [navigate]);
 
@@ -90,9 +92,16 @@ export const PlayerListResults = ({...rest }) => {
   }, [playerInfo]);
 
   useEffect(() => {
-    console.log(page, limit);
-    dispatch(playerGet(page * limit, limit));
+    dispatch(allPlayersGet(page * limit, limit));
   }, [page, limit]);
+
+  const handleInfo = (id) => {
+    navigate("/playerInfo", {state: {id}});
+  }
+
+  const handleTeamInfo = (id) => {
+    navigate("/teamInfo", {state: {id}});
+  }
 
   return (
     <Card {...rest}>
@@ -101,7 +110,7 @@ export const PlayerListResults = ({...rest }) => {
       <>
     
       <PerfectScrollbar>
-        <Box sx={{ minWidth: 1050 }}>
+        <Box sx={{ minWidth: 400 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -131,9 +140,17 @@ export const PlayerListResults = ({...rest }) => {
                         {/* <Avatar src={player.avatarUrl} sx={{ mr: 2 }}>
                         
                       </Avatar> */}
-
-                        <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
-
+                        {
+                          player.playerImage ? 
+                          (
+                            <Avatar sx={{ mr: 2 }} src={`${baseImageUrl}${player.playerImage}`} />
+                          )
+                          :
+                          (
+                            <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
+                          )
+                        }
+                        
                         {/* <Typography color="textPrimary" variant="body1">
                         {player.name}
                       </Typography> */}
@@ -144,7 +161,7 @@ export const PlayerListResults = ({...rest }) => {
                       component="button"
                       variant="body2"
                       onClick={() => {
-                        console.info("I'm a button.");
+                        handleInfo(player._id);
                       }}
                     >{player.name}</Link></TableCell>
                     <TableCell><Link
@@ -152,7 +169,7 @@ export const PlayerListResults = ({...rest }) => {
                       component="button"
                       variant="body2"
                       onClick={() => {
-                        console.info("I'm a button.");
+                        handleTeamInfo(player.club._id)
                       }}
                     >
                       {player.club.name}
@@ -181,7 +198,7 @@ export const PlayerListResults = ({...rest }) => {
       }
 
       {
-        loading && <CircularProgress />
+        loading && <Stack alignItems="center"><CircularProgress /></Stack>
       }
     </Card>
   );

@@ -23,7 +23,7 @@ export const PlayerListToolbar = (props) => (
       }}
     >
       <Typography sx={{ m: 1 }} variant="h4">
-        Players
+        Players & Teams
       </Typography>
 
       <Box sx={{ m: 1 }}></Box>
