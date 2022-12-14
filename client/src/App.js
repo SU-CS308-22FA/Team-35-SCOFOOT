@@ -10,6 +10,7 @@ import PlayersAndTeams from "./screens/Players/PlayersAndTeams";
 import TeamsInfo from "./screens/TeamsInfo/TeamsInfo";
 import PlayersInfo from "./screens/PlayersInfo/PlayersInfo";
 import Verifications from "./screens/VerificationRequests/Verifications";
+import ProfilePage from "./screens/ProfilePage/ProfilePage";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/database" element={<PlayersAndTeams />} />
         <Route path="/teamInfo" element={<TeamsInfo />} />
         <Route path="/playerInfo" element={<PlayersInfo />} />
+        <Route path="/profilepage" element={<ProfilePage />} />
         <Route path="/" element={<Home />} />
       </Routes>
     </Router>
