@@ -20,14 +20,12 @@ function Header() {
   const { userInfo } = userLogin;
   
   const allUsers = useSelector((state) => state.allUsers );
-  console.log('ALLUSERS: ', allUsers.usersData)
 
   useEffect(()=>{
     dispatch(seeAllUsers())
   },[])
 
 
-  console.log(userInfo);
   
   const logoutHandler = () => {
     dispatch(logout());

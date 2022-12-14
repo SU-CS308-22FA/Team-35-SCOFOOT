@@ -1,10 +1,10 @@
 import React from "react";
+import { PlayerHeaderInfo } from "../../components/PlayerInfo/PlayerHeaderInfo";
 import { Box, Container, Grid } from "@mui/material";
-function PlayersInfo() {
+function PlayersInfo(player) {
   return (
     <>
       <Box
-        component="main"
         sx={{
           flexGrow: 1,
           py: 3,
@@ -12,6 +12,7 @@ function PlayersInfo() {
       >
         <Container maxWidth={false}>
           <Grid container spacing={2}>
+          <PlayerHeaderInfo />
           </Grid>
         </Container>
       </Box>

@@ -5,7 +5,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { playerGet } from "../../actions/playerActions";
+import { allPlayersGet } from "../../actions/playerActions";
 //import { format } from "date-fns";
 //import { getInitials } from "../../utils/get-initials";
 import {
@@ -65,7 +65,7 @@ export const PlayerListResults = ({...rest }) => {
   const [players, setPlayers] = useState(null);
   const [playerSize, setPlayerSize] = useState(page * limit + limit);
 
-  const playerResponse = useSelector((state) => state.playerGet);
+  const playerResponse = useSelector((state) => state.allPlayersGet);
   const { loading, error, playerInfo } = playerResponse;
 
   const handleLimitChange = (event) => {
@@ -78,7 +78,7 @@ export const PlayerListResults = ({...rest }) => {
 
   useEffect(() => {
     if (!playerInfo) {
-      dispatch(playerGet(page * limit, limit));
+      dispatch(allPlayersGet(page * limit, limit));
     }
   }, [navigate]);
 
@@ -91,9 +91,12 @@ export const PlayerListResults = ({...rest }) => {
   }, [playerInfo]);
 
   useEffect(() => {
-    console.log(page, limit);
-    dispatch(playerGet(page * limit, limit));
+    dispatch(allPlayersGet(page * limit, limit));
   }, [page, limit]);
+
+  const handleInfo = (id) => {
+    navigate("/playerInfo", {state: {id}});
+  }
 
   return (
     <Card {...rest}>
@@ -153,7 +156,7 @@ export const PlayerListResults = ({...rest }) => {
                       component="button"
                       variant="body2"
                       onClick={() => {
-                        console.info("I'm a button.");
+                        handleInfo(player._id);
                       }}
                     >{player.name}</Link></TableCell>
                     <TableCell><Link
@@ -161,7 +164,7 @@ export const PlayerListResults = ({...rest }) => {
                       component="button"
                       variant="body2"
                       onClick={() => {
-                        console.info("I'm a button.");
+                        console.info(this.key);
                       }}
                     >
                       {player.club.name}
