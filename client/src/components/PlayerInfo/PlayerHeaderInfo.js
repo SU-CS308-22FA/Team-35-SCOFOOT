@@ -24,6 +24,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { playerGet } from "../../actions/playerActions";
 import { useDispatch, useSelector } from "react-redux";
 import { ThemeProvider } from "react-bootstrap";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import IconButton from '@mui/material/IconButton';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { addToFavorites, deleteFromFavorites } from "../../actions/userActions";
   
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -78,16 +82,40 @@ import { ThemeProvider } from "react-bootstrap";
     const basePlayerImageUrl = "images/players/";
     const baseTeamImageUrl = "images/teams/";
 
+    const userLogin = useSelector((state) => state.userLogin);
+	  const { userInfo } = userLogin;
+
+    const [user, setUser] = useState(null);
+
+    const addFavorites = (goalKeeper_id , user_id) => {
+      dispatch(addToFavorites(goalKeeper_id, user_id));
+  
+    };
+
+    const deleteFavorites = (goalKeeper_id , user_id) => {
+      dispatch(deleteFromFavorites(goalKeeper_id, user_id));
+  
+    };
+
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
+
+    function isFavoritePlayer(arr, id) {
+      let isExists = false;
+      arr.forEach(element => {
+        if(element._id === id) {
+          isExists = true;
+        }
+      });
+      return isExists;
+    }
 
     useEffect(() => {
       dispatch(playerGet(id));
     }, [navigate])
     
     useEffect(() => {
-        console.log(playerInfo);
         setPlayer(playerInfo);
     }, [playerInfo]);
 
@@ -443,9 +471,15 @@ import { ThemeProvider } from "react-bootstrap";
         }
         
     }, [player]);
+
+    useEffect(() => {
+      setUser(userInfo);
+    }, [userInfo])
+    
   
     const theme = useTheme();
-  
+    
+    
     
   
     return (
@@ -490,6 +524,18 @@ import { ThemeProvider } from "react-bootstrap";
                        sx={{ width: 100, height: 100 }}>
 
                        </Avatar>
+                       {user &&
+                       isFavoritePlayer(user.favorites_list, player._id) ?
+                    (<IconButton onClick={() => deleteFavorites(player._id, user._id)}>
+                       <FavoriteIcon>
+                        </FavoriteIcon></IconButton>)
+                        :
+                    (<IconButton onClick ={() => addFavorites(player._id, user._id)} >
+                    <FavoriteBorderIcon>
+                      
+                    </FavoriteBorderIcon>
+                    </IconButton>)  
+                      }
                     </Box>
   
                     <Box

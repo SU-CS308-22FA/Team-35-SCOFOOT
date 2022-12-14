@@ -17,7 +17,8 @@ import {
 	ADMIN_VERIFICATION_REQUEST_SUCCESS,
 	INBOX_AFTER_DELETION_SUCCESS,
 	VERIFICATION_STATUS_UPDATE,
-	ALL_USERS_SUCCESS
+	ALL_USERS_SUCCESS,
+	FAVORITES_GET_SUCCESS
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -244,6 +245,7 @@ export const addToFavorites = (goalkeeper_id , user_id) => async(dispatch, getSt
 	try{
 		const {data} = await axios.post("/api/users/addFavorites", {goalkeeper_id, user_id});
 		dispatch({ type: USER_LOGIN_SUCCESS, payload: data});
+		localStorage.setItem("userInfo", JSON.stringify(data));
 	}
 	catch(error){
 
@@ -254,6 +256,7 @@ export const deleteFromFavorites = (goalkeeper_id , user_id) => async(dispatch, 
 	try{
 		const {data} = await axios.post("/api/users/deleteFavorites", {goalkeeper_id, user_id});
 		dispatch({ type: USER_LOGIN_SUCCESS, payload: data});
+		localStorage.setItem("userInfo", JSON.stringify(data));
 	}
 	catch(error){
 
@@ -265,6 +268,7 @@ export const getFavorites = (_id) => async (dispatch) => {
 		
 		const {data} = await axios.get("api/users/favorites");
 		dispatch({type: FAVORITES_GET_SUCCESS, payload:data});
+		
   
 	}
 	catch(error){}
