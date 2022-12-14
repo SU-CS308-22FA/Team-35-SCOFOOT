@@ -9,6 +9,7 @@ import {
 	userUpdateReducer,
 	seeVerificationReducer,
 	allUsersReducer,
+	getFavoritesReducer
 	
 } from "./reducers/userReducers";
 import { playerGetReducer } from "./reducers/playerReducers";
@@ -21,6 +22,7 @@ const reducer = combineReducers({
 	seeVerification : seeVerificationReducer,
 	allUsers: allUsersReducer,
     playerGet: playerGetReducer,
+	favoritePlayers : getFavoritesReducer
 
 });
 

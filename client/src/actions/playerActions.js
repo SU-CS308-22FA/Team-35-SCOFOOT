@@ -3,6 +3,7 @@ import {
   PLAYER_GET_FAIL,
   PLAYER_GET_SUCCESS,
   PLAYER_GET_REQUEST,
+  FAVORITES_GET_SUCCESS
 } from "../constants/playerConstants";
 
 export const playerGet = (email, password) => async (dispatch) => {
@@ -24,3 +25,5 @@ export const playerGet = (email, password) => async (dispatch) => {
     });
   }
 };
+
+

@@ -259,3 +259,14 @@ export const deleteFromFavorites = (goalkeeper_id , user_id) => async(dispatch, 
 
 	}
 };
+
+export const getFavorites = (_id) => async (dispatch) => {
+	try{
+		
+		const {data} = await axios.get("api/users/favorites");
+		dispatch({type: FAVORITES_GET_SUCCESS, payload:data});
+  
+	}
+	catch(error){}
+
+}; 

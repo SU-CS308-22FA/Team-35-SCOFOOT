@@ -263,7 +263,7 @@ const addFavorites = asyncHandler(async(req,res,next) => {
 	console.log(player);
 	const user = await User.findOne({_id: user_id});
 	console.log(user);
-	user.favorites_list.push(player._id);
+	user.favorites_list.push(player);
 	const updatedUser = await user.save();
 	console.log(updatedUser);
 	res.json({
@@ -298,8 +298,8 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 	var ab = user.favorites_list.filter(function (letter) {
 		console.log(letter);
 		console.log(player._id);
-		console.log(letter != player._id);
-		return (letter == player._id);
+		console.log(letter != player);
+		return (letter == player);
 	});
 	console.log(ab);
 	user.favorites_list = ab ;
@@ -319,6 +319,14 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 		token: generateToken(updatedUser._id),
 	});
 
-})
+});
 
-export { deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+ const getFavorites = asyncHandler(async(req,res,next) => {
+       const {_id} = req.body ; // user id is taken
+	   const user = await User.findOne({_id});
+	   const favorites_list = user.favorites_list;
+	   console.log(favorites_list);
+	   res.json(favorites_list);
+ });
+
+export { getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

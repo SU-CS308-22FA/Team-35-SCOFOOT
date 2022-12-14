@@ -101,7 +101,15 @@ export const allUsersReducer = (state = {}, action) => {
 }
 
 
+export const getFavoritesReducer = (state={}, action) => {
+	switch(action.type){
+		case FAVORITES_GET_SUCCESS:
+			return {favoritesData: action.payload};
 
+		default:
+			return state;
+	}
+}
 
 
 
