@@ -8,31 +8,40 @@ import {
 	userRegisterReducer,
 	userUpdateReducer,
 	seeVerificationReducer,
+	allUsersReducer,
+	getFavoritesReducer
 	
 } from "./reducers/userReducers";
+import { allPlayersGetReducer, playerGetReducer } from "./reducers/playerReducers";
+import { allTeamsGetReducer, teamGetReducer } from "./reducers/teamReducers";
 const reducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
 	userUpdate: userUpdateReducer,
 	userDelete: userDeleteReducer,
 	seeVerification : seeVerificationReducer,
-
+	allUsers: allUsersReducer,
+  	allPlayersGet: allPlayersGetReducer,
+	playerGet: playerGetReducer,
+	allTeamsGet: allTeamsGetReducer,
+	teamGet: teamGetReducer,
+	favoritePlayers : getFavoritesReducer
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
-	? JSON.parse(localStorage.getItem("userInfo"))
-	: null;
+  ? JSON.parse(localStorage.getItem("userInfo"))
+  : null;
 
 const initialState = {
-	userLogin: { userInfo: userInfoFromStorage },
+  userLogin: { userInfo: userInfoFromStorage },
 };
 
 const middleware = [thunk];
 
 const store = createStore(
-	reducer,
-	initialState,
-	composeWithDevTools(applyMiddleware(...middleware))
+  reducer,
+  initialState,
+  composeWithDevTools(applyMiddleware(...middleware))
 );
 
 export default store;

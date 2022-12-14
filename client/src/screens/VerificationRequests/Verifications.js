@@ -24,9 +24,9 @@ const Verifications = () => {
     
   }
 
-  const approveRequest = (_id) => {
+  const approveRequest = (_id, email) => {
     //console.log(_id);
-    dispatch(approveVerificationRequest(_id));
+    dispatch(approveVerificationRequest(_id, email));
     
   }
   

@@ -15,7 +15,9 @@ import {
 	ADMIN_VERIFICATION_REQUEST_FAIL,
 	ADMIN_VERIFICATION_REQUEST_SUCCESS,
 	INBOX_AFTER_DELETION_SUCCESS,
-	VERIFICATION_STATUS_UPDATE
+	ALL_USERS_SUCCESS,
+	GET_USER_SUCCESS,
+	FAVORITES_GET_SUCCESS
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -89,6 +91,26 @@ export const seeVerificationReducer = (state = {}, action) => {  // all verifica
 			return state;
 	}
 };
+
+export const allUsersReducer = (state = {}, action) => {
+	switch(action.type) {
+		case ALL_USERS_SUCCESS:
+			return {usersData : action.payload};
+		default:
+			return state;
+	}
+}
+
+
+export const getFavoritesReducer = (state={}, action) => {
+	switch(action.type){
+		case FAVORITES_GET_SUCCESS:
+			return {favoritesData: action.payload};
+
+		default:
+			return state;
+	}
+}
 
 
 

@@ -1,33 +1,44 @@
 import User from "../models/User.js";
 import generateToken from "../utils/generateToken.js";
 import asyncHandler from "express-async-handler";
-import Requests from "../models/Requests.js"
+import Requests from "../models/Requests.js";
+import Player from "../models/Player.js";
+import mongoose from "mongoose";
+
 
 const registerUser = asyncHandler(async (req, res, next) => {
-	const { name, surname, email, password } = req.body;
+  const { name, surname, email, password, profile_type, pic } = req.body;
 
-	const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ email });
 
-	if (userExists) {
-		res.status(400);
-		throw new Error("User already exists.");
-	}
+  if (userExists) {
+    res.status(400);
+    throw new Error("User already exists.");
+  }
 
-	const user = await User.create({
-		name,
-		surname,
-		email,
-		password,
-	});
+  const user = await User.create({
+    name,
+    surname,
+    email,
+    password,
+    pic,
+    profile_type,
+    aboutme,
+  });
 
 	if (user) {
 		res.status(201).json({
 			_id: user.id,
 			name: user.name,
 			surname: user.surname,
+      aboutme: user.aboutme,
 			email: user.email,
+			profile_type: user.profile_type,
+			pic: user.pic,
 			isAdmin: user.isAdmin,
 			isVerified: user.isVerified,
+			isRequestSent: user.isRequestSent,
+			favorites_list: user.favorites_list,
 			token: generateToken(user._id),
 		});
 	} else {
@@ -39,18 +50,23 @@ const registerUser = asyncHandler(async (req, res, next) => {
 const loginUser = asyncHandler(async (req, res, next) => {
 	const { email, password } = req.body;
     
+	
 	const user = await User.findOne({ email });
-
+	console.log(user);
 	if (user && (await user.matchPassword(password))) {
 		res.json({
 			_id: user._id,
 			name: user.name,
 			surname: user.surname,
+      aboutme: user.aboutme,
 			email: user.email,
+			profile_type: user.profile_type,
+			pic: user.pic,
 			isAdmin: user.isAdmin,
 			token: generateToken(user._id),
 			isVerified: user.isVerified,
-			isRequestSent : user.isRequestSent
+			isRequestSent : user.isRequestSent,
+			favorites_list: await Player.find({_id: { $in: user.favorites_list}})
 		});
 	} else {
 		res.status(401);
@@ -59,22 +75,32 @@ const loginUser = asyncHandler(async (req, res, next) => {
 });
 
 const updateUserProfile = asyncHandler(async (req, res, next) => {
-	const user = await User.findById(req.user._id);
-	if (user) {
-		try {
-			user.name = req.body.name || user.name;
-			user.surname = req.body.surname || user.surname;
-			user.email = req.body.email || user.email;
-			if (req.body.password) {
-				user.password = req.body.password;
-			}
-			const updatedUser = await user.save();
+  const user = await User.findById(req.user._id);
+  if (user) {
+    try {
+      user.name = req.body.name || user.name;
+      user.surname = req.body.surname || user.surname;
+      user.email = req.body.email || user.email;
+      user.profile_type = req.body.profile_type || user.profile_type;
+      user.pic = req.body.pic || user.pic;
+      user.aboutme = req.body.aboutme || user.aboutme;
+      if (req.body.password) {
+        user.password = req.body.password;
+      }
+      const updatedUser = await user.save();
 
 			res.json({
 				_id: updatedUser._id,
 				name: updatedUser.name,
 				surname: updatedUser.surname,
+        aboutme: user.aboutme,
 				email: updatedUser.email,
+				pic: updatedUser.pic,
+				profile_type: user.profile_type,
+				favorites_list : user.favorites_list,
+				isRequestSent: user.isRequestSent,
+		    isVerified: user.isVerified, 
+				isAdmin: user.isAdmin,
 				token: generateToken(updatedUser._id),
 			});
 		} catch (error) {
@@ -92,42 +118,33 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
 });
 
 const deleteUser = asyncHandler(async (req, res, next) => {
-	const user = await User.findById(req.user._id);
-	if (user) {
-		user.remove();
-		res.json({
-			message: "User deleted"
-		});
-
-	} else {
-		res.status(404);
-		throw new Error("User not found!");
-	}
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.remove();
+    res.json({
+      message: "User deleted",
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found!");
+  }
 });
 
-
-
-
 const showRequests = asyncHandler(async (req, res, next) => {
- 	const requests = await Requests.find() ;
- 	if(requests){
-		res.json(requests);
-  	}
-
-	else {
-		res.status(404);
-		throw new Error("Requests not found!");
-	}
-
+  const requests = await Requests.find();
+  if (requests) {
+    res.json(requests);
+  } else {
+    res.status(404);
+    throw new Error("Requests not found!");
+  }
 });
 
 const deleteRequest = asyncHandler(async (req, res, next) => {
 	
 	const request = await Requests.findById(req.body._id);
-	console.log(request);
 	const deletedRequest = await request.remove();
 	const requests = await Requests.find() ;
-	console.log(requests);
  	if(requests){
 		res.json(requests);
   	}
@@ -139,21 +156,17 @@ const deleteRequest = asyncHandler(async (req, res, next) => {
 
 });
 
-
 const approveRequest = asyncHandler(async (req, res, next) => { // first delete it from the requests and then change isVerified feature of the User to true
 	
 	const request = await Requests.findById(req.body._id); // the request info ( name, surname, email) that will be deleted from requests map
-	console.log(request);
 	const email = request.email;	
-	console.log(email);
 	const deletedRequest = await request.remove();
 
 	const requests = await Requests.find() ;
-	console.log(requests);
     const user = await User.findOne({email: email});
 	user.isVerified = true; // useri verified olacak sekilde guncelledik
 	const updatedUser = await user.save(); // user updatelendi
-
+  
 
 
  	if(requests){
@@ -165,51 +178,140 @@ const approveRequest = asyncHandler(async (req, res, next) => { // first delete 
 		throw new Error("Requests not found!");
 	}
 
+  if (requests) {
+    res.json(requests);
+  } else {
+    res.status(404);
+    throw new Error("Requests not found!");
+  }
 });
 
 const sendRequest = asyncHandler(async (req, res, next) => { 
 	const {email} = req.body;
 	const user = await User.findOne({email}); 
-	console.log(user.name);
 	const name = user.name;
 	const surname = user.surname;
-	
-	const request  = await Requests.create({
-		name,
-		surname,
-		email
-	});
 
-	const requests = await Requests.find();
+  const request = await Requests.create({
+    name,
+    surname,
+    email,
+  });
 
-	if (request) {
-		res.json(requests) ;
-	} else {
-		res.status(400);
-		throw new Error("Error occured.");
+  const requests = await Requests.find();
+
+  if (request) {
+    res.json(requests);
+  } else {
+    res.status(400);
+    throw new Error("Error occured.");
+  }
+});
+
+const getUser = asyncHandler(async(req,res,next) => {
+	console.log(req.body);
+	const {email} = req.body;
+    const user = await User.findOne({email});
+    console.log(user);
+	if(user){
+		console.log("210", user)
+		res.json(user);
+		console.log("212", user)
 	}
-
-
 });
 
 const changeIsSent = asyncHandler(async (req, res, next) => {
-	const {email} = req.body;
-	const user = await User.findOne({email});
-	user.isRequestSent = !user.isRequestSent;
-	const updatedUser = await user.save();
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  user.isRequestSent = !user.isRequestSent;
+  const updatedUser = await user.save();
 
-		
-	res.json({
-			_id: updatedUser._id,
-			name: updatedUser.name,
-			surname: updatedUser.surname,
-			email: updatedUser.email,
-			isAdmin: updatedUser.isAdmin,
-			token: generateToken(updatedUser._id),
-			isVerified: updatedUser.isVerified,
-			isRequestSent : updatedUser.isRequestSent
-		});
+  res.json({
+    _id: updatedUser._id,
+    name: updatedUser.name,
+    surname: updatedUser.surname,
+    email: updatedUser.email,
+    isAdmin: updatedUser.isAdmin,
+    aboutme: updatedUser.aboutme,
+    token: generateToken(updatedUser._id),
+    isVerified: updatedUser.isVerified,
+    isRequestSent: updatedUser.isRequestSent,
+  });
+});
+
+const getAllUsers = asyncHandler(async(req,res,next) => {
+   const users = await User.find();
+   if(users){
+	res.json(users);
+  }
+
+else {
+	res.status(404);
+	throw new Error("Users not found!");
+}
+});
+
+const addFavorites = asyncHandler(async(req,res,next) => {
+	const {goalkeeper_id, user_id} = req.body ;
 	
-}); 
+	const goal_keeper_id = goalkeeper_id;
 
-export { changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+	const player = await Player.findOne({_id: goal_keeper_id});
+	console.log(player);
+	const user = await User.findOne({_id: user_id});
+	console.log(user);
+	user.favorites_list.push(mongoose.Types.ObjectId(player._id));
+	const updatedUser = await user.save();
+	console.log(updatedUser);
+	res.json({
+		_id: updatedUser._id,
+		name: updatedUser.name,
+		surname: updatedUser.surname,
+		email: updatedUser.email,
+		pic: updatedUser.pic,
+		profile_type: updatedUser.profile_type,
+		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
+		isRequestSent: updatedUser.isRequestSent,
+		isVerified: updatedUser.isVerified, 
+		isAdmin: updatedUser.isAdmin,
+		token: generateToken(updatedUser._id),
+	});
+
+})
+
+
+const deleteFavorites = asyncHandler(async(req,res,next) => {
+	const {goalkeeper_id, user_id} = req.body ;
+	
+	const goal_keeper_id = goalkeeper_id;
+    
+	const player = await Player.findById(mongoose.Types.ObjectId(goal_keeper_id));
+	const user = await User.findOne({_id: user_id});
+	user.favorites_list.pull(player._id);
+	const updatedUser = await user.save();
+	console.log(updatedUser);
+	res.json({
+		_id: updatedUser._id,
+		name: updatedUser.name,
+		surname: updatedUser.surname,
+		email: updatedUser.email,
+		pic: updatedUser.pic,
+		profile_type: updatedUser.profile_type,
+		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
+		isRequestSent: updatedUser.isRequestSent,
+		isVerified: updatedUser.isVerified, 
+		isAdmin: updatedUser.isAdmin,
+		token: generateToken(updatedUser._id),
+	});
+
+});
+
+ const getFavorites = asyncHandler(async(req,res,next) => {
+       const {_id} = req.body ; // user id is taken
+	   const user = await User.findOne({_id});
+	   const favorites_list = user.favorites_list;
+	   console.log(favorites_list);
+	   res.json(favorites_list);
+ });
+
+export { getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

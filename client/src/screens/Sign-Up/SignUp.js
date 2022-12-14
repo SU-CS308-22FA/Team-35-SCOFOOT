@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,15 +15,21 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { register } from "../../actions/userActions";
+import { Form } from "react-bootstrap";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const theme = createTheme();
 
 export default function SignUp() {
 	const [name, setName] = useState("");
+	
 	const [surname, setSurname] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
+	const [profile_type] =useState("");
+	const [pic] = useState();
+
 	const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] =
 		useState("");
 	const [isConfirmPasswordInvalid, setIsConfirmPasswordInvalid] =
@@ -56,9 +63,9 @@ export default function SignUp() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		dispatch(register(name, surname, email, password));
+		dispatch(register(name, surname, email, password, profile_type, pic));
 	};
-
+	
 	return (
 		<ThemeProvider theme={theme}>
 			<Container component="main" maxWidth="xs">
@@ -83,6 +90,7 @@ export default function SignUp() {
 						sx={{ mt: 3 }}
 					>
 						<Grid container spacing={2}>
+
 							<Grid item xs={12} sm={6}>
 								<TextField
 									autoComplete="given-name"
@@ -139,7 +147,7 @@ export default function SignUp() {
 								<TextField
 									required
 									fullWidth
-									validate
+									validate = "true"
 									name="confirmPassword"
 									label="Confirm Password"
 									type="password"
@@ -158,6 +166,11 @@ export default function SignUp() {
 									}
 								/>
 							</Grid>
+							<Grid item xs={12} sm={12}>
+							<Form.Label>Profile type</Form.Label>
+							
+							</Grid>
+							
 						</Grid>
 						<Box
 						>
@@ -193,3 +206,4 @@ export default function SignUp() {
 		</ThemeProvider>
 	);
 }
+
