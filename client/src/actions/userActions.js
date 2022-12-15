@@ -245,6 +245,7 @@ export const addToFavorites = (goalkeeper_id , user_id) => async(dispatch, getSt
 	try{
 		const {data} = await axios.post("/api/users/addFavorites", {goalkeeper_id, user_id});
 		dispatch({ type: USER_LOGIN_SUCCESS, payload: data});
+
 		localStorage.setItem("userInfo", JSON.stringify(data));
 	}
 	catch(error){
@@ -255,6 +256,7 @@ export const addToFavorites = (goalkeeper_id , user_id) => async(dispatch, getSt
 export const deleteFromFavorites = (goalkeeper_id , user_id) => async(dispatch, getState) => {
 	try{
 		const {data} = await axios.post("/api/users/deleteFavorites", {goalkeeper_id, user_id});
+		console.log(data);
 		dispatch({ type: USER_LOGIN_SUCCESS, payload: data});
 		localStorage.setItem("userInfo", JSON.stringify(data));
 	}
@@ -263,10 +265,13 @@ export const deleteFromFavorites = (goalkeeper_id , user_id) => async(dispatch, 
 	}
 };
 
-export const getFavorites = (_id) => async (dispatch) => {
+export const getFavorites = (start, stop, _id) => async (dispatch) => {
 	try{
-		
-		const {data} = await axios.get("api/users/favorites");
+		console.log(_id);
+		console.log(start);
+		console.log(stop);
+		const {data} = await axios.get(`/api/users/favorites/?start=${start}&stop=${stop}`, { params: {_id}});
+		console.log(data);
 		dispatch({type: FAVORITES_GET_SUCCESS, payload:data});
 		
   
