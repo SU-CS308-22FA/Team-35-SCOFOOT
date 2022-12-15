@@ -96,6 +96,60 @@ npm install --prefix client && npm run build --prefix client
 
 ### Deploying the project to a remote server (Heroku)
 
+### Install Heroku
 
+1 . Create an account on **[https://heroku.com](https://heroku.com)**. This should be pretty straight forward.
+2 . Install the Heroku CLI on your computer: <br/>**[https://devcenter.heroku.com/articles/heroku-cli](https://devcenter.heroku.com/articles/heroku-cli)**. 
+Check that you have the `heroku-cli` installed by checking the version number in your terminal:
+```bash
+heroku --version
+```
+
+3 . Connect the `Heroku CLI` to your account by writing the following command in your terminal and follow the instructions on the command line:
+```bash
+heroku login
+```
+_Use your credentials from the earlier account creation._
+
+### Deploy the project
+
+1 . Heroku will look for a startup-script, this is by default `npm start` so make sure you have that in your `package.json` (assuming your script is called `app.js`):
+```json
+ "scripts": {
+    "start" : "node app.js"
+ }
+```
+
+2 . You also have to make changes to the port, you can't hardcode a dev-port. But you can reference herokus port without knowing it by a special variabel. So add the following to your code:
+```js
+const port = process.env.PORT || 4000;
+```
+When you upload to Heroku it will use the environment-port but when you are developing it will use the port 4000. Then reference this port in your app:
+```js
+app.listen(port);
+```
+
+3 . Then create a remote heroku project, kinda like creating a git repository on GitHub. This will create a project on Heroku with a random name. If you want to name your app you have to supply your own name like `heroku create project-name`. The command below will just create a random name:
+```bash
+heroku create
+```
+
+4 . Push your app to __Heroku__ like pushing to GitHub expect for `origin` you have `heroku` (you will see a wall of code).
+```bash
+git push heroku main
+```
+
+5 . Visit your newly create app by opening it via heroku:
+```bash
+heroku open
+```
+
+
+If you are getting errors you can view the error logs by running this command:
+```bash
+heroku logs --tail
+```
+
+This might give you a hint on what's wrong.
 
 
