@@ -8,29 +8,31 @@ import mongoose from "mongoose";
 
 
 const registerUser = asyncHandler(async (req, res, next) => {
-	const { name, surname, email, password, profile_type, pic } = req.body;
+  const { name, surname, email, password, profile_type, pic } = req.body;
 
-	const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ email });
 
-	if (userExists) {
-		res.status(400);
-		throw new Error("User already exists.");
-	}
+  if (userExists) {
+    res.status(400);
+    throw new Error("User already exists.");
+  }
 
-	const user = await User.create({
-		name,
-		surname,
-		email,
-		password,
-		pic,
-		profile_type 
-	});
+  const user = await User.create({
+    name,
+    surname,
+    email,
+    password,
+    pic,
+    profile_type,
+    aboutme,
+  });
 
 	if (user) {
 		res.status(201).json({
 			_id: user.id,
 			name: user.name,
 			surname: user.surname,
+      aboutme: user.aboutme,
 			email: user.email,
 			profile_type: user.profile_type,
 			pic: user.pic,
@@ -56,6 +58,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			_id: user._id,
 			name: user.name,
 			surname: user.surname,
+      aboutme: user.aboutme,
 			email: user.email,
 			profile_type: user.profile_type,
 			pic: user.pic,
@@ -72,29 +75,31 @@ const loginUser = asyncHandler(async (req, res, next) => {
 });
 
 const updateUserProfile = asyncHandler(async (req, res, next) => {
-	const user = await User.findById(req.user._id);
-	if (user) {
-		try {
-			user.name = req.body.name || user.name;
-			user.surname = req.body.surname || user.surname;
-			user.email = req.body.email || user.email;
-			user.profile_type = req.body.profile_type || user.profile_type;
-			user.pic = req.body.pic || user.pic;
-			if (req.body.password) {
-				user.password = req.body.password;
-			}
-			const updatedUser = await user.save();
+  const user = await User.findById(req.user._id);
+  if (user) {
+    try {
+      user.name = req.body.name || user.name;
+      user.surname = req.body.surname || user.surname;
+      user.email = req.body.email || user.email;
+      user.profile_type = req.body.profile_type || user.profile_type;
+      user.pic = req.body.pic || user.pic;
+      user.aboutme = req.body.aboutme || user.aboutme;
+      if (req.body.password) {
+        user.password = req.body.password;
+      }
+      const updatedUser = await user.save();
 
 			res.json({
 				_id: updatedUser._id,
 				name: updatedUser.name,
 				surname: updatedUser.surname,
+        aboutme: user.aboutme,
 				email: updatedUser.email,
 				pic: updatedUser.pic,
 				profile_type: user.profile_type,
 				favorites_list : user.favorites_list,
 				isRequestSent: user.isRequestSent,
-		        isVerified: user.isVerified, 
+		    isVerified: user.isVerified, 
 				isAdmin: user.isAdmin,
 				token: generateToken(updatedUser._id),
 			});
@@ -113,33 +118,26 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
 });
 
 const deleteUser = asyncHandler(async (req, res, next) => {
-	const user = await User.findById(req.user._id);
-	if (user) {
-		user.remove();
-		res.json({
-			message: "User deleted"
-		});
-
-	} else {
-		res.status(404);
-		throw new Error("User not found!");
-	}
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.remove();
+    res.json({
+      message: "User deleted",
+    });
+  } else {
+    res.status(404);
+    throw new Error("User not found!");
+  }
 });
 
-
-
-
 const showRequests = asyncHandler(async (req, res, next) => {
- 	const requests = await Requests.find() ;
- 	if(requests){
-		res.json(requests);
-  	}
-
-	else {
-		res.status(404);
-		throw new Error("Requests not found!");
-	}
-
+  const requests = await Requests.find();
+  if (requests) {
+    res.json(requests);
+  } else {
+    res.status(404);
+    throw new Error("Requests not found!");
+  }
 });
 
 const deleteRequest = asyncHandler(async (req, res, next) => {
@@ -157,7 +155,6 @@ const deleteRequest = asyncHandler(async (req, res, next) => {
 	}
 
 });
-
 
 const approveRequest = asyncHandler(async (req, res, next) => { // first delete it from the requests and then change isVerified feature of the User to true
 	
@@ -181,6 +178,12 @@ const approveRequest = asyncHandler(async (req, res, next) => { // first delete 
 		throw new Error("Requests not found!");
 	}
 
+  if (requests) {
+    res.json(requests);
+  } else {
+    res.status(404);
+    throw new Error("Requests not found!");
+  }
 });
 
 const sendRequest = asyncHandler(async (req, res, next) => { 
@@ -188,23 +191,21 @@ const sendRequest = asyncHandler(async (req, res, next) => {
 	const user = await User.findOne({email}); 
 	const name = user.name;
 	const surname = user.surname;
-	
-	const request  = await Requests.create({
-		name,
-		surname,
-		email
-	});
 
-	const requests = await Requests.find();
+  const request = await Requests.create({
+    name,
+    surname,
+    email,
+  });
 
-	if (request) {
-		res.json(requests) ;
-	} else {
-		res.status(400);
-		throw new Error("Error occured.");
-	}
+  const requests = await Requests.find();
 
-
+  if (request) {
+    res.json(requests);
+  } else {
+    res.status(400);
+    throw new Error("Error occured.");
+  }
 });
 
 const getUser = asyncHandler(async(req,res,next) => {
@@ -216,24 +217,23 @@ const getUser = asyncHandler(async(req,res,next) => {
 });
 
 const changeIsSent = asyncHandler(async (req, res, next) => {
-	const {email} = req.body;
-	const user = await User.findOne({email});
-	user.isRequestSent = !user.isRequestSent;
-	const updatedUser = await user.save();
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  user.isRequestSent = !user.isRequestSent;
+  const updatedUser = await user.save();
 
-		
-	res.json({
-			_id: updatedUser._id,
-			name: updatedUser.name,
-			surname: updatedUser.surname,
-			email: updatedUser.email,
-			isAdmin: updatedUser.isAdmin,
-			token: generateToken(updatedUser._id),
-			isVerified: updatedUser.isVerified,
-			isRequestSent : updatedUser.isRequestSent
-		});
-	
-}); 
+  res.json({
+    _id: updatedUser._id,
+    name: updatedUser.name,
+    surname: updatedUser.surname,
+    email: updatedUser.email,
+    isAdmin: updatedUser.isAdmin,
+    aboutme: updatedUser.aboutme,
+    token: generateToken(updatedUser._id),
+    isVerified: updatedUser.isVerified,
+    isRequestSent: updatedUser.isRequestSent,
+  });
+});
 
 const getAllUsers = asyncHandler(async(req,res,next) => {
    const users = await User.find();

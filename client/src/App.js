@@ -11,6 +11,8 @@ import TeamsInfo from "./screens/TeamsInfo/TeamsInfo";
 import PlayersInfo from "./screens/PlayersInfo/PlayersInfo";
 import Verifications from "./screens/VerificationRequests/Verifications";
 import { FavPlayers } from "./components/FavoritePlayers/FavPlayers";
+import ProfilePage from "./screens/ProfilePage/ProfilePage";
+
 
 const App = () => {
   return (
@@ -29,6 +31,7 @@ const App = () => {
         <Route path="/database" element={<PlayersAndTeams />} />
         <Route path="/teamInfo" element={<TeamsInfo />} />
         <Route path="/playerInfo" element={<PlayersInfo />} />
+        <Route path="/profilepage" element={<ProfilePage />} />
         <Route path="/" element={<Home />} />
         <Route path= "/favorites" element={<FavPlayers/>} />
       </Routes>

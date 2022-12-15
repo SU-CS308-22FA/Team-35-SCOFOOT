@@ -58,14 +58,12 @@ function Header() {
             {userInfo ? (
               <>
                         
-                  
+                <Nav.Link href="/profilepage">My Profile </Nav.Link>
                 <NavDropdown
                   title={`${userInfo.name}`}
                   id="collasible-nav-dropdown"
                 >
-                  <NavDropdown.Item href="/profile">
-                    My Profile
-                  </NavDropdown.Item>
+                  <NavDropdown.Item href="/profile">Settings</NavDropdown.Item>
 
                   <NavDropdown.Divider />
                   <NavDropdown.Item onClick={logoutHandler}>

@@ -1,18 +1,15 @@
 import { React } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import PropTypes from "prop-types";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { allPlayersGet } from "../../actions/playerActions";
+import { playerSearch } from "../../actions/playerActions";
 //import { format } from "date-fns";
 //import { getInitials } from "../../utils/get-initials";
 import {
   Avatar,
   Box,
   Card,
-  Checkbox,
   Link,
   Table,
   TableBody,
@@ -20,12 +17,11 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
   CircularProgress,
   Stack
 } from "@mui/material";
 
-export const PlayerListResults = ({...rest }) => {
+export const PlayerSearchResults = ({searchKey, ...rest }) => {
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -59,42 +55,39 @@ export const PlayerListResults = ({...rest }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const baseImageUrl = "images/players/";
-
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
-  const [players, setPlayers] = useState(null);
-  const [playerSize, setPlayerSize] = useState(page * limit + limit);
 
-  const playerResponse = useSelector((state) => state.allPlayersGet);
-  const { loading, error, playerInfo } = playerResponse;
+  const playerSearchResponse = useSelector((state) => state.playerSearch);
+  const { loading, error, playerSearchResult } = playerSearchResponse;
+
+  const [players, setPlayers] = useState([]);
+  const [searchResultSize, setSearchResultSize] = useState(page * limit + limit);
+
+  const baseImageUrl = "images/players/";
+
+  useEffect(() => {
+    if (playerSearchResult) {
+        setPage(0);
+        setPlayers(playerSearchResult.players);
+        setSearchResultSize(playerSearchResult.size);
+    }
+  }, [playerSearchResult]);
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
-    
   };
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
 
+ 
   useEffect(() => {
-    if (!playerInfo) {
-      dispatch(allPlayersGet(page * limit, limit));
-    }
-  }, [navigate]);
+    dispatch(playerSearch(searchKey, page * limit, limit));
+  }, [searchKey, page, limit, dispatch]);
 
-  useEffect(() => {
-    if (playerInfo) {
-      setPlayerSize(playerInfo.size);
-      setPlayers(playerInfo.players);
-      
-    }
-  }, [playerInfo]);
-
-  useEffect(() => {
-    dispatch(allPlayersGet(page * limit, limit ));
-  }, [page, limit]);
+  
 
   const handleInfo = (id) => {
     navigate("/playerInfo", {state: {id}});
@@ -106,9 +99,6 @@ export const PlayerListResults = ({...rest }) => {
 
   return (
     <Card {...rest}>
-    {
-        loading && <Stack alignItems="center"><CircularProgress /></Stack>
-    }
     {
       players &&
       <>
@@ -191,7 +181,7 @@ export const PlayerListResults = ({...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={playerSize}
+        count={searchResultSize}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
