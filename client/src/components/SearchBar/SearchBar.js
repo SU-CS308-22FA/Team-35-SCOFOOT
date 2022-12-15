@@ -46,7 +46,7 @@ function SearchBar({ placeholder, data }) {
           {filteredData.slice(0, 15).map((value, key) => {
             return (
               <a className="dataItem" target="_blank" key={key}>
-                <p>{value.name} </p>
+                <p>{value.name.concat(" ", value.surname)} </p>
               </a>
             );
           })}

@@ -3,6 +3,7 @@ import generateToken from "../utils/generateToken.js";
 import asyncHandler from "express-async-handler";
 import Requests from "../models/Requests.js";
 import Player from "../models/Player.js";
+import Team from "../models/Team.js"
 import mongoose from "mongoose";
 
 
@@ -52,7 +53,6 @@ const loginUser = asyncHandler(async (req, res, next) => {
     
 	
 	const user = await User.findOne({ email });
-	console.log(user);
 	if (user && (await user.matchPassword(password))) {
 		res.json({
 			_id: user._id,
@@ -209,14 +209,10 @@ const sendRequest = asyncHandler(async (req, res, next) => {
 });
 
 const getUser = asyncHandler(async(req,res,next) => {
-	console.log(req.body);
 	const {email} = req.body;
     const user = await User.findOne({email});
-    console.log(user);
 	if(user){
-		console.log("210", user)
 		res.json(user);
-		console.log("212", user)
 	}
 });
 
@@ -257,12 +253,11 @@ const addFavorites = asyncHandler(async(req,res,next) => {
 	const goal_keeper_id = goalkeeper_id;
 
 	const player = await Player.findOne({_id: goal_keeper_id});
-	console.log(player);
 	const user = await User.findOne({_id: user_id});
-	console.log(user);
+	
 	user.favorites_list.push(mongoose.Types.ObjectId(player._id));
 	const updatedUser = await user.save();
-	console.log(updatedUser);
+
 	res.json({
 		_id: updatedUser._id,
 		name: updatedUser.name,
@@ -289,7 +284,7 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 	const user = await User.findOne({_id: user_id});
 	user.favorites_list.pull(player._id);
 	const updatedUser = await user.save();
-	console.log(updatedUser);
+	
 	res.json({
 		_id: updatedUser._id,
 		name: updatedUser.name,
@@ -307,11 +302,30 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 });
 
  const getFavorites = asyncHandler(async(req,res,next) => {
-       const {_id} = req.body ; // user id is taken
+	   
+	   const start = Number(req.query.start);
+       const stop = Number(req.query.stop);
+	   const _id = req.query._id ;
+	  
 	   const user = await User.findOne({_id});
+	   
+	   let players = [];
 	   const favorites_list = user.favorites_list;
-	   console.log(favorites_list);
-	   res.json(favorites_list);
+	   const count = favorites_list.length ;
+	   const sorted_favorites_list = favorites_list.slice(start,stop);
+	   
+	   for(let i = 0 ; i < sorted_favorites_list.length ; i++){
+		const player = await Player.findById(mongoose.Types.ObjectId(sorted_favorites_list[i]));
+		
+		const team = await Team.findById(mongoose.Types.ObjectId(player.club));
+        var clubName = team.club;
+        player.club = clubName;
+		
+	    players.push(player);
+		
+	   }
+
+	   res.json({size: count , players: players });
  });
 
 export { getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
