@@ -142,7 +142,7 @@ export const FavPlayers = ({...rest }) => {
   return (
     <Card {...rest}>
     {
-      players &&
+      players && players.length > 0 ? (
       <>
     
       <PerfectScrollbar>
@@ -220,7 +220,12 @@ export const FavPlayers = ({...rest }) => {
         rowsPerPage={limit}
         rowsPerPageOptions={[5, 10, 15]}
       />
-      </>
+      </>)
+
+      : 
+      (
+        <Typography>Favorite players will come here</Typography>
+      )
       }
 
       
