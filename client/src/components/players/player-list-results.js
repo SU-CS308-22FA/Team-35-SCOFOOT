@@ -71,6 +71,7 @@ export const PlayerListResults = ({...rest }) => {
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
+    
   };
 
   const handlePageChange = (event, newPage) => {
@@ -92,7 +93,7 @@ export const PlayerListResults = ({...rest }) => {
   }, [playerInfo]);
 
   useEffect(() => {
-    dispatch(allPlayersGet(page * limit, limit));
+    dispatch(allPlayersGet(page * limit, limit ));
   }, [page, limit]);
 
   const handleInfo = (id) => {
@@ -105,6 +106,9 @@ export const PlayerListResults = ({...rest }) => {
 
   return (
     <Card {...rest}>
+    {
+        loading && <Stack alignItems="center"><CircularProgress /></Stack>
+    }
     {
       players &&
       <>
@@ -195,10 +199,6 @@ export const PlayerListResults = ({...rest }) => {
         rowsPerPageOptions={[5, 10, 15]}
       />
       </>
-      }
-
-      {
-        loading && <Stack alignItems="center"><CircularProgress /></Stack>
       }
     </Card>
   );

@@ -58,6 +58,46 @@ const getPlayer = asyncHandler(async (req, res, next) => {
   
 });
 
+const searchPlayer = asyncHandler(async (req, res, next) => {
+  const searchKey = req.query.searchKey;
+  const start = Number(req.query.start);
+  const stop = Number(req.query.stop);
+  const rgx = (pattern) => new RegExp(`.*${pattern}.*`);
+  const searchRgx = rgx(searchKey);
+
+  const players = await Player.find({
+    $or: [
+      { name: { $regex: searchRgx, $options: "i" } },
+    ],
+  })
+    .skip(start)
+    .limit(stop)
+    .catch(next);
+
+  // Get the length of the documents in the collection
+  const count = await Player.countDocuments({
+    $or: [
+      { name: { $regex: searchRgx, $options: "i" } },
+    ],
+  });
+    
+  var team, clubInfo;
+  for (let i = 0; i < players.length; i++) {
+    team = await Team.findById(mongoose.Types.ObjectId(players[i].club));
+    var clubName = team.club;
+    var clubId = team._id;
+    var clubInfo = {
+      name: clubName,
+      _id: clubId
+    }
+    players[i] = players[i].toObject();
+    players[i].club = clubInfo;
+  }
+
+  res.status(200).json({size: count, players: players, currentSearchKey: searchKey});
+  
+});
+
 const getAllTeams = asyncHandler(async (req, res, next) => {
 
   try {
@@ -90,4 +130,4 @@ const getTeam = asyncHandler(async (req, res, next) => {
 });
 
 
-export { getAllPlayers, getPlayer, getAllTeams, getTeam };
+export { getAllPlayers, getPlayer, searchPlayer, getAllTeams, getTeam };

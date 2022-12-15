@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import PropTypes from "prop-types";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
-//import { format } from "date-fns";
-//import { getInitials } from "../../utils/get-initials";
 import {
   Avatar,
   Box,
@@ -60,7 +55,6 @@ export const TeamListResults = ({...rest}) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [teams, setTeams] = useState(null);
-  const [teamSize, setTeamSize] = useState(page * limit + limit);
   const teamResponse = useSelector((state) => state.allTeamsGet);
   const { loading, error, teamInfo } = teamResponse;
 
@@ -104,10 +98,7 @@ export const TeamListResults = ({...rest}) => {
               <TableRow>
                 <TableCell padding="checkbox"></TableCell>
 
-                <TableCell>Clubs</TableCell>
-                <TableCell>Win</TableCell>
-                <TableCell>Tie</TableCell>
-                <TableCell>Loss</TableCell>
+                <TableCell>Name</TableCell>
                 <TableCell>Ranking</TableCell>
               </TableRow>
             </TableHead>
@@ -144,9 +135,6 @@ export const TeamListResults = ({...rest}) => {
                     >
                       {team.club}
                     </Link></TableCell>
-                  <TableCell>{team.stats.win}</TableCell>
-                  <TableCell>{team.stats.tie}</TableCell>
-                  <TableCell>{team.stats.loss}</TableCell>
                   <TableCell>{team.stats.ranking}</TableCell>
                 </TableRow>
               ))}

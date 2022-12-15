@@ -8,10 +8,10 @@ import {
   Button,
   Box,
 } from "@mui/material";
-
+import { FavPlayers } from "../FavoritePlayers/FavPlayers";
 import { Card } from "react-bootstrap";
 
-function FavPlayers() {
+function FavPlayer() {
   return (
     <div>
       <Card>
@@ -23,7 +23,8 @@ function FavPlayers() {
             justifyContent: "center",
           }}
         >
-          <Typography>Favorite players will come here</Typography>
+          
+          <FavPlayers />
         </CardContent>
 
         <Box
@@ -38,4 +39,4 @@ function FavPlayers() {
   );
 }
 
-export default FavPlayers;
+export default FavPlayer;

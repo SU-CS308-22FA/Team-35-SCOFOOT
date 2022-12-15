@@ -40,7 +40,7 @@ export default function Login() {
 				navigate("/admin_profile");
 			}
 			else{
-				navigate("/profile");
+				navigate("/profile"); // bunu profile ile degistirmeyi unutma
 			}
 		
 		}
