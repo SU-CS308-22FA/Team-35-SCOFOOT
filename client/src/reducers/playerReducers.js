@@ -4,7 +4,10 @@ import {
   ALL_PLAYERS_GET_REQUEST,
   PLAYER_GET_REQUEST,
   PLAYER_GET_FAIL,
-  PLAYER_GET_SUCCESS
+  PLAYER_GET_SUCCESS,
+  PLAYER_SEARCH_REQUEST,
+  PLAYER_SEARCH_FAIL,
+  PLAYER_SEARCH_SUCCESS
 } from "../constants/playerConstants";
 
 export const allPlayersGetReducer = (state = {}, action) => {
@@ -28,6 +31,20 @@ export const playerGetReducer = (state = {}, action) => {
     case PLAYER_GET_SUCCESS:
       return { loading: false, playerInfo: action.payload };
     case PLAYER_GET_FAIL:
+      return { loading: false, error: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+export const playerSearchReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PLAYER_SEARCH_REQUEST:
+      return { loading: true };
+    case PLAYER_SEARCH_SUCCESS:
+      return { loading: false, playerSearchResult: action.payload };
+    case PLAYER_SEARCH_FAIL:
       return { loading: false, error: action.payload };
 
     default:
