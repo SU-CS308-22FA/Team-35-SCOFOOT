@@ -157,8 +157,9 @@ function AccountInfo() {
                 height: 100,
                 width: 100,
               }}
-              {...stringAvatar(`${name} ${surname}`)}
+              src={pic}
             />
+
             <Box
               sx={{
                 display: "flex",
@@ -166,6 +167,7 @@ function AccountInfo() {
                 pt: 3,
               }}
             ></Box>
+
             <Typography color="textPrimary" gutterBottom variant="h5">
               {`${name} ${surname}`}
             </Typography>
