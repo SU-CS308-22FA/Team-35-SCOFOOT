@@ -16,8 +16,8 @@ import {
 	ADMIN_VERIFICATION_REQUEST_SUCCESS,
 	INBOX_AFTER_DELETION_SUCCESS,
 	ALL_USERS_SUCCESS,
-	GET_USER_SUCCESS,
-	FAVORITES_GET_SUCCESS
+	FAVORITES_GET_SUCCESS,
+	GET_USER_BY_ID_SUCCESS
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -112,6 +112,14 @@ export const getFavoritesReducer = (state={}, action) => {
 	}
 }
 
+export const getUserReducer = (state={}, action) => {
+	switch(action.type){
+		case GET_USER_BY_ID_SUCCESS:
+			return {userData : action.payload};
+		default:
+			return state;
+	}
+}
 
 
 

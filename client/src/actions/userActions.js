@@ -18,7 +18,8 @@ import {
 	INBOX_AFTER_DELETION_SUCCESS,
 	VERIFICATION_STATUS_UPDATE,
 	ALL_USERS_SUCCESS,
-	FAVORITES_GET_SUCCESS
+	FAVORITES_GET_SUCCESS,
+	GET_USER_BY_ID_SUCCESS
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -279,3 +280,17 @@ export const getFavorites = (start, stop, _id) => async (dispatch) => {
 	catch(error){}
 
 }; 
+
+export const getUserById = (_id) => async(dispatch) => {
+	try {
+		console.log("aa");
+		console.log(_id);
+		const {data} = await axios.post("/api/users/userInfo", {_id}) ;
+		console.log(data);
+		dispatch( {type: GET_USER_BY_ID_SUCCESS, payload: data});
+	}
+
+	catch(error){
+	}
+
+}

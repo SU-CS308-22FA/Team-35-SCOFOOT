@@ -13,7 +13,8 @@ import {
 	getUser,
 	addFavorites,
 	deleteFavorites,
-	getFavorites
+	getFavorites,
+	getUserById
 } from "../controllers/userControllers.js";
 import { protect } from "../middlewares/auth.js";
 
@@ -33,4 +34,5 @@ router.post("/getUser", getUser);
 router.post("/addFavorites", addFavorites);
 router.post("/deleteFavorites", deleteFavorites);
 router.get("/favorites", getFavorites);
+router.post("/userInfo", getUserById);
 export default router;

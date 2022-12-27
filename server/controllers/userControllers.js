@@ -328,4 +328,15 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 	   res.json({size: count , players: players });
  });
 
-export { getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+ const getUserById = asyncHandler(async(req,res,next) => {
+	const {_id} = req.body ;
+	
+	const user = await User.findOne({_id});
+	res.json(user);
+
+});
+
+
+
+
+export { getUserById, getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
