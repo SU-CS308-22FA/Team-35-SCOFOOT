@@ -10,6 +10,7 @@ import PlayersAndTeams from "./screens/Players/PlayersAndTeams";
 import TeamsInfo from "./screens/TeamsInfo/TeamsInfo";
 import PlayersInfo from "./screens/PlayersInfo/PlayersInfo";
 import Verifications from "./screens/VerificationRequests/Verifications";
+import AllFollowingRequests from "./screens/UserProfilePage/AllFollowingRequestsPage";
 import { FavPlayers } from "./components/FavoritePlayers/FavPlayers";
 import ProfilePage from "./screens/ProfilePage/ProfilePage";
 import UserProfilePage from "./screens/UserProfilePage/UserProfilePage" ;
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path= "/favorites" element={<FavPlayers/>} />
         <Route path= "/userProfile" element={<UserProfilePage/> } />
+        <Route path= "/followingRequests" element={<AllFollowingRequests/>} />
       </Routes>
     </Router>
   );

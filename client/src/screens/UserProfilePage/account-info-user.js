@@ -138,6 +138,8 @@ function AccountInfoUser({data}) {
               </Button> }
               {user && (user?.following_sent?.includes(data._id)) && !(user?.following_approved?.includes(data._id)) && <p> Following Request Already Sent</p> }
 
+              {user && (user?.following_approved?.includes(data._id)) && <p> You follow the user</p>}
+
 
               
                

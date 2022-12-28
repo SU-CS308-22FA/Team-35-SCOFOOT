@@ -7,6 +7,7 @@ import Team from "../models/Team.js"
 import mongoose from "mongoose";
 
 
+
 const registerUser = asyncHandler(async (req, res, next) => {
   const { name, surname, email, password, profile_type, pic } = req.body;
 
@@ -339,10 +340,8 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 
 const sendFollowRequest = asyncHandler(async(req,res,next) => {
 	const {user_id, data_id} = req.body;
-	console.log(user_id);
-	console.log(data_id);
+	
 	const user = await User.findOne({_id : user_id}) ;
-	console.log(user);
 
 	let following_request_list = user.following_sent ;
 	following_request_list.push(data_id);
@@ -356,8 +355,87 @@ const sendFollowRequest = asyncHandler(async(req,res,next) => {
 	const secondUpdatedUser = await second_user.save();
 
 
+	/*res.json({
+		_id: updatedUser._id,
+		name: updatedUser.name,
+		surname: updatedUser.surname,
+		email: updatedUser.email,
+		pic: updatedUser.pic,
+		profile_type: updatedUser.profile_type,
+		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
+		isRequestSent: updatedUser.isRequestSent,
+		isVerified: updatedUser.isVerified, 
+		isAdmin: updatedUser.isAdmin,
+		token: generateToken(updatedUser._id),
+		following_sent: await User.find({_id: { $in: updatedUser.following_sent}}),
+		following_approved: await User.find({_id: { $in: updatedUser.following_approved}}),
+		following_request_waiting: await User.find({_id: { $in: updatedUser.following_request_waiting}})
+	}); */
 	res.json(updatedUser);
+});
+
+const seeFollowRequests = asyncHandler(async(req,res,next) => {
+	const {_id} = req.body;
+	const user = await User.findOne({_id});
+	const following_requests_of_user = await User.find({_id: { $in: user.following_request_waiting}});
+	res.json(following_requests_of_user);
+
+	 
+
+})
+
+const deleteFollowingRequests = asyncHandler(async(req,res,next) => {
+	// delete from user's following waiting
+	// delete from data's following sent
+const {user_id, data_id} = req.body ;
+const user = await User.findOne({_id : user_id});
+const second_user = await User.findOne({_id: data_id});
+let user_following_waiting_list = user.following_request_waiting ;
+user_following_waiting_list.pull(data_id);
+user.following_request_waiting = user_following_waiting_list ;
+const updatedUser = user.save();
+let second_user_following_sent_list = second_user.following_request_waiting ;
+second_user_following_sent_list.pull(user_id);
+second_user.following_request_waiting = second_user_following_sent_list;
+const secondUpdatedUser = second_user.save();
+const following_requests_of_user = await User.find({_id: { $in: updatedUser.following_request_waiting}});
+
+res.json(following_requests_of_user);
+
+
+})
+
+const approveFollowingRequests = asyncHandler(async(req,res,next) => {
+	// delete from data's following sent
+	// add to data's following approved
+	// delete from user's following request waiting 
+
+const {user_id, data_id} = req.body ;
+const user = await User.findOne({_id : user_id});
+const second_user = await User.findOne({_id: data_id});
+
+let user_following_request_waiting = user.following_request_waiting ;
+user_following_request_waiting.pull(data_id);
+const updatedUser = user.save();
+
+let second_user_following_sent_list = second_user.following_request_waiting ;
+second_user_following_sent_list.pull(user_id);
+second_user.following_request_waiting = second_user_following_sent_list;
+
+
+let second_user_approved_list = second_user.following_approved;
+second_user_approved_list.push(user_id)
+second_user.following_approved = second_user_approved_list;
+const secondUpdatedUser = second_user.save();
+
+const following_requests_of_user = await User.find({_id: { $in: updatedUser.following_request_waiting}});
+
+res.json(following_requests_of_user);
 })
 
 
-export { sendFollowRequest, getUserById, getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+
+
+
+
+export { approveFollowingRequests, deleteFollowingRequests, seeFollowRequests, sendFollowRequest, getUserById, getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

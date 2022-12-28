@@ -17,7 +17,8 @@ import {
 	INBOX_AFTER_DELETION_SUCCESS,
 	ALL_USERS_SUCCESS,
 	FAVORITES_GET_SUCCESS,
-	GET_USER_BY_ID_SUCCESS
+	GET_USER_BY_ID_SUCCESS,
+	WAITING_FOLLOWING_REQUESTS
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -91,6 +92,15 @@ export const seeVerificationReducer = (state = {}, action) => {  // all verifica
 			return state;
 	}
 };
+
+export const seeRequestsReducer = (state= {}, action) => {
+	switch (action.type){
+		case WAITING_FOLLOWING_REQUESTS:
+			return {followingRequestsInfo : action.payload};
+		default:
+			return state;
+	}
+}
 
 export const allUsersReducer = (state = {}, action) => {
 	switch(action.type) {

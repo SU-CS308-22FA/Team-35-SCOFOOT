@@ -20,7 +20,8 @@ import {
 	ALL_USERS_SUCCESS,
 	FAVORITES_GET_SUCCESS,
 	GET_USER_BY_ID_SUCCESS,
-	SEND_FOLLOWING_REQUEST_SUCCESS
+	SEND_FOLLOWING_REQUEST_SUCCESS,
+	WAITING_FOLLOWING_REQUESTS
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -295,14 +296,42 @@ export const getUserById = (_id) => async(dispatch) => {
 
 export const sendFollowingRequest = (user_id, data_id ) => async(dispatch) => {
    try {
-	console.log(user_id);
-	console.log(data_id);
+	
 	const {data} = await axios.post("/api/users/sendFollowingRequest", {user_id, data_id}); // user dondur
-	console.log(data);
+	
 	dispatch( {type: USER_LOGIN_SUCCESS, payload: data});
 	localStorage.setItem("userInfo", JSON.stringify(data));
    }
    catch(error){}
    
+}
+
+export const seeAllFollowingRequests = (_id) => async(dispatch) => {
+	try {
+		const {data} = await axios.post("/api/users/seeFollowingRequests", {_id});
+		dispatch ( {type: WAITING_FOLLOWING_REQUESTS, payload: data});
+	
+	}
+	catch(error){}
+
+} 
+
+export const deleteFollowingRequest = (user_id, data_id) => async(dispatch) => {
+ try{
+	const {data} = await axios.post("/api/users/deleteFollowingRequest", {user_id, data_id});
+	dispatch ({type: WAITING_FOLLOWING_REQUESTS, payload: data});
+ }
+ catch(error){
+
+}}
+
+export const approveFollowingRequest = (user_id, data_id) => async(dispatch) => {
+ try{
+	const {data} = await axios.post("/api/users/approveFollowingRequest", {user_id, data_id});
+	dispatch ({type: WAITING_FOLLOWING_REQUESTS, payload: data});
+ }
+ catch(error){}
+  
+
 }
 

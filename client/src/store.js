@@ -10,7 +10,8 @@ import {
 	seeVerificationReducer,
 	allUsersReducer,
 	getFavoritesReducer,
-	getUserReducer
+	getUserReducer,
+	seeRequestsReducer
 	
 } from "./reducers/userReducers";
 import { allPlayersGetReducer, playerGetReducer, playerSearchReducer } from "./reducers/playerReducers";
@@ -28,7 +29,8 @@ const reducer = combineReducers({
 	teamGet: teamGetReducer,
 	favoritePlayers : getFavoritesReducer,
 	playerSearch: playerSearchReducer,
-	otherUser : getUserReducer
+	otherUser : getUserReducer,
+	seeFollowingRequests: seeRequestsReducer
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
