@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Nav } from "react-bootstrap";
-import {
-  updateProfile,
-  deleteUser,
-  sendRequest,
-  changeIsSent,
-} from "../../actions/userActions";
-import green from "@material-ui/core/colors/green";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { useNavigate } from "react-router-dom";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import "../../screens/VerificationRequests/verification.css";
@@ -22,10 +15,12 @@ import {
   Divider,
   Button,
 } from "@mui/material";
+import { sendFollowingRequest } from "../../actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
 
 function AccountInfoUser({data}) {
   console.log(data);
-  
+  const dispatch = useDispatch();
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -58,6 +53,29 @@ function AccountInfoUser({data}) {
           : name[0],
     };
   }
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    setUser(userInfo);
+    
+  }, [userInfo]);
+
+  
+
+  /* function deleteRequest(){
+     dispatch(deleteFollowingRequest(user._id, data._id));
+
+  } */
+
+  const sendRequest = () =>  {
+    //console.log(_id);
+    dispatch(sendFollowingRequest(user._id, data._id));
+    
+  }
+  
 
   return (
     <div>
@@ -112,6 +130,21 @@ function AccountInfoUser({data}) {
             <Typography color="textSecondary" variant="body2">
               {data.profile_type}
             </Typography>
+
+            <Typography color="textSecondary" variant="body2">
+              {user && !(user?.following_sent?.includes(data._id)) && !(user?.following_approved?.includes(data._id)) && 
+              <Button onClick={() => sendRequest()}>
+                  <PersonAddIcon/> 
+              </Button> }
+              {user && (user?.following_sent?.includes(data._id)) && !(user?.following_approved?.includes(data._id)) && <p> Following Request Already Sent</p> }
+
+
+              
+               
+              
+              
+            </Typography>
+
           </Box>
         </CardContent>
         <Box

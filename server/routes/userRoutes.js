@@ -14,7 +14,8 @@ import {
 	addFavorites,
 	deleteFavorites,
 	getFavorites,
-	getUserById
+	getUserById,
+	sendFollowRequest
 } from "../controllers/userControllers.js";
 import { protect } from "../middlewares/auth.js";
 
@@ -35,4 +36,5 @@ router.post("/addFavorites", addFavorites);
 router.post("/deleteFavorites", deleteFavorites);
 router.get("/favorites", getFavorites);
 router.post("/userInfo", getUserById);
+router.post("/sendFollowingRequest", sendFollowRequest);
 export default router;

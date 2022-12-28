@@ -337,6 +337,27 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 });
 
 
+const sendFollowRequest = asyncHandler(async(req,res,next) => {
+	const {user_id, data_id} = req.body;
+	console.log(user_id);
+	console.log(data_id);
+	const user = await User.findOne({_id : user_id}) ;
+	console.log(user);
+
+	let following_request_list = user.following_sent ;
+	following_request_list.push(data_id);
+	user.following_sent = following_request_list ;
+	const updatedUser = await user.save() ;
+
+	const second_user = await User.findOne({_id : data_id});
+	let request_waiting_list = second_user.following_request_waiting;
+	request_waiting_list.push(user_id);
+	second_user.following_request_waiting = request_waiting_list;
+	const secondUpdatedUser = await second_user.save();
 
 
-export { getUserById, getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+	res.json(updatedUser);
+})
+
+
+export { sendFollowRequest, getUserById, getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
