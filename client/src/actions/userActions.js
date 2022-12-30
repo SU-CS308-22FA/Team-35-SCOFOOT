@@ -301,6 +301,7 @@ export const sendFollowingRequest = (user_id, data_id ) => async(dispatch) => {
 	
 	dispatch( {type: USER_LOGIN_SUCCESS, payload: data});
 	localStorage.setItem("userInfo", JSON.stringify(data));
+	console.log(data);
    }
    catch(error){}
    
@@ -309,8 +310,10 @@ export const sendFollowingRequest = (user_id, data_id ) => async(dispatch) => {
 export const seeAllFollowingRequests = (_id) => async(dispatch) => {
 	try {
 		const {data} = await axios.post("/api/users/seeFollowingRequests", {_id});
-		dispatch ( {type: WAITING_FOLLOWING_REQUESTS, payload: data});
-	
+		//dispatch ( {type: WAITING_FOLLOWING_REQUESTS, payload: data});
+		//localStorage.setItem("followingRequestsInfo", JSON.stringify(data));
+		dispatch( {type: USER_LOGIN_SUCCESS, payload: data});
+		localStorage.setItem("userInfo", JSON.stringify(data));
 	}
 	catch(error){}
 
@@ -319,7 +322,12 @@ export const seeAllFollowingRequests = (_id) => async(dispatch) => {
 export const deleteFollowingRequest = (user_id, data_id) => async(dispatch) => {
  try{
 	const {data} = await axios.post("/api/users/deleteFollowingRequest", {user_id, data_id});
-	dispatch ({type: WAITING_FOLLOWING_REQUESTS, payload: data});
+	//dispatch ({type: WAITING_FOLLOWING_REQUESTS, payload: data});
+	//localStorage.setItem("followingRequestsInfo", JSON.stringify(data));
+
+	dispatch( {type: USER_LOGIN_SUCCESS, payload: data});
+	localStorage.setItem("userInfo", JSON.stringify(data));
+	console.log(data);
  }
  catch(error){
 
@@ -328,10 +336,26 @@ export const deleteFollowingRequest = (user_id, data_id) => async(dispatch) => {
 export const approveFollowingRequest = (user_id, data_id) => async(dispatch) => {
  try{
 	const {data} = await axios.post("/api/users/approveFollowingRequest", {user_id, data_id});
-	dispatch ({type: WAITING_FOLLOWING_REQUESTS, payload: data});
+
+	//dispatch ({type: WAITING_FOLLOWING_REQUESTS, payload: data});
+	//localStorage.setItem("followingRequestsInfo", JSON.stringify(data));
+
+	dispatch( {type: USER_LOGIN_SUCCESS, payload: data});
+	localStorage.setItem("userInfo", JSON.stringify(data));
+	console.log(data);
  }
  catch(error){}
   
 
+}
+
+export const getCurrentUser = (_id) => async(dispatch) => {
+	try {
+		const {data} = await axios.post("/api/users/currentUserInfo", {_id}) ;
+		dispatch( {type: USER_LOGIN_SUCCESS, payload: data});
+	}
+
+	catch(error){
+	}
 }
 

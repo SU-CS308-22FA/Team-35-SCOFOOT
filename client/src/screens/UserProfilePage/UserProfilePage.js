@@ -5,7 +5,7 @@ import UserAboutMe from "../../screens/UserProfilePage/about-user";
 import UserPosts from "../../screens/UserProfilePage/posts-user";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import { getUserById } from "../../actions/userActions";
+import { getCurrentUser, getUserById } from "../../actions/userActions";
 
 function UserProfilePage() {
  const location = useLocation();
@@ -17,6 +17,9 @@ function UserProfilePage() {
  const navigate = useNavigate();
  const otherUser = useSelector((state)=> state.otherUser);
  const {userData} = otherUser;
+ const userLogin = useSelector((state) => state.userLogin);
+ const { userInfo } = userLogin;
+ 
  const [user, setUser] = useState({});
 
 
@@ -24,6 +27,10 @@ function UserProfilePage() {
     dispatch(getUserById(_id));
   }, [_id]);
 
+  useEffect(()=> {
+    dispatch(getCurrentUser(userInfo._id));
+    dispatch(getUserById(_id));
+  }, []);
 
  
   useEffect(() => {

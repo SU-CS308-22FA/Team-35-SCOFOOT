@@ -19,6 +19,7 @@ import { sendFollowingRequest } from "../../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
 
 function AccountInfoUser({data}) {
+  
   console.log(data);
   const dispatch = useDispatch();
   function stringToColor(string) {
@@ -57,6 +58,7 @@ function AccountInfoUser({data}) {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [user, setUser] = useState(null);
+  console.log(userInfo);
 
   useEffect(() => {
     setUser(userInfo);
@@ -132,13 +134,13 @@ function AccountInfoUser({data}) {
             </Typography>
 
             <Typography color="textSecondary" variant="body2">
-              {user && !(user?.following_sent?.includes(data._id)) && !(user?.following_approved?.includes(data._id)) && 
-              <Button onClick={() => sendRequest()}>
+              {user && !(user?.following_sent?.some(following => following._id === data._id)) && !(user?.following_approved?.some(following =>  following._id === data._id)) && 
+              <Button onClick={() => sendRequest()}> 
                   <PersonAddIcon/> 
               </Button> }
-              {user && (user?.following_sent?.includes(data._id)) && !(user?.following_approved?.includes(data._id)) && <p> Following Request Already Sent</p> }
+              {user && (user?.following_sent?.some(following =>   following._id === data._id)) && !(user?.following_approved?.some(following =>  following._id === data._id)) && <p> Following Request Already Sent</p> }
 
-              {user && (user?.following_approved?.includes(data._id)) && <p> You follow the user</p>}
+              {user && (user?.following_approved?.some(following =>   following._id === data._id)) && <p> You follow the user</p>}
 
 
               

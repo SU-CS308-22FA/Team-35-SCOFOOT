@@ -37,8 +37,13 @@ const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
 
+const connectionInfo = localStorage.getItem("followingRequestsInfo")
+  ? JSON.parse(localStorage.getItem("followingRequestsInfo"))
+  : null;
+
 const initialState = {
   userLogin: { userInfo: userInfoFromStorage },
+  seeFollowingRequests: { followingRequestsInfo: connectionInfo}
 };
 
 const middleware = [thunk];

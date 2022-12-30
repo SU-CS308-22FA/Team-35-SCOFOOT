@@ -4,15 +4,21 @@ import '../../screens/VerificationRequests/verification.css'
 import { useDispatch, useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
-import { approveFollowingRequest, deleteFollowingRequest } from "../../actions/userActions";
+import { approveFollowingRequest, deleteFollowingRequest, seeAllFollowingRequests } from "../../actions/userActions";
+
 
 const Requests = () => {
 
 
-  const requestsInbox = useSelector((state) => state.seeFollowingRequests);
-  const { followingRequestsInfo } = requestsInbox; // all requests of the user
+  //const requestsInbox = useSelector((state) => state.seeFollowingRequests);
+  //const { followingRequestsInfo } = requestsInbox; // all requests of the user
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const [requests, setRequest] = useState(null);
     
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const removeRequest = (user_id, data_id) => {
     //console.log(_id);
@@ -25,7 +31,11 @@ const Requests = () => {
     dispatch(approveFollowingRequest(user_id, data_id));
     
   }
-  
+
+  useEffect(() => {
+    dispatch(seeAllFollowingRequests(userInfo._id));
+    setRequest(userInfo.following_request_waiting);
+  }, [userInfo, navigate])
 
 
   
@@ -36,7 +46,7 @@ const Requests = () => {
             <div className="underline"></div>
           </div>
           <div>
-            {(followingRequestsInfo?.map((single) => {
+            {(requests?.map((single) => {
               return <FRequest key = {single._id}{...single} removeRequest={removeRequest} approveRequest = {approveRequest} />;
             }))}
 
