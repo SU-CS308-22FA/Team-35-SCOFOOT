@@ -359,3 +359,12 @@ export const getCurrentUser = (_id) => async(dispatch) => {
 	}
 }
 
+export const removeFollowedUser = (user_id, data_id) => async(dispatch) => {
+	try{
+		const data = await axios.post("/api/users/removeFollowedUser", {user_id, data_id});
+		dispatch({type: USER_LOGIN_SUCCESS, payload: data});
+	}
+
+	catch(error){}
+}
+

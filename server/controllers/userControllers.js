@@ -507,7 +507,38 @@ res.json({
 	following_approved: updatedUser.following_approved,
 	following_request_waiting: updatedUser.following_request_waiting
 }); 
+});
+
+const removeFollowingUser = asyncHandler(async(req,res,next) => {
+	// userin following approved'undan datayi sil
+	const {user_id, data_id} = req.body ;
+	const user = await User.findOne({_id : user_id});
+    
+	const following_already_approved = await user.following_approved.filter(following => { return following._id == data_id});
+	user.following_approved.pull(following_already_approved[0]);
+	const updatedUser = user.save();
+	res.json({
+		_id: updatedUser._id,
+		name: updatedUser.name,
+		surname: updatedUser.surname,
+		email: updatedUser.email,
+		pic: updatedUser.pic,
+		profile_type: updatedUser.profile_type,
+		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
+		isRequestSent: updatedUser.isRequestSent,
+		isVerified: updatedUser.isVerified, 
+		isAdmin: updatedUser.isAdmin,
+		token: generateToken(updatedUser._id),
+		following_sent: updatedUser.following_sent,
+		following_approved: updatedUser.following_approved,
+		following_request_waiting: updatedUser.following_request_waiting
+	}); 
+
+
 })
+
+
+
 
 const getCurrentUserInfo = asyncHandler(async(req,res,next) => {
 	const {_id} = req.body;
@@ -536,4 +567,4 @@ const getCurrentUserInfo = asyncHandler(async(req,res,next) => {
 
 
 
-export { getCurrentUserInfo, approveFollowingRequests, deleteFollowingRequests, seeFollowRequests, sendFollowRequest, getUserById, getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+export { removeFollowingUser, getCurrentUserInfo, approveFollowingRequests, deleteFollowingRequests, seeFollowRequests, sendFollowRequest, getUserById, getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

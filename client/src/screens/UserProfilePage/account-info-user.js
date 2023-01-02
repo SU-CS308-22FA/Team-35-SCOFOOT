@@ -15,7 +15,7 @@ import {
   Divider,
   Button,
 } from "@mui/material";
-import { sendFollowingRequest } from "../../actions/userActions";
+import { removeFollowedUser, sendFollowingRequest } from "../../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
 
 function AccountInfoUser({data}) {
@@ -76,6 +76,10 @@ function AccountInfoUser({data}) {
     //console.log(_id);
     dispatch(sendFollowingRequest(user._id, data._id));
     
+  }
+
+  const deleteFromFollowing = (user_id, data_id) => {
+    dispatch(removeFollowedUser(user_id, data_id));
   }
   
 
@@ -140,7 +144,9 @@ function AccountInfoUser({data}) {
               </Button> }
               {user && (user?.following_sent?.some(following =>   following._id === data._id)) && !(user?.following_approved?.some(following =>  following._id === data._id)) && <p> Following Request Already Sent</p> }
 
-              {user && (user?.following_approved?.some(following =>   following._id === data._id)) && <p> You follow the user</p>}
+              {user && (user?.following_approved?.some(following =>   following._id === data._id)) &&  <Button onClick={() => deleteFromFollowing(user._id, data._id)}> 
+                  <PersonRemoveIcon/> 
+              </Button>}
 
 
               

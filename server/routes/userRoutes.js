@@ -19,7 +19,8 @@ import {
 	seeFollowRequests,
 	deleteFollowingRequests,
 	approveFollowingRequests,
-	getCurrentUserInfo
+	getCurrentUserInfo,
+	removeFollowingUser
 } from "../controllers/userControllers.js";
 import { protect } from "../middlewares/auth.js";
 
@@ -45,4 +46,5 @@ router.post("/seeFollowingRequests", seeFollowRequests);
 router.post("/deleteFollowingRequest", deleteFollowingRequests);
 router.post("/approveFollowingRequest", approveFollowingRequests);
 router.post("/currentUserInfo", getCurrentUserInfo);
+router.post("/removeFollowedUser", removeFollowingUser);
 export default router;
