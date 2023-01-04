@@ -66,6 +66,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 			isVerified: user.isVerified,
 			isRequestSent: user.isRequestSent,
 			favorites_list: user.favorites_list,
+			playerProfile: user.playerProfile,
 			token: generateToken(user._id),
 		});
 	} else {
@@ -84,7 +85,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			_id: user._id,
 			name: user.name,
 			surname: user.surname,
-      aboutme: user.aboutme,
+      		aboutme: user.aboutme,
 			email: user.email,
 			accountType: user.accountType,
 			pic: user.pic,
@@ -92,6 +93,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			token: generateToken(user._id),
 			isVerified: user.isVerified,
 			isRequestSent : user.isRequestSent,
+			playerProfile: user.playerProfile,
 			favorites_list: await Player.find({_id: { $in: user.favorites_list}})
 		});
 	} else {
@@ -127,6 +129,7 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
 				isRequestSent: user.isRequestSent,
 		    isVerified: user.isVerified, 
 				isAdmin: user.isAdmin,
+				playerProfile: user.playerProfile,
 				token: generateToken(updatedUser._id),
 			});
 		} catch (error) {
@@ -295,6 +298,7 @@ const addFavorites = asyncHandler(async(req,res,next) => {
 		isRequestSent: updatedUser.isRequestSent,
 		isVerified: updatedUser.isVerified, 
 		isAdmin: updatedUser.isAdmin,
+		playerProfile: user.playerProfile,
 		token: generateToken(updatedUser._id),
 	});
 
@@ -322,6 +326,7 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 		isRequestSent: updatedUser.isRequestSent,
 		isVerified: updatedUser.isVerified, 
 		isAdmin: updatedUser.isAdmin,
+		playerProfile: user.playerProfile,
 		token: generateToken(updatedUser._id),
 	});
 

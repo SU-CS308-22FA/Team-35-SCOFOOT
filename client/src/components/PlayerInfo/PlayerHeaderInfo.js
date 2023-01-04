@@ -11,6 +11,7 @@ import {
   Avatar,
   Tabs,
   Tab,
+  Button
 } from "@mui/material";
 import PropTypes from "prop-types";
 import PublicIcon from "@mui/icons-material/Public";
@@ -27,6 +28,7 @@ import { ThemeProvider } from "react-bootstrap";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import EditIcon from '@mui/icons-material/Edit';
 import { addToFavorites, deleteFromFavorites } from "../../actions/userActions";
 
 function TabPanel(props) {
@@ -72,6 +74,10 @@ export const PlayerHeaderInfo = (props) => {
 
   const { state } = useLocation();
   const { id } = state || {};
+  var { isOwner } = state || {};
+  if (!isOwner) {
+    isOwner = false;
+  }
   const [value, setValue] = useState(0);
 
   const [info, setInfo] = useState([]);
@@ -474,6 +480,10 @@ export const PlayerHeaderInfo = (props) => {
     setUser(userInfo);
   }, [userInfo]);
 
+  const setEditBox = (value) => {
+    console.log(value);
+  }
+
   const theme = useTheme();
 
   return (
@@ -558,7 +568,15 @@ export const PlayerHeaderInfo = (props) => {
                             color="textPrimary"
                             variant="body1"
                           >
-                            {value}
+                          {value}
+                          {
+                            isOwner ?
+                            <IconButton color="secondary" onClick={() => setEditBox(value)} >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                            :
+                            <></>
+                          }
                           </Typography>
                         </Box>
                       ))}
@@ -593,6 +611,7 @@ export const PlayerHeaderInfo = (props) => {
                             variant="body1"
                           >
                             {value}
+                            
                           </Typography>
                         </Box>
                       ))}

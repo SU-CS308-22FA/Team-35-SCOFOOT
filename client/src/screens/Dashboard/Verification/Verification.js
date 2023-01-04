@@ -7,6 +7,7 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
+import Avatar from '@mui/material/Avatar';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
@@ -15,6 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Stack from '@mui/material/Stack';
+import CardHeader from '@mui/material/CardHeader';
 import { Button } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,6 +30,7 @@ import AddBoxIcon from '@mui/icons-material/AddBox';
 
 
 function Row(props) {
+  const baseImageUrl = "images/teams/";
   const { row, verificationCodesObject } = props;
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
@@ -60,7 +63,15 @@ function Row(props) {
   return (
     <Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell>
+        <TableCell component="th" scope="row">
+          <CardHeader
+            avatar={
+              <Avatar src={`${baseImageUrl}${row.teamImage}`} />
+            }
+            title={row.club}
+          />
+        </TableCell>
+        <TableCell align="right">
           <IconButton
             aria-label="expand row"
             size="small"
@@ -68,9 +79,6 @@ function Row(props) {
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
-        </TableCell>
-        <TableCell component="th" scope="row">
-          {row.club}
         </TableCell>
       </TableRow>
       <TableRow>
@@ -219,8 +227,8 @@ export default function CollapsibleTable() {
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
-            <TableCell />
             <TableCell>Teams</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
