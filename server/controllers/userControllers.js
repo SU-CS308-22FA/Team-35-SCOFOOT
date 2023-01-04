@@ -319,35 +319,6 @@ const addFavorites = asyncHandler(async (req, res, next) => {
   });
 });
 
-const deleteFavorites = asyncHandler(async (req, res, next) => {
-  const { goalkeeper_id, user_id } = req.body;
-
-  const goal_keeper_id = goalkeeper_id;
-
-  const player = await Player.findById(mongoose.Types.ObjectId(goal_keeper_id));
-  const user = await User.findOne({ _id: user_id });
-  user.favorites_list.pull(player._id);
-  const updatedUser = await user.save();
-
-  res.json({
-    _id: updatedUser._id,
-    name: updatedUser.name,
-    surname: updatedUser.surname,
-    email: updatedUser.email,
-    pic: updatedUser.pic,
-    profile_type: updatedUser.profile_type,
-    favorites_list: await Player.find({
-      _id: { $in: updatedUser.favorites_list },
-    }),
-    isRequestSent: updatedUser.isRequestSent,
-    isVerified: updatedUser.isVerified,
-    isAdmin: updatedUser.isAdmin,
-    token: generateToken(updatedUser._id),
-    following_sent: updatedUser.following_sent,
-    following_approved: updatedUser.following_approved,
-    following_request_waiting: updatedUser.following_request_waiting,
-  });
-});
 
 const getFavorites = asyncHandler(async (req, res, next) => {
   const start = Number(req.query.start);
@@ -545,37 +516,37 @@ const approveFollowingRequests = asyncHandler(async (req, res, next) => {
   });
 });
 
-const addFavorites = asyncHandler(async(req,res,next) => {
-	const {goalkeeper_id, user_id} = req.body ;
-	
-	const goal_keeper_id = goalkeeper_id;
-
-	const player = await Player.findOne({_id: goal_keeper_id});
-	const user = await User.findOne({_id: user_id});
-	
-	user.favorites_list.push(mongoose.Types.ObjectId(player._id));
+const removeFollowingUser = asyncHandler(async (req, res, next) => {
+	// userin following approved'undan datayi sil
+	const { user_id, data_id } = req.body;
+	const user = await User.findOne({ _id: user_id });
+  
+	const following_already_approved = await user.following_approved.filter(
+	  (following) => {
+		return following._id == data_id;
+	  }
+	);
+	user.following_approved.pull(following_already_approved[0]);
 	const updatedUser = await user.save();
-
 	res.json({
-		_id: updatedUser._id,
-		name: updatedUser.name,
-		surname: updatedUser.surname,
-		email: updatedUser.email,
-		pic: updatedUser.pic,
-		accountType: updatedUser.accountType,
-		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
-		isRequestSent: updatedUser.isRequestSent,
-		isVerified: updatedUser.isVerified, 
-		isAdmin: updatedUser.isAdmin,
-		playerProfile: user.playerProfile,
-		token: generateToken(updatedUser._id),
-    following_sent: updatedUser.following_sent,
-    following_approved: updatedUser.following_approved,
-    following_request_waiting: updatedUser.following_request_waiting,
+	  _id: updatedUser._id,
+	  name: updatedUser.name,
+	  surname: updatedUser.surname,
+	  email: updatedUser.email,
+	  pic: updatedUser.pic,
+	  profile_type: updatedUser.profile_type,
+	  favorites_list: await Player.find({
+		_id: { $in: updatedUser.favorites_list },
+	  }),
+	  isRequestSent: updatedUser.isRequestSent,
+	  isVerified: updatedUser.isVerified,
+	  isAdmin: updatedUser.isAdmin,
+	  token: generateToken(updatedUser._id),
+	  following_sent: updatedUser.following_sent,
+	  following_approved: updatedUser.following_approved,
+	  following_request_waiting: updatedUser.following_request_waiting,
 	});
-
-})
-
+  });
 
 const deleteFavorites = asyncHandler(async(req,res,next) => {
 	const {goalkeeper_id, user_id} = req.body ;
@@ -600,10 +571,11 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 		isAdmin: updatedUser.isAdmin,
 		playerProfile: user.playerProfile,
 		token: generateToken(updatedUser._id),
-    following_sent: updatedUser.following_sent,
-    following_approved: updatedUser.following_approved,
-    following_request_waiting: updatedUser.following_request_waiting,
+    	following_sent: updatedUser.following_sent,
+    	following_approved: updatedUser.following_approved,
+    	following_request_waiting: updatedUser.following_request_waiting,
 	});
+});
 
 
 const getCurrentUserInfo = asyncHandler(async (req, res, next) => {
@@ -648,5 +620,6 @@ export {
   registerUser,
   loginUser,
   updateUserProfile,
-  deleteUser,
+  deleteUser
 };
+
