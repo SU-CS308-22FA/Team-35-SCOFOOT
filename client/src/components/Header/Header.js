@@ -1,4 +1,4 @@
-import React, { useEffect , useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,6 @@ import { seeAllUsers } from "../../actions/userActions";
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 function Header() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -21,15 +20,12 @@ function Header() {
   const { userInfo } = userLogin;
   
   const allUsers = useSelector((state) => state.allUsers );
- // const [user,setUser] = useState(null);
+ //const [user,setUser] = useState(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(seeAllUsers());
-    //setUser(userInfo);
-  },[])
+  }, []);
 
-
-  
   const logoutHandler = () => {
     dispatch(logout());
     navigate("/");
@@ -45,7 +41,6 @@ function Header() {
   
 
   return (
-    
     <ThemeProvider theme={theme}>
       <Navbar
         className="px-4"
@@ -66,9 +61,10 @@ function Header() {
 
           <SearchBar placeholder="Enter a User..." data={allUsers.usersData} /> 
           <Nav.Link href="/database">Players & Teams</Nav.Link>
+          <Nav.Link href="/feed">Feed</Nav.Link>
+
             {userInfo ? (
               <>
-                        
                 <Nav.Link href="/profilepage">My Profile </Nav.Link>
                 <NavDropdown
                   title={`${userInfo?.name}`}
@@ -88,7 +84,6 @@ function Header() {
                 <Nav.Link href="/signup">Sign Up</Nav.Link>
               </>
             )}
-            
           </Nav>
         </Navbar.Collapse>
       </Navbar>

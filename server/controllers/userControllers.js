@@ -6,10 +6,8 @@ import Player from "../models/Player.js";
 import Team from "../models/Team.js"
 import mongoose from "mongoose";
 
-
-
 const registerUser = asyncHandler(async (req, res, next) => {
-  const { name, surname, email, password, profile_type, pic } = req.body;
+  const { name, surname, email, password, profile_type, pic, image } = req.body;
 
   const userExists = await User.findOne({ email });
 
@@ -24,8 +22,8 @@ const registerUser = asyncHandler(async (req, res, next) => {
     email,
     password,
     pic,
+    image,
     profile_type,
-    aboutme,
   });
 
 	if (user) {
@@ -37,6 +35,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 			email: user.email,
 			profile_type: user.profile_type,
 			pic: user.pic,
+      image: user.image,
 			isAdmin: user.isAdmin,
 			isVerified: user.isVerified,
 			isRequestSent: user.isRequestSent,
@@ -66,6 +65,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			email: user.email,
 			profile_type: user.profile_type,
 			pic: user.pic,
+      image: user.image,
 			isAdmin: user.isAdmin,
 			token: generateToken(user._id),
 			isVerified: user.isVerified,
@@ -90,6 +90,7 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
       user.email = req.body.email || user.email;
       user.profile_type = req.body.profile_type || user.profile_type;
       user.pic = req.body.pic || user.pic;
+      user.image = req.body.image || user.image;
       user.aboutme = req.body.aboutme || user.aboutme;
 	  user.following_sent = req.body.following_sent || user.following_sent;
 	  user.following_approved = req.body.following_approved || user.following_approved;
@@ -107,6 +108,7 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
                 aboutme: user.aboutme,
 				email: updatedUser.email,
 				pic: updatedUser.pic,
+        image: updatedUser.image,
 				profile_type: user.profile_type,
 				favorites_list : user.favorites_list,
 				isRequestSent: user.isRequestSent,
@@ -129,6 +131,7 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
 		res.status(404);
 		throw new Error("User not found!");
 	}
+
 });
 
 const deleteUser = asyncHandler(async (req, res, next) => {
@@ -155,42 +158,35 @@ const showRequests = asyncHandler(async (req, res, next) => {
 });
 
 const deleteRequest = asyncHandler(async (req, res, next) => {
-	
-	const request = await Requests.findById(req.body._id);
-	const deletedRequest = await request.remove();
-	const requests = await Requests.find() ;
- 	if(requests){
-		res.json(requests);
-  	}
-
-	else {
-		res.status(404);
-		throw new Error("Requests not found!");
-	}
-
+  const request = await Requests.findById(req.body._id);
+  const deletedRequest = await request.remove();
+  const requests = await Requests.find();
+  if (requests) {
+    res.json(requests);
+  } else {
+    res.status(404);
+    throw new Error("Requests not found!");
+  }
 });
 
-const approveRequest = asyncHandler(async (req, res, next) => { // first delete it from the requests and then change isVerified feature of the User to true
-	
-	const request = await Requests.findById(req.body._id); // the request info ( name, surname, email) that will be deleted from requests map
-	const email = request.email;	
-	const deletedRequest = await request.remove();
+const approveRequest = asyncHandler(async (req, res, next) => {
+  // first delete it from the requests and then change isVerified feature of the User to true
 
-	const requests = await Requests.find() ;
-    const user = await User.findOne({email: email});
-	user.isVerified = true; // useri verified olacak sekilde guncelledik
-	const updatedUser = await user.save(); // user updatelendi
-  
+  const request = await Requests.findById(req.body._id); // the request info ( name, surname, email) that will be deleted from requests map
+  const email = request.email;
+  const deletedRequest = await request.remove();
 
+  const requests = await Requests.find();
+  const user = await User.findOne({ email: email });
+  user.isVerified = true; // useri verified olacak sekilde guncelledik
+  const updatedUser = await user.save(); // user updatelendi
 
- 	if(requests){
-		res.json(requests);
-  	}
-
-	else {
-		res.status(404);
-		throw new Error("Requests not found!");
-	}
+  if (requests) {
+    res.json(requests);
+  } else {
+    res.status(404);
+    throw new Error("Requests not found!");
+  }
 
   if (requests) {
     res.json(requests);
@@ -200,11 +196,11 @@ const approveRequest = asyncHandler(async (req, res, next) => { // first delete 
   }
 });
 
-const sendRequest = asyncHandler(async (req, res, next) => { 
-	const {email} = req.body;
-	const user = await User.findOne({email}); 
-	const name = user.name;
-	const surname = user.surname;
+const sendRequest = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  const name = user.name;
+  const surname = user.surname;
 
   const request = await Requests.create({
     name,
@@ -252,17 +248,46 @@ const changeIsSent = asyncHandler(async (req, res, next) => {
   });
 });
 
-const getAllUsers = asyncHandler(async(req,res,next) => {
-   const users = await User.find();
-   if(users){
-	res.json(users);
+const getAllUsers = asyncHandler(async (req, res, next) => {
+  const users = await User.find();
+  if (users) {
+    res.json(users);
+  } else {
+    res.status(404);
+    throw new Error("Users not found!");
   }
-
-else {
-	res.status(404);
-	throw new Error("Users not found!");
-}
 });
+
+const addFavorites = asyncHandler(async (req, res, next) => {
+  const { goalkeeper_id, user_id } = req.body;
+
+  const goal_keeper_id = goalkeeper_id;
+
+  const player = await Player.findOne({ _id: goal_keeper_id });
+  console.log(player);
+  const user = await User.findOne({ _id: user_id });
+  console.log(user);
+  user.favorites_list.push(mongoose.Types.ObjectId(player._id));
+  const updatedUser = await user.save();
+  console.log(updatedUser);
+  res.json({
+    _id: updatedUser._id,
+    name: updatedUser.name,
+    surname: updatedUser.surname,
+    email: updatedUser.email,
+    pic: updatedUser.pic,
+    image: updatedUser.image,
+    profile_type: updatedUser.profile_type,
+    favorites_list: await Player.find({
+      _id: { $in: updatedUser.favorites_list },
+    }),
+    isRequestSent: updatedUser.isRequestSent,
+    isVerified: updatedUser.isVerified,
+    isAdmin: updatedUser.isAdmin,
+    token: generateToken(updatedUser._id),
+  });
+});
+
 
 const addFavorites = asyncHandler(async(req,res,next) => {
 	const {goalkeeper_id, user_id} = req.body ;
@@ -322,7 +347,30 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 		following_request_waiting: updatedUser.following_request_waiting
 	});
 
+
+  const player = await Player.findById(mongoose.Types.ObjectId(goal_keeper_id));
+  const user = await User.findOne({ _id: user_id });
+  user.favorites_list.pull(player._id);
+  const updatedUser = await user.save();
+  console.log(updatedUser);
+  res.json({
+    _id: updatedUser._id,
+    name: updatedUser.name,
+    surname: updatedUser.surname,
+    email: updatedUser.email,
+    pic: updatedUser.pic,
+    image: updatedUser.image,
+    profile_type: updatedUser.profile_type,
+    favorites_list: await Player.find({
+      _id: { $in: updatedUser.favorites_list },
+    }),
+    isRequestSent: updatedUser.isRequestSent,
+    isVerified: updatedUser.isVerified,
+    isAdmin: updatedUser.isAdmin,
+    token: generateToken(updatedUser._id),
+  });
 });
+
 
  const getFavorites = asyncHandler(async(req,res,next) => {
 	   

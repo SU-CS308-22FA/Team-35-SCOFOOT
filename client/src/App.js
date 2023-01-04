@@ -13,6 +13,7 @@ import Verifications from "./screens/VerificationRequests/Verifications";
 import AllFollowingRequests from "./screens/UserProfilePage/AllFollowingRequestsPage";
 import { FavPlayers } from "./components/FavoritePlayers/FavPlayers";
 import ProfilePage from "./screens/ProfilePage/ProfilePage";
+import Feed from "./components/Feed";
 import UserProfilePage from "./screens/UserProfilePage/UserProfilePage" ;
 import ConnectionPage from "./components/ProfilePage/connections";
 const App = () => {
@@ -28,11 +29,12 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin_profile" element={<AdminProfile />} />
-				<Route path="/verification" element={<Verifications />} />
+        <Route path="/verification" element={<Verifications />} />
         <Route path="/database" element={<PlayersAndTeams />} />
         <Route path="/teamInfo" element={<TeamsInfo />} />
         <Route path="/playerInfo" element={<PlayersInfo />} />
         <Route path="/profilepage" element={<ProfilePage />} />
+        <Route path="/feed" element={<Feed />} />
         <Route path="/" element={<Home />} />
         <Route path= "/favorites" element={<FavPlayers/>} />
         <Route path= "/userProfile" element={<UserProfilePage/> } />

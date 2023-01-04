@@ -8,6 +8,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MainScreen from "../../components/MainScreen";
 import "./Profile.css";
+import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateProfile,
@@ -22,6 +23,8 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import "../../screens/VerificationRequests/verification.css";
+import axios from "axios";
+import { Typography } from "@mui/material";
 
 const Profile = () => {
   const [name, setName] = useState("");
@@ -30,6 +33,9 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [aboutme, setAboutMe] = useState("");
+  const [image, setImage] = useState({});
+  const [uploading, setUploading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const [pic, setPic] = useState(
     "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
@@ -63,6 +69,7 @@ const Profile = () => {
       setProfile_type(userInfo.profile_type);
       setPic(userInfo.pic);
       setAboutMe(userInfo.aboutme);
+      setImage(userInfo.image);
     }
   }, [navigate, userInfo]);
 
@@ -97,6 +104,46 @@ const Profile = () => {
     console.log(email);
     dispatch(sendRequest(email));
     dispatch(changeIsSent(email));
+  };
+
+  // const postDetails = (pics) => {
+  //   setPicMessage(null);
+  //   if (pics.type === "image/jpeg" || pics.type === "image/png") {
+  //     const data = new FormData();
+  //     data.append("file", pics);
+  //     data.append("upload_preset", "notezipper");
+  //     data.append("cloud_name", "piyushproj");
+  //     fetch("https://api.cloudinary.com/v1_1/piyushproj/image/upload", {
+  //       method: "post",
+  //       body: data,
+  //     })
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         setPic(data.url.toString());
+  //         console.log(pic);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   } else {
+  //     return setPicMessage("Please Select an Image");
+  //   }
+  // };
+
+  //handle and convert to base 64
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    setFiletoBase(file);
+    console.log(file);
+  };
+  const setFiletoBase = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    console.log("here1");
+    reader.onloadend = () => {
+      setPic(reader.result);
+      console.log("here2");
+    };
   };
 
   return (
@@ -175,6 +222,15 @@ const Profile = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 ></Form.Control>
               </Form.Group>
+              <Form.Group controlId="pic">
+                <Form.Label>Profile Picture Url</Form.Label>
+                <Form.Control
+                  type="pic"
+                  placeholder="Enter Profile Picture Url"
+                  value={pic}
+                  onChange={(e) => setPic(e.target.value)}
+                ></Form.Control>
+              </Form.Group>
 
               <Form.Group controlId="profile_type">
                 <Form.Label>Account Type</Form.Label>
@@ -250,7 +306,13 @@ const Profile = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 ></Form.Control>
               </Form.Group>
-              <img src={pic} alt={name} className="profilePic" />
+              <Form.Group>
+                <Form.Label>Upload Profile Picture</Form.Label>
+                <br />
+                <input type="file" name="myImage" onChange={handleImage} />
+                <img src={pic} className="profilePic" />
+              </Form.Group>
+
               <Row>
                 <Col md={12}>
                   <Button
