@@ -24,7 +24,6 @@ const registerUser = asyncHandler(async (req, res, next) => {
     password,
     pic,
     profile_type,
-    aboutme,
   });
 
 	if (user) {
@@ -32,7 +31,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 			_id: user.id,
 			name: user.name,
 			surname: user.surname,
-      aboutme: user.aboutme,
+      		aboutme: user.aboutme,
 			email: user.email,
 			profile_type: user.profile_type,
 			pic: user.pic,

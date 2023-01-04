@@ -1,6 +1,5 @@
 import Team from "../models/Team.js";
 import Player from "../models/Player.js";
-import generateToken from "../utils/generateToken.js";
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
 

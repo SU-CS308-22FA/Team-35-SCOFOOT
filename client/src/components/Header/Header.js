@@ -66,6 +66,10 @@ function Header() {
                   <NavDropdown.Item href="/profile">Settings</NavDropdown.Item>
 
                   <NavDropdown.Divider />
+                  <NavDropdown.Item href="/dashboard">
+                    Dashboard  
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
                   <NavDropdown.Item onClick={logoutHandler}>
                     Logout
                   </NavDropdown.Item>
