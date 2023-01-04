@@ -16,8 +16,9 @@ import {
 	ADMIN_VERIFICATION_REQUEST_SUCCESS,
 	INBOX_AFTER_DELETION_SUCCESS,
 	ALL_USERS_SUCCESS,
-	GET_USER_SUCCESS,
-	FAVORITES_GET_SUCCESS
+	FAVORITES_GET_SUCCESS,
+	GET_USER_BY_ID_SUCCESS,
+	WAITING_FOLLOWING_REQUESTS
 } from "../constants/userConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -92,6 +93,15 @@ export const seeVerificationReducer = (state = {}, action) => {  // all verifica
 	}
 };
 
+export const seeRequestsReducer = (state= {}, action) => {
+	switch (action.type){
+		case WAITING_FOLLOWING_REQUESTS:
+			return {followingRequestsInfo : action.payload};
+		default:
+			return state;
+	}
+}
+
 export const allUsersReducer = (state = {}, action) => {
 	switch(action.type) {
 		case ALL_USERS_SUCCESS:
@@ -112,6 +122,14 @@ export const getFavoritesReducer = (state={}, action) => {
 	}
 }
 
+export const getUserReducer = (state={}, action) => {
+	switch(action.type){
+		case GET_USER_BY_ID_SUCCESS:
+			return {userData : action.payload};
+		default:
+			return state;
+	}
+}
 
 
 

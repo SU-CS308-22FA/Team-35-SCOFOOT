@@ -32,15 +32,17 @@ export default function Login() {
 
   const { loading, error, userInfo } = userLogin;
 
-  useEffect(() => {
-    if (userInfo) {
-      if (userInfo.isAdmin === true) {
-        navigate("/admin_profile");
-      } else {
-        navigate("/profile");
-      }
-    }
-  }, [navigate, userInfo]);
+	useEffect(() => {
+		if (userInfo) {
+			if(userInfo.isAdmin === true){
+				navigate("/admin_profile");
+			}
+			else{
+				navigate("/profile"); // bunu profile ile degistirmeyi unutma
+			}
+		
+		}
+	}, [navigate, userInfo]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

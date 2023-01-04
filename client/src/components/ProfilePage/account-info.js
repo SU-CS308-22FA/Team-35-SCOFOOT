@@ -22,6 +22,7 @@ import {
   Divider,
   Button,
 } from "@mui/material";
+import { Link } from 'react-router-dom';
 
 function AccountInfo() {
   const [name, setName] = useState("");
@@ -37,6 +38,7 @@ function AccountInfo() {
   const [picMessage, setPicMessage] = useState("");
   const [profile_type, setProfile_type] = useState("");
   const [open, setOpen] = React.useState(false);
+  const [id, setId] = useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -61,6 +63,7 @@ function AccountInfo() {
       setEmail(userInfo.email);
       setProfile_type(userInfo.profile_type);
       setPic(userInfo.pic);
+      setId(userInfo._id);
     }
   }, [navigate, userInfo]);
 
@@ -174,9 +177,21 @@ function AccountInfo() {
             <Typography color="textSecondary" variant="body2">
               {email}
             </Typography>
+
+        
             <Typography color="textSecondary" variant="body2">
               {profile_type}
             </Typography>
+
+            <Typography color="textSecondary" variant="body2"> 
+              <Link className="dataItem"  to = "/connections" state= {{ _id: id } }  >
+                 Following 
+               </Link>
+            </Typography>
+            
+            
+            
+            
           </Box>
         </CardContent>
         <Box

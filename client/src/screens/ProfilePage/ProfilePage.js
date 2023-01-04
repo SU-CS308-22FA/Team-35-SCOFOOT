@@ -4,11 +4,15 @@ import AccountInfo from "../../components/ProfilePage/account-info";
 import AboutMe from "../../components/ProfilePage/about-me";
 import FavPlayers from "../../components/ProfilePage/fav-players";
 import Posts from "../../components/ProfilePage/posts";
+import { useLocation } from 'react-router-dom'
 
 import PostShare from "../../components/ProfilePage/postShare";
 import PostWidget from "../../components/ProfilePage/postwidget";
 
 function ProfilePage() {
+ 
+
+
   return (
     <>
       <Box

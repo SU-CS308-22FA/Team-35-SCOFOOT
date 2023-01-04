@@ -1,20 +1,15 @@
 import { React } from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import PropTypes from "prop-types";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import IconButton from '@mui/material/IconButton';
-
+import { playerSearch } from "../../actions/playerActions";
 //import { format } from "date-fns";
 //import { getInitials } from "../../utils/get-initials";
 import {
   Avatar,
   Box,
   Card,
-  Checkbox,
   Link,
   Table,
   TableBody,
@@ -22,14 +17,11 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
   CircularProgress,
   Stack
 } from "@mui/material";
-import { addToFavorites, deleteFromFavorites, getFavorites } from "../../actions/userActions";
 
-export const FavPlayers = ({...rest }) => {
-  
+export const PlayerSearchResults = ({searchKey, ...rest }) => {
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -63,22 +55,24 @@ export const FavPlayers = ({...rest }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const baseImageUrl = "images/players/";
-
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
-  const [players, setPlayers] = useState(null);
-  const [playerSize, setPlayerSize] = useState(page * limit + limit);
 
-  //const playerResponse = useSelector((state) => state.allPlayersGet);
-  //const { loading, error, playerInfo } = playerResponse;
+  const playerSearchResponse = useSelector((state) => state.playerSearch);
+  const { loading, error, playerSearchResult } = playerSearchResponse;
 
-  const favoritePlayers = useSelector((state) => state.favoritePlayers);
-  const {favoritesData} = favoritePlayers;
+  const [players, setPlayers] = useState([]);
+  const [searchResultSize, setSearchResultSize] = useState(page * limit + limit);
 
+  const baseImageUrl = "images/players/";
 
-  const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  useEffect(() => {
+    if (playerSearchResult) {
+        setPage(0);
+        setPlayers(playerSearchResult.players);
+        setSearchResultSize(playerSearchResult.size);
+    }
+  }, [playerSearchResult]);
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -88,61 +82,25 @@ export const FavPlayers = ({...rest }) => {
     setPage(newPage);
   };
 
-  
-  
-
-  const deleteFavorites = (player , user_id) => {
-    dispatch(deleteFromFavorites(player._id, user_id));
- 
-    const index = favoritesData.players.indexOf(player);
-    favoritesData.players.splice(index,1);
-    
-
-  };
-  const [user, setUser] = useState(null);
-
-  
-
-  useEffect(() => {
-    if (favoritesData) {
-      const _id = userInfo._id ;
-      dispatch(getFavorites(page * limit, limit, _id)); // getFavorites return players array
-    
-    }
-  }, [navigate]);
  
   useEffect(() => {
-    if (favoritesData) {
-      setPlayerSize(favoritesData.size);
-      setPlayers(favoritesData.players);
-      
-      
-    }
-  }, [favoritesData]);
+    dispatch(playerSearch(searchKey, page * limit, limit));
+  }, [searchKey, page, limit, dispatch]);
 
-  useEffect(() => {
-   
-    dispatch(getFavorites(page * limit, (limit *2 ), userInfo._id ));
-   
-  }, [page, limit, userInfo]);
-
-
-  useEffect(() => {
-    setUser(userInfo);
-    
-  }, [userInfo])
-
+  
 
   const handleInfo = (id) => {
     navigate("/playerInfo", {state: {id}});
   }
 
-  
+  const handleTeamInfo = (id) => {
+    navigate("/teamInfo", {state: {id}});
+  }
 
   return (
     <Card {...rest}>
     {
-      players && players.length > 0 ? (
+      players &&
       <>
     
       <PerfectScrollbar>
@@ -157,6 +115,9 @@ export const FavPlayers = ({...rest }) => {
 
                 <TableCell>Position</TableCell>
 
+                <TableCell>Nationality</TableCell>
+
+                <TableCell>Birthday</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -183,12 +144,6 @@ export const FavPlayers = ({...rest }) => {
                             <Avatar sx={{ mr: 2 }} {...stringAvatar(player.name)} />
                           )
                         }
-                        {user &&
-                            (<IconButton onClick={() => deleteFavorites(player, user._id)}>
-                              <FavoriteIcon></FavoriteIcon>
-                              </IconButton>)
-                        
-                      }
                         
                         {/* <Typography color="textPrimary" variant="body1">
                         {player.name}
@@ -203,8 +158,21 @@ export const FavPlayers = ({...rest }) => {
                         handleInfo(player._id);
                       }}
                     >{player.name}</Link></TableCell>
-                    <TableCell>{player.club}</TableCell>
-                    <TableCell>{player.position}</TableCell>                  
+                    <TableCell><Link
+                      underline="hover"
+                      component="button"
+                      variant="body2"
+                      onClick={() => {
+                        handleTeamInfo(player.club._id)
+                      }}
+                    >
+                      {player.club.name}
+                    </Link></TableCell>
+                    <TableCell>{player.position}</TableCell>
+                    <TableCell>{player.nationality}</TableCell>
+                    <TableCell>{player.bday}</TableCell>
+
+                    {/* <TableCell>{format(player.bday, "dd/MM/yyyy")}</TableCell> */}
                   </TableRow>
                 ))}
             </TableBody>
@@ -213,22 +181,15 @@ export const FavPlayers = ({...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={playerSize}
+        count={searchResultSize}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
         rowsPerPage={limit}
         rowsPerPageOptions={[5, 10, 15]}
       />
-      </>)
-
-      : 
-      (
-        <Typography>Favorite players will come here</Typography>
-      )
+      </>
       }
-
-      
     </Card>
   );
 };

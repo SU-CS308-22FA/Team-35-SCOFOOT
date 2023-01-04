@@ -7,15 +7,15 @@ import {
   Typography,
   Button,
   Box,
+  Card,
 } from "@mui/material";
-import { FavPlayers } from "../FavoritePlayers/FavPlayers";
-import { Card } from "react-bootstrap";
 
-function FavPlayer() {
+function Posts({data}) {
   return (
     <div>
+      {" "}
       <Card>
-        <CardHeader title={"Favorite Players"} />
+        <CardHeader title={"Posts"} />
         <Divider />
         <CardContent
           sx={{
@@ -23,15 +23,14 @@ function FavPlayer() {
             justifyContent: "center",
           }}
         >
-          
-          <FavPlayers />
+          <Typography>Accounts posts will appear here. </Typography>
         </CardContent>
 
         <Box
           sx={{
             display: "flex",
             justifyContent: "center",
-            pt: 18,
+            pt: 30,
           }}
         ></Box>
       </Card>
@@ -39,4 +38,4 @@ function FavPlayer() {
   );
 }
 
-export default FavPlayer;
+export default Posts;

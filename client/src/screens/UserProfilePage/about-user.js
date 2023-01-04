@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+import { Form, Row, Col, Container } from "react-bootstrap";
+
+
 import {
   CardActions,
   CardContent,
@@ -7,36 +11,35 @@ import {
   Typography,
   Button,
   Box,
+  Grid,
 } from "@mui/material";
-import { FavPlayers } from "../FavoritePlayers/FavPlayers";
 import { Card } from "react-bootstrap";
 
-function FavPlayer() {
+
+function AboutUser({data}) {
+  
   return (
     <div>
       <Card>
-        <CardHeader title={"Favorite Players"} />
+        <CardHeader style={{ display: "flex" }} title={"About".concat(" ", `${data.name}`)} />
+
         <Divider />
+
         <CardContent
           sx={{
             display: "flex",
             justifyContent: "center",
           }}
         >
-          
-          <FavPlayers />
+          <Col md={12}>
+            
+             <Typography>{data.aboutme}</Typography>
+ 
+          </Col>
         </CardContent>
-
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            pt: 18,
-          }}
-        ></Box>
       </Card>
     </div>
   );
 }
 
-export default FavPlayer;
+export default AboutUser;

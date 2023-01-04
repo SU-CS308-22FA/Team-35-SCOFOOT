@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./SearchBar.css";
-
+import { Link } from 'react-router-dom';
 
 
 
@@ -12,12 +12,10 @@ function SearchBar({ placeholder, data }) {
 
   const handleFilter = (event) => {
     const searchWord = event.target.value;
-    console.log('searchWord: ',searchWord)
     setWordEntered(searchWord);
     const newFilter = data.filter((value) => {
       return value.name.toLowerCase().includes(searchWord.toLowerCase());
     });
-    console.log('newFilter: ', newFilter)
 
     if (searchWord === "") {
       setFilteredData([]);
@@ -43,11 +41,12 @@ function SearchBar({ placeholder, data }) {
       </div>
       {filteredData.length != 0 && (
         <div className="dataResult">
-          {filteredData.slice(0, 15).map((value, key) => {
+          {filteredData.slice(0, 15).map((value) => {
             return (
-              <a className="dataItem" target="_blank" key={key}>
-                <p>{value.name} </p>
-              </a>
+              <Link className="dataItem"  to = "/userProfile" state= {{ _id: value._id } } onClick={clearInput} >
+                 {value.name.concat(" ", value.surname)} 
+              </Link>
+            
             );
           })}
         </div>
