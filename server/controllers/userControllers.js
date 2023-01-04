@@ -5,11 +5,11 @@ import Requests from "../models/Requests.js";
 import Player from "../models/Player.js";
 import Team from "../models/Team.js"
 import mongoose from "mongoose";
+import VerificationCode from "../models/VerificationCode.js";
 
 
 const registerUser = asyncHandler(async (req, res, next) => {
-  const { name, surname, email, password, profile_type, pic } = req.body;
-
+  const { name, surname, email, password, pic, accountType, verificationCode } = req.body;
   const userExists = await User.findOne({ email });
 
   if (userExists) {
@@ -17,14 +17,41 @@ const registerUser = asyncHandler(async (req, res, next) => {
     throw new Error("User already exists.");
   }
 
-  const user = await User.create({
-    name,
-    surname,
-    email,
-    password,
-    pic,
-    profile_type,
-  });
+  let user;
+
+  if (accountType === 0) 
+  {
+	user = await User.create({
+		name,
+		surname,
+		email,
+		password,
+		pic,
+		accountType
+	  });
+  }
+  else if (accountType === 1) 
+  {
+	const verifyCode = await VerificationCode.findOne({code : verificationCode});
+	if (verifyCode) {
+		const playerProfile = verifyCode.player;
+		user = await User.create({
+			name,
+			surname,
+			email,
+			password,
+			pic,
+			accountType,
+			playerProfile,
+			isVerified : true,
+		})
+		await VerificationCode.updateOne({_id : verifyCode._id}, {isUsed : true});
+	}
+	else {
+		throw new Error("Verification code is wrong.");
+	}
+	
+  }
 
 	if (user) {
 		res.status(201).json({
@@ -33,7 +60,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 			surname: user.surname,
       		aboutme: user.aboutme,
 			email: user.email,
-			profile_type: user.profile_type,
+			accountType: user.accountType,
 			pic: user.pic,
 			isAdmin: user.isAdmin,
 			isVerified: user.isVerified,
@@ -59,7 +86,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			surname: user.surname,
       aboutme: user.aboutme,
 			email: user.email,
-			profile_type: user.profile_type,
+			accountType: user.accountType,
 			pic: user.pic,
 			isAdmin: user.isAdmin,
 			token: generateToken(user._id),
@@ -80,7 +107,7 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
       user.name = req.body.name || user.name;
       user.surname = req.body.surname || user.surname;
       user.email = req.body.email || user.email;
-      user.profile_type = req.body.profile_type || user.profile_type;
+      user.accountType = req.body.accountType || user.accountType;
       user.pic = req.body.pic || user.pic;
       user.aboutme = req.body.aboutme || user.aboutme;
       if (req.body.password) {
@@ -95,7 +122,7 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
         aboutme: user.aboutme,
 				email: updatedUser.email,
 				pic: updatedUser.pic,
-				profile_type: user.profile_type,
+				accountType: user.accountType,
 				favorites_list : user.favorites_list,
 				isRequestSent: user.isRequestSent,
 		    isVerified: user.isVerified, 
@@ -263,7 +290,7 @@ const addFavorites = asyncHandler(async(req,res,next) => {
 		surname: updatedUser.surname,
 		email: updatedUser.email,
 		pic: updatedUser.pic,
-		profile_type: updatedUser.profile_type,
+		accountType: updatedUser.accountType,
 		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
 		isRequestSent: updatedUser.isRequestSent,
 		isVerified: updatedUser.isVerified, 
@@ -290,7 +317,7 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 		surname: updatedUser.surname,
 		email: updatedUser.email,
 		pic: updatedUser.pic,
-		profile_type: updatedUser.profile_type,
+		accountType: updatedUser.accountType,
 		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
 		isRequestSent: updatedUser.isRequestSent,
 		isVerified: updatedUser.isVerified, 

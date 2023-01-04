@@ -50,7 +50,7 @@ export const logout = () => async (dispatch) => {
 };
 
 export const register =
-	(name, surname, email, password) => async (dispatch) => {
+	(name, surname, email, password, pic, accountType, verificationCode) => async (dispatch) => {
 		try {
 			dispatch({ type: USER_REGISTER_REQUEST });
 
@@ -59,6 +59,9 @@ export const register =
 				surname,
 				email,
 				password,
+				pic,
+				accountType,
+				verificationCode
 			});
 
 			dispatch({ type: USER_REGISTER_SUCCESS, payload: data });

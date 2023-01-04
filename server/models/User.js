@@ -1,4 +1,3 @@
-import { Int32 } from "mongodb";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 
@@ -13,10 +12,14 @@ const userSchema = mongoose.Schema(
 		email: { type: String, required: true, unique: true },
 		password: { type: String, required: true },
 		isAdmin: { type: Boolean, required: true, default: false },
-		profile_type: {type: String, required: true, default: 'Player'},
 		isVerified: {type: Boolean, required: true, default: false},
 		isRequestSent : {type: Boolean, required: true, default: false},
-		favorites_list : {type : Array , required:true, default: []}
+		favorites_list : {type : Array , required:true, default: []},
+    accountType: {type : Number, required:true, default: 0},
+    playerProfile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Player'
+    }
 	},
 
   {
