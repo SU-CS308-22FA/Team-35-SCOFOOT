@@ -1,4 +1,4 @@
-import React, { useEffect , useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -7,26 +7,23 @@ import { theme } from "../../theme";
 import { ThemeProvider } from "@mui/system";
 import { lightGreen } from "@mui/material/colors";
 import { Box } from "@mui/material";
-import { Input } from '@mui/material';
+import { Input } from "@mui/material";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { seeAllUsers } from "../../actions/userActions";
 
 function Header() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-  
-  const allUsers = useSelector((state) => state.allUsers );
 
-  useEffect(()=>{
+  const allUsers = useSelector((state) => state.allUsers);
+
+  useEffect(() => {
     dispatch(seeAllUsers());
-  },[])
+  }, []);
 
-
-  
   const logoutHandler = () => {
     dispatch(logout());
     navigate("/");
@@ -34,11 +31,7 @@ function Header() {
 
   useEffect(() => {}, [navigate, userInfo]);
 
-  
-  
-
   return (
-    
     <ThemeProvider theme={theme}>
       <Navbar
         className="px-4"
@@ -53,11 +46,14 @@ function Header() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="m-auto"></Nav>
           <Nav>
-          <SearchBar placeholder="Enter a User..." data={allUsers.usersData} /> 
-          <Nav.Link href="/database">Players & Teams</Nav.Link>
+            <SearchBar
+              placeholder="Enter a User..."
+              data={allUsers.usersData}
+            />
+            <Nav.Link href="/database">Players & Teams</Nav.Link>
+            <Nav.Link href="/feed">Feed</Nav.Link>
             {userInfo ? (
               <>
-                        
                 <Nav.Link href="/profilepage">My Profile </Nav.Link>
                 <NavDropdown
                   title={`${userInfo.name}`}
@@ -77,7 +73,6 @@ function Header() {
                 <Nav.Link href="/signup">Sign Up</Nav.Link>
               </>
             )}
-            
           </Nav>
         </Navbar.Collapse>
       </Navbar>

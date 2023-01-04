@@ -3,29 +3,39 @@ import { legacy_createStore as createStore } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import {
-	userDeleteReducer,
-	userLoginReducer,
-	userRegisterReducer,
-	userUpdateReducer,
-	seeVerificationReducer,
-	allUsersReducer,
-	getFavoritesReducer
-	
+  userDeleteReducer,
+  userLoginReducer,
+  userRegisterReducer,
+  userUpdateReducer,
+  seeVerificationReducer,
+  allUsersReducer,
+  getFavoritesReducer,
 } from "./reducers/userReducers";
-import { allPlayersGetReducer, playerGetReducer } from "./reducers/playerReducers";
+import {
+  postCreateReducer,
+  postGetReducer,
+  allPostsGetReducer,
+} from "./reducers/postReducers";
+import {
+  allPlayersGetReducer,
+  playerGetReducer,
+} from "./reducers/playerReducers";
 import { allTeamsGetReducer, teamGetReducer } from "./reducers/teamReducers";
 const reducer = combineReducers({
-	userLogin: userLoginReducer,
-	userRegister: userRegisterReducer,
-	userUpdate: userUpdateReducer,
-	userDelete: userDeleteReducer,
-	seeVerification : seeVerificationReducer,
-	allUsers: allUsersReducer,
-  	allPlayersGet: allPlayersGetReducer,
-	playerGet: playerGetReducer,
-	allTeamsGet: allTeamsGetReducer,
-	teamGet: teamGetReducer,
-	favoritePlayers : getFavoritesReducer
+  postCreate: postCreateReducer,
+  getUserPosts: postGetReducer,
+  getFeedPosts: allPostsGetReducer,
+  userLogin: userLoginReducer,
+  userRegister: userRegisterReducer,
+  userUpdate: userUpdateReducer,
+  userDelete: userDeleteReducer,
+  seeVerification: seeVerificationReducer,
+  allUsers: allUsersReducer,
+  allPlayersGet: allPlayersGetReducer,
+  playerGet: playerGetReducer,
+  allTeamsGet: allTeamsGetReducer,
+  teamGet: teamGetReducer,
+  favoritePlayers: getFavoritesReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

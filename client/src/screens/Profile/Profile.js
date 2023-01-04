@@ -84,7 +84,6 @@ const Profile = () => {
         aboutme,
         profile_type,
         pic,
-        image,
       })
     );
   };
@@ -107,47 +106,44 @@ const Profile = () => {
     dispatch(changeIsSent(email));
   };
 
-  // const handleImage = async (e) => {
-  //   const file = e.target.files[0];
-  //   let formData = new FormData();
-  //   formData.append("image", file);
-  //   // console.log;([...formData]);
-  //   setUploading(true);
-  //   try {
-  //     const { data } = await axios.post("/upload-image", formData);
-  //     //console.log("Image Upload",data);
-  //     setUploading(false);
-  //     setImage({
-  //       url: data.url,
-  //       public_id: data.public_id,
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
+  // const postDetails = (pics) => {
+  //   setPicMessage(null);
+  //   if (pics.type === "image/jpeg" || pics.type === "image/png") {
+  //     const data = new FormData();
+  //     data.append("file", pics);
+  //     data.append("upload_preset", "notezipper");
+  //     data.append("cloud_name", "piyushproj");
+  //     fetch("https://api.cloudinary.com/v1_1/piyushproj/image/upload", {
+  //       method: "post",
+  //       body: data,
+  //     })
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         setPic(data.url.toString());
+  //         console.log(pic);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //       });
+  //   } else {
+  //     return setPicMessage("Please Select an Image");
   //   }
   // };
 
-  const postDetails = (pics) => {
-    setPicMessage(null);
-    if (pics.type === "image/jpeg" || pics.type === "image/png") {
-      const data = new FormData();
-      data.append("file", pics);
-      data.append("upload_preset", "notezipper");
-      data.append("cloud_name", "piyushproj");
-      fetch("https://api.cloudinary.com/v1_1/piyushproj/image/upload", {
-        method: "post",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setPic(data.url.toString());
-          console.log(pic);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      return setPicMessage("Please Select an Image");
-    }
+  //handle and convert to base 64
+  const handleImage = (e) => {
+    const file = e.target.files[0];
+    setFiletoBase(file);
+    console.log(file);
+  };
+  const setFiletoBase = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    console.log("here1");
+    reader.onloadend = () => {
+      setPic(reader.result);
+      console.log("here2");
+    };
   };
 
   return (
@@ -227,10 +223,10 @@ const Profile = () => {
                 ></Form.Control>
               </Form.Group>
               <Form.Group controlId="pic">
-                <Form.Label>Pic</Form.Label>
+                <Form.Label>Profile Picture Url</Form.Label>
                 <Form.Control
                   type="pic"
-                  placeholder="Enter Pic"
+                  placeholder="Enter Profile Picture Url"
                   value={pic}
                   onChange={(e) => setPic(e.target.value)}
                 ></Form.Control>
@@ -310,38 +306,12 @@ const Profile = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 ></Form.Control>
               </Form.Group>
-
-              {/* <Form.Group controlId="image">
-                <Form.Label>Change Image</Form.Label>
-              </Form.Group> */}
-              {/* {selectedImage && (
-                <div>
-                  <img
-                    alt="not fount"
-                    width={"250px"}
-                    src={URL.createObjectURL(selectedImage)}
-                  />
-                  <br />
-                  <button onClick={() => setSelectedImage(null)}>Remove</button>
-                  <button
-                    onClick={() => setPic(URL.createObjectURL(selectedImage))}
-                  >
-                    Save
-                  </button>
-                </div>
-              )}
-              <br />
-
-              <input
-                type="file"
-                name="myImage"
-                onChange={(event) => {
-                  console.log(event.target.files[0]);
-                  setSelectedImage(event.target.files[0]);
-                }}
-              /> */}
-
-              <img src={pic} className="profilePic" />
+              <Form.Group>
+                <Form.Label>Upload Profile Picture</Form.Label>
+                <br />
+                <input type="file" name="myImage" onChange={handleImage} />
+                <img src={pic} className="profilePic" />
+              </Form.Group>
 
               <Row>
                 <Col md={12}>
