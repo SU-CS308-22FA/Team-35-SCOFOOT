@@ -7,6 +7,7 @@ import Team from "../models/Team.js"
 import mongoose from "mongoose";
 
 
+
 const registerUser = asyncHandler(async (req, res, next) => {
   const { name, surname, email, password, profile_type, pic } = req.body;
 
@@ -32,7 +33,7 @@ const registerUser = asyncHandler(async (req, res, next) => {
 			_id: user.id,
 			name: user.name,
 			surname: user.surname,
-      aboutme: user.aboutme,
+            aboutme: user.aboutme,
 			email: user.email,
 			profile_type: user.profile_type,
 			pic: user.pic,
@@ -41,6 +42,9 @@ const registerUser = asyncHandler(async (req, res, next) => {
 			isRequestSent: user.isRequestSent,
 			favorites_list: user.favorites_list,
 			token: generateToken(user._id),
+			following_sent: user.following_sent,
+		    following_approved: user.following_approved,
+		    following_request_waiting: user.following_request_waiting
 		});
 	} else {
 		res.status(400);
@@ -58,7 +62,7 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			_id: user._id,
 			name: user.name,
 			surname: user.surname,
-      aboutme: user.aboutme,
+            aboutme: user.aboutme,
 			email: user.email,
 			profile_type: user.profile_type,
 			pic: user.pic,
@@ -66,7 +70,10 @@ const loginUser = asyncHandler(async (req, res, next) => {
 			token: generateToken(user._id),
 			isVerified: user.isVerified,
 			isRequestSent : user.isRequestSent,
-			favorites_list: await Player.find({_id: { $in: user.favorites_list}})
+			favorites_list: await Player.find({_id: { $in: user.favorites_list}}),
+			following_sent: user.following_sent,
+		    following_approved: user.following_approved,
+		    following_request_waiting: user.following_request_waiting
 		});
 	} else {
 		res.status(401);
@@ -84,6 +91,10 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
       user.profile_type = req.body.profile_type || user.profile_type;
       user.pic = req.body.pic || user.pic;
       user.aboutme = req.body.aboutme || user.aboutme;
+	  user.following_sent = req.body.following_sent || user.following_sent;
+	  user.following_approved = req.body.following_approved || user.following_approved;
+	  user.following_request_waiting= req.body.following_request_waiting || user.following_request_waiting;
+	  
       if (req.body.password) {
         user.password = req.body.password;
       }
@@ -93,15 +104,18 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
 				_id: updatedUser._id,
 				name: updatedUser.name,
 				surname: updatedUser.surname,
-        aboutme: user.aboutme,
+                aboutme: user.aboutme,
 				email: updatedUser.email,
 				pic: updatedUser.pic,
 				profile_type: user.profile_type,
 				favorites_list : user.favorites_list,
 				isRequestSent: user.isRequestSent,
-		    isVerified: user.isVerified, 
+		        isVerified: user.isVerified, 
 				isAdmin: user.isAdmin,
 				token: generateToken(updatedUser._id),
+				following_sent: user.following_sent,
+				following_approved: user.following_approved,
+				following_request_waiting: user.following_request_waiting
 			});
 		} catch (error) {
 			// 11000 error code is DuplicateKey error
@@ -232,6 +246,9 @@ const changeIsSent = asyncHandler(async (req, res, next) => {
     token: generateToken(updatedUser._id),
     isVerified: updatedUser.isVerified,
     isRequestSent: updatedUser.isRequestSent,
+	following_sent: updatedUser.following_sent,
+	following_approved: updatedUser.following_approved,
+	following_request_waiting: updatedUser.following_request_waiting
   });
 });
 
@@ -270,6 +287,9 @@ const addFavorites = asyncHandler(async(req,res,next) => {
 		isVerified: updatedUser.isVerified, 
 		isAdmin: updatedUser.isAdmin,
 		token: generateToken(updatedUser._id),
+		following_sent: updatedUser.following_sent,
+		following_approved: updatedUser.following_approved,
+		following_request_waiting: updatedUser.following_request_waiting
 	});
 
 })
@@ -297,6 +317,9 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 		isVerified: updatedUser.isVerified, 
 		isAdmin: updatedUser.isAdmin,
 		token: generateToken(updatedUser._id),
+		following_sent: updatedUser.following_sent,
+		following_approved: updatedUser.following_approved,
+		following_request_waiting: updatedUser.following_request_waiting
 	});
 
 });
@@ -328,4 +351,220 @@ const deleteFavorites = asyncHandler(async(req,res,next) => {
 	   res.json({size: count , players: players });
  });
 
-export { getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };
+ const getUserById = asyncHandler(async(req,res,next) => {
+	const {_id} = req.body ;
+	
+	const user = await User.findOne({_id});
+	res.json(user);
+
+});
+
+
+const sendFollowRequest = asyncHandler(async(req,res,next) => {
+	// user'in following_sent'ine ekle
+	// data'nin following_request_waiting'e ekle
+	const {user_id, data_id} = req.body;
+	
+	const user = await User.findOne({_id : user_id}) ;
+
+	const second_user = await User.findOne({_id : data_id}) ;
+	
+	//console.log("users" ,user);
+	//console.log(" second_userrrr" ,second_user);
+    
+	user.following_sent.push(second_user); // user'in icindeki following sentteki second userda following request waiting yok  
+	const updatedUser = await user.save();
+	
+	//console.log(updatedUser);
+
+    const third_user = await User.findOne({_id: user_id});
+
+	second_user.following_request_waiting.push(third_user); // second user'in following request waitingdeki userda following request waiting yok
+	//console.log(second_user);
+	const bb = await second_user.save();
+	//console.log(bb);
+	res.json({
+		_id: updatedUser._id,
+		name: updatedUser.name,
+		surname: updatedUser.surname,
+		email: updatedUser.email,
+		pic: updatedUser.pic,
+		profile_type: updatedUser.profile_type,
+		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
+		isRequestSent: updatedUser.isRequestSent,
+		isVerified: updatedUser.isVerified, 
+		isAdmin: updatedUser.isAdmin,
+		token: generateToken(updatedUser._id),
+		following_sent: updatedUser.following_sent,
+		following_approved: updatedUser.following_approved,
+		following_request_waiting: updatedUser.following_request_waiting
+	}); 
+	//res.json(updatedUser);
+});
+
+
+const seeFollowRequests = asyncHandler(async(req,res,next) => {
+	const {_id} = req.body;
+	const user = await User.findOne({_id});
+	//const following_requests_of_user = await User.find({_id: { $in: user.following_request_waiting}});
+	//res.json(following_requests_of_user);
+	res.json(user);
+})
+
+const deleteFollowingRequests = asyncHandler(async(req,res,next) => {
+	// delete from user's following waiting
+	// delete from data's following sent
+const {user_id, data_id} = req.body ;
+
+const user = await User.findOne({_id : user_id});
+const second_user = await User.findOne({_id: data_id});
+console.log(user);
+console.log(second_user);
+
+
+
+const following_request_waiting = await user.following_request_waiting.filter(following => { return following._id == data_id})
+console.log(following_request_waiting[0]);
+
+user.following_request_waiting.pull(following_request_waiting[0]) ;
+const updatedUser = await user.save();
+console.log(updatedUser);
+
+
+const following_sent = await second_user.following_sent.filter(following => {
+	console.log(following._id);
+	console.log(user_id);
+	return following._id == user_id})
+
+console.log(following_sent[0]);
+second_user.following_sent.pull(following_sent[0]);
+const secondUpdatedUser = await second_user.save();
+console.log(secondUpdatedUser);
+
+
+//const following_requests_of_user = await User.find({_id: { $in: updatedUser.following_request_waiting}});
+//res.json(following_requests_of_user);
+res.json({
+	_id: updatedUser._id,
+	name: updatedUser.name,
+	surname: updatedUser.surname,
+	email: updatedUser.email,
+	pic: updatedUser.pic,
+	profile_type: updatedUser.profile_type,
+	favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
+	isRequestSent: updatedUser.isRequestSent,
+	isVerified: updatedUser.isVerified, 
+	isAdmin: updatedUser.isAdmin,
+	token: generateToken(updatedUser._id),
+	following_sent: updatedUser.following_sent,
+	following_approved: updatedUser.following_approved,
+	following_request_waiting: updatedUser.following_request_waiting
+}); 
+
+
+})
+
+const approveFollowingRequests = asyncHandler(async(req,res,next) => {
+	// delete from data's following sent
+	// add to data's following approved
+	// delete from user's following request waiting 
+
+const {user_id, data_id} = req.body ;
+const user = await User.findOne({_id : user_id});
+const second_user = await User.findOne({_id: data_id});
+
+
+const following_request_waiting = await user.following_request_waiting.filter(following => { return following._id == data_id});
+user.following_request_waiting.pull(following_request_waiting[0]);
+
+//user.following_request_waiting.pull(second_user); // data_id ile degistir
+const updatedUser = await user.save();
+//const user_copy = await User.findOne({_id: user_id});
+
+console.log(second_user);
+console.log(data_id);
+const following_sent = await second_user.following_sent.filter(following => {return following._id == user_id});
+console.log(following_sent[0]);
+//second_user.following_sent.pull(user_copy); // user_id ile degistir
+second_user.following_sent.pull(following_sent[0]);
+second_user.following_approved.push(following_sent[0]);
+console.log(second_user);
+const secondUpdatedUser = await second_user.save();
+
+res.json({
+	_id: updatedUser._id,
+	name: updatedUser.name,
+	surname: updatedUser.surname,
+	email: updatedUser.email,
+	pic: updatedUser.pic,
+	profile_type: updatedUser.profile_type,
+	favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
+	isRequestSent: updatedUser.isRequestSent,
+	isVerified: updatedUser.isVerified, 
+	isAdmin: updatedUser.isAdmin,
+	token: generateToken(updatedUser._id),
+	following_sent: updatedUser.following_sent,
+	following_approved: updatedUser.following_approved,
+	following_request_waiting: updatedUser.following_request_waiting
+}); 
+});
+
+const removeFollowingUser = asyncHandler(async(req,res,next) => {
+	// userin following approved'undan datayi sil
+	const {user_id, data_id} = req.body ;
+	const user = await User.findOne({_id : user_id});
+    
+	const following_already_approved = await user.following_approved.filter(following => { return following._id == data_id});
+	user.following_approved.pull(following_already_approved[0]);
+	const updatedUser = await user.save();
+	res.json({
+		_id: updatedUser._id,
+		name: updatedUser.name,
+		surname: updatedUser.surname,
+		email: updatedUser.email,
+		pic: updatedUser.pic,
+		profile_type: updatedUser.profile_type,
+		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
+		isRequestSent: updatedUser.isRequestSent,
+		isVerified: updatedUser.isVerified, 
+		isAdmin: updatedUser.isAdmin,
+		token: generateToken(updatedUser._id),
+		following_sent: updatedUser.following_sent,
+		following_approved: updatedUser.following_approved,
+		following_request_waiting: updatedUser.following_request_waiting
+	}); 
+
+
+})
+
+
+
+
+const getCurrentUserInfo = asyncHandler(async(req,res,next) => {
+	const {_id} = req.body;
+	const user = await User.findOne({_id});
+	res.json({
+		_id: user._id,
+		name: user.name,
+		surname: user.surname,
+		email: user.email,
+		pic: user.pic,
+		profile_type: user.profile_type,
+		favorites_list : await Player.find({_id: { $in: user.favorites_list}}),
+		isRequestSent: user.isRequestSent,
+		isVerified: user.isVerified, 
+		isAdmin: user.isAdmin,
+		token: generateToken(user._id),
+		following_sent: user.following_sent,
+		following_approved: user.following_approved,
+		following_request_waiting: user.following_request_waiting
+	}); 
+
+})
+
+
+
+
+
+
+export { removeFollowingUser, getCurrentUserInfo, approveFollowingRequests, deleteFollowingRequests, seeFollowRequests, sendFollowRequest, getUserById, getFavorites, deleteFavorites, addFavorites, getUser, getAllUsers, changeIsSent, sendRequest, approveRequest, deleteRequest, showRequests, registerUser, loginUser, updateUserProfile, deleteUser };

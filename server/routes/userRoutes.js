@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import {
 	registerUser,
 	loginUser,
@@ -13,7 +13,14 @@ import {
 	getUser,
 	addFavorites,
 	deleteFavorites,
-	getFavorites
+	getFavorites,
+	getUserById,
+	sendFollowRequest,
+	seeFollowRequests,
+	deleteFollowingRequests,
+	approveFollowingRequests,
+	getCurrentUserInfo,
+	removeFollowingUser
 } from "../controllers/userControllers.js";
 import { protect } from "../middlewares/auth.js";
 
@@ -33,4 +40,11 @@ router.post("/getUser", getUser);
 router.post("/addFavorites", addFavorites);
 router.post("/deleteFavorites", deleteFavorites);
 router.get("/favorites", getFavorites);
+router.post("/userInfo", getUserById);
+router.post("/sendFollowingRequest", sendFollowRequest);
+router.post("/seeFollowingRequests", seeFollowRequests);
+router.post("/deleteFollowingRequest", deleteFollowingRequests);
+router.post("/approveFollowingRequest", approveFollowingRequests);
+router.post("/currentUserInfo", getCurrentUserInfo);
+router.post("/removeFollowedUser", removeFollowingUser);
 export default router;
