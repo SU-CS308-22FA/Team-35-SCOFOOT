@@ -14,26 +14,25 @@ function Posts() {
   return (
     <div>
       {" "}
-      <Card>
-        <CardHeader title={"Posts"} />
-        <Divider />
-        <CardContent
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <Typography>Accounts posts will appear here. </Typography>
-        </CardContent>
-
-        <Box
+      {/* <Card> */}
+      <CardHeader title={"Posts"} />
+      <Divider />
+      <CardContent
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        {/* <Typography>Accounts posts will appear here. </Typography> */}
+      </CardContent>
+      {/* <Box
           sx={{
             display: "flex",
             justifyContent: "center",
             pt: 30,
-          }}
-        ></Box>
-      </Card>
+          }} 
+        ></Box>*/}
+      {/* </Card> */}
     </div>
   );
 }

@@ -16,6 +16,11 @@ import {
 } from "./reducers/userReducers";
 import { allPlayersGetReducer, playerGetReducer, playerSearchReducer } from "./reducers/playerReducers";
 import { allTeamsGetReducer, teamGetReducer } from "./reducers/teamReducers";
+import {
+  postCreateReducer,
+  postGetReducer,
+  allPostsGetReducer,
+} from "./reducers/postReducers";
 const reducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
@@ -23,14 +28,17 @@ const reducer = combineReducers({
 	userDelete: userDeleteReducer,
 	seeVerification : seeVerificationReducer,
 	allUsers: allUsersReducer,
-  	allPlayersGet: allPlayersGetReducer,
+  allPlayersGet: allPlayersGetReducer,
 	playerGet: playerGetReducer,
 	allTeamsGet: allTeamsGetReducer,
 	teamGet: teamGetReducer,
 	favoritePlayers : getFavoritesReducer,
 	playerSearch: playerSearchReducer,
 	otherUser : getUserReducer,
-	seeFollowingRequests: seeRequestsReducer
+	seeFollowingRequests: seeRequestsReducer,
+  postCreate: postCreateReducer,
+  getUserPosts: postGetReducer,
+  getFeedPosts: allPostsGetReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
