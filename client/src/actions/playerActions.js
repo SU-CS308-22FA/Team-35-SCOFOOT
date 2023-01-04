@@ -12,6 +12,14 @@ import {
   PLAYER_SEARCH_FAIL,
 } from "../constants/playerConstants";
 
+/**
+ * Retrieves information for all players.
+ *
+ * @param start the start index for the player results
+ * @param stop the stop index for the player results
+ * @param dispatch the dispatch function to use for dispatching the results of the search
+ * @throws Exception if any error occurs while retrieving the player information through dispatching ALL_PLAYERS_GET_FAILED state
+ */
 export const allPlayersGet = (start, stop) => async (dispatch) => {
   try {
     dispatch({ type: ALL_PLAYERS_GET_REQUEST });
@@ -31,6 +39,13 @@ export const allPlayersGet = (start, stop) => async (dispatch) => {
   }
 };
 
+/**
+ * Retrieves player information for the specified player ID.
+ *
+ * @param id the ID of the player to retrieve information for
+ * @param dispatch the dispatch function to use for dispatching the results of the search
+ * @throws Exception if any error occurs while retrieving the player information through dispatching PLAYER_GET_FAILED state
+ */
 export const playerGet = (id) => async (dispatch) => {
   try {
     dispatch({ type: PLAYER_GET_REQUEST });
@@ -39,7 +54,6 @@ export const playerGet = (id) => async (dispatch) => {
     dispatch({ type: PLAYER_GET_SUCCESS, payload: data });
 
   } catch (error) {
-    console.log(error);
     dispatch({
       type: PLAYER_GET_FAIL,
       payload:
@@ -49,6 +63,16 @@ export const playerGet = (id) => async (dispatch) => {
     });
   }
 };
+
+/**
+ * Performs a search for players using the specified search key.
+ *
+ * @param searchKey the search key to use for the search
+ * @param start the start index for the search results
+ * @param stop the stop index for the search results
+ * @param dispatch the dispatch function to use for dispatching the results of the search
+ * @throws Exception if any error occurs while performing the search through dispatching PLAYER_SEARCH_FAIL
+ */
 
 export const playerSearch = (searchKey, start, stop) => async (dispatch) => {
   try {

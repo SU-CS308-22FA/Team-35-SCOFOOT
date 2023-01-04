@@ -4,8 +4,15 @@ import AccountInfo from "../../components/ProfilePage/account-info";
 import AboutMe from "../../components/ProfilePage/about-me";
 import FavPlayers from "../../components/ProfilePage/fav-players";
 import Posts from "../../components/ProfilePage/posts";
+import { useLocation } from 'react-router-dom'
+
+import PostShare from "../../components/ProfilePage/postShare";
+import PostWidget from "../../components/ProfilePage/postwidget";
 
 function ProfilePage() {
+ 
+
+
   return (
     <>
       <Box
@@ -21,15 +28,25 @@ function ProfilePage() {
           <Grid container spacing={1}>
             <Grid item lg={4} md={10} xs={12}>
               <AccountInfo />
-            </Grid>
-            <Grid item lg={8} md={6} xs={12}>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  py: 0.5,
+                }}
+              ></Box>
               <AboutMe></AboutMe>
-            </Grid>
-            <Grid item lg={4} md={10} xs={12}>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  py: 0.5,
+                }}
+              ></Box>
               <FavPlayers />
             </Grid>
             <Grid item lg={8} md={6} xs={12}>
+              <PostShare></PostShare>
               <Posts></Posts>
+              <PostWidget></PostWidget>
             </Grid>
           </Grid>
         </Container>

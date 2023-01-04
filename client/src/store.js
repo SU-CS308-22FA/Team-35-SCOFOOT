@@ -9,12 +9,20 @@ import {
 	userUpdateReducer,
 	seeVerificationReducer,
 	allUsersReducer,
-	getFavoritesReducer
+	getFavoritesReducer,
+	getUserReducer,
+	seeRequestsReducer
 	
 } from "./reducers/userReducers";
 import { allPlayersGetReducer, playerGetReducer, playerSearchReducer } from "./reducers/playerReducers";
 import { allTeamsGetReducer, teamGetReducer } from "./reducers/teamReducers";
 import { generateVerificationCodeReducer, getVerificationCodesReducer } from "./reducers/adminReducers";
+import {
+  postCreateReducer,
+  postGetReducer,
+  allPostsGetReducer,
+} from "./reducers/postReducers";
+
 const reducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
@@ -22,7 +30,7 @@ const reducer = combineReducers({
 	userDelete: userDeleteReducer,
 	seeVerification : seeVerificationReducer,
 	allUsers: allUsersReducer,
-  	allPlayersGet: allPlayersGetReducer,
+  allPlayersGet: allPlayersGetReducer,
 	playerGet: playerGetReducer,
 	allTeamsGet: allTeamsGetReducer,
 	teamGet: teamGetReducer,
@@ -30,14 +38,24 @@ const reducer = combineReducers({
 	playerSearch: playerSearchReducer,
 	generateVerificationCode: generateVerificationCodeReducer,
 	getVerificationCodes: getVerificationCodesReducer,
+	otherUser : getUserReducer,
+	seeFollowingRequests: seeRequestsReducer,
+  postCreate: postCreateReducer,
+  getUserPosts: postGetReducer,
+  getFeedPosts: allPostsGetReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
 
+const connectionInfo = localStorage.getItem("followingRequestsInfo")
+  ? JSON.parse(localStorage.getItem("followingRequestsInfo"))
+  : null;
+
 const initialState = {
   userLogin: { userInfo: userInfoFromStorage },
+  seeFollowingRequests: { followingRequestsInfo: connectionInfo}
 };
 
 const middleware = [thunk];

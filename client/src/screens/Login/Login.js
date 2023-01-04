@@ -19,9 +19,7 @@ import { login } from "../../actions/userActions";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading";
 
-
 const theme = createTheme();
-
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -31,7 +29,7 @@ export default function Login() {
   const navigate = useNavigate();
 
   const userLogin = useSelector((state) => state.userLogin);
-  
+
   const { loading, error, userInfo } = userLogin;
 
 	useEffect(() => {
@@ -49,9 +47,7 @@ export default function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     dispatch(login(email, password));
-    
   };
-  
 
   return (
     <ThemeProvider theme={theme}>

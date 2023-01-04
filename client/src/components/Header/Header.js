@@ -1,18 +1,18 @@
-import React, { useEffect , useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../actions/userActions";
+import { logout, seeAllFollowingRequests } from "../../actions/userActions";
 import { theme } from "../../theme";
 import { ThemeProvider } from "@mui/system";
 import { lightGreen } from "@mui/material/colors";
-import { Box } from "@mui/material";
+import { Button } from "@mui/material";
 import { Input } from '@mui/material';
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { seeAllUsers } from "../../actions/userActions";
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 function Header() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,13 +20,12 @@ function Header() {
   const { userInfo } = userLogin;
   
   const allUsers = useSelector((state) => state.allUsers );
+ //const [user,setUser] = useState(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(seeAllUsers());
-  },[])
+  }, []);
 
-
-  
   const logoutHandler = () => {
     dispatch(logout());
     navigate("/");
@@ -34,11 +33,14 @@ function Header() {
 
   useEffect(() => {}, [navigate, userInfo]);
 
+   const seeFollowingRequests = () => {
+    dispatch(seeAllFollowingRequests(userInfo._id));
+    navigate("/followingRequests", {replace:true});
+  }
   
   
 
   return (
-    
     <ThemeProvider theme={theme}>
       <Navbar
         className="px-4"
@@ -53,14 +55,19 @@ function Header() {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="m-auto"></Nav>
           <Nav>
+          <Button onClick={() => seeFollowingRequests()}>
+            <NotificationsActiveIcon color="action" />
+          </Button>
+
           <SearchBar placeholder="Enter a User..." data={allUsers.usersData} /> 
           <Nav.Link href="/database">Players & Teams</Nav.Link>
+          <Nav.Link href="/feed">Feed</Nav.Link>
+
             {userInfo ? (
               <>
-                        
                 <Nav.Link href="/profilepage">My Profile </Nav.Link>
                 <NavDropdown
-                  title={`${userInfo.name}`}
+                  title={`${userInfo?.name}`}
                   id="collasible-nav-dropdown"
                 >
                   <NavDropdown.Item href="/profile">Settings</NavDropdown.Item>
@@ -94,7 +101,6 @@ function Header() {
                 <Nav.Link href="/signup">Sign Up</Nav.Link>
               </>
             )}
-            
           </Nav>
         </Navbar.Collapse>
       </Navbar>

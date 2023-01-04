@@ -10,6 +10,10 @@ import adminRoutes from "./routes/adminRoutes.js";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import { posts } from "./data.js";
+import Post from "./models/Post.js";
+import User from "./models/User.js";
+import postRoutes from "./routes/postRoutes.js";
 
 const app = express();
 dotenv.config();
@@ -23,6 +27,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/players", playerRoutes);
 app.use("/api/teams", teamRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/posts", postRoutes);
 
 // ----------- deployment -----------
 const __filename = fileURLToPath(import.meta.url);
@@ -53,6 +58,7 @@ mongoose
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server running on port: ${PORT}`);
+      //Post.insertMany(posts);
     });
   })
   .catch((error) => {

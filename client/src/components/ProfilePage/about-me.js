@@ -87,6 +87,7 @@ function AboutMe() {
         pic,
       })
     );
+    setEditAboutMe(!EditAboutme);
   };
 
   const deleteUserHandler = () => {
@@ -110,6 +111,11 @@ function AboutMe() {
     setEditAboutMe(!EditAboutme);
   };
 
+  const handleSaveButton = () => {
+    setEditAboutMe(!EditAboutme);
+    submitHandler();
+  };
+
   return (
     <div>
       <Card>
@@ -128,25 +134,6 @@ function AboutMe() {
 
             {EditAboutme && (
               <Form onSubmit={submitHandler}>
-                {loading && <Loading />}
-                {success && (
-                  <ErrorMessage variant="success">
-                    Updated Successfully
-                  </ErrorMessage>
-                )}
-                {error && <ErrorMessage variant="danger">{error}</ErrorMessage>}
-                {loadingUserDelete && <Loading />}
-                {successUserDelete && (
-                  <ErrorMessage variant="success">
-                    Updated Successfully
-                  </ErrorMessage>
-                )}
-                {errorUserDelete && (
-                  <ErrorMessage variant="danger">
-                    {errorUserDelete}
-                  </ErrorMessage>
-                )}
-
                 <Form.Group controlId="aboutme">
                   <Form.Control
                     type="text"
@@ -166,20 +153,20 @@ function AboutMe() {
                     >
                       SAVE
                     </Button>
-                    <Box
+                    {/* <Box
                       sx={{
                         display: "flex",
                         justifyContent: "center",
                         pt: 10.7,
                       }}
-                    ></Box>
+                    ></Box> */}
                   </Col>
                 </Row>
               </Form>
             )}
           </Col>
         </CardContent>
-        {!EditAboutme && (
+        {/* {!EditAboutme && (
           <Box
             sx={{
               display: "flex",
@@ -187,18 +174,20 @@ function AboutMe() {
               pt: 21,
             }}
           ></Box>
-        )}
+        )} */}
         <Box
           sx={{
             display: "flex",
             justifyContent: "flex-end",
           }}
         >
-          <Button
-            size="large"
-            onClick={() => setEditAboutMe(!EditAboutme)}
-            startIcon={<EditIcon />}
-          ></Button>
+          {!EditAboutme && (
+            <Button
+              size="large"
+              onClick={() => setEditAboutMe(!EditAboutme)}
+              startIcon={<EditIcon />}
+            ></Button>
+          )}
         </Box>
       </Card>
     </div>
