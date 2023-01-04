@@ -5,9 +5,10 @@ import Requests from "../models/Requests.js";
 import Player from "../models/Player.js";
 import Team from "../models/Team.js";
 import mongoose from "mongoose";
+import VerificationCode from "../models/VerificationCode.js";
 
 const registerUser = asyncHandler(async (req, res, next) => {
-  const { name, surname, email, password, profile_type, pic, image } = req.body;
+  const { name, surname, email, password, pic, accountType, verificationCode } = req.body;
 
   const userExists = await User.findOne({ email });
 
@@ -16,68 +17,96 @@ const registerUser = asyncHandler(async (req, res, next) => {
     throw new Error("User already exists.");
   }
 
-  const user = await User.create({
-    name,
-    surname,
-    email,
-    password,
-    pic,
-    image,
-    profile_type,
-  });
+  let user;
 
-  if (user) {
-    res.status(201).json({
-      _id: user.id,
-      name: user.name,
-      surname: user.surname,
-      aboutme: user.aboutme,
-      email: user.email,
-      profile_type: user.profile_type,
-      pic: user.pic,
-      image: user.image,
-      isAdmin: user.isAdmin,
-      isVerified: user.isVerified,
-      isRequestSent: user.isRequestSent,
-      favorites_list: user.favorites_list,
-      token: generateToken(user._id),
+  if (accountType === 0) 
+  {
+	user = await User.create({
+		name,
+		surname,
+		email,
+		password,
+		pic,
+		accountType
+	  });
+  }
+  else if (accountType === 1) 
+  {
+	const verifyCode = await VerificationCode.findOne({code : verificationCode});
+	if (verifyCode) {
+		const playerProfile = verifyCode.player;
+		user = await User.create({
+			name,
+			surname,
+			email,
+			password,
+			pic,
+			accountType,
+			playerProfile,
+			isVerified : true,
+		})
+		await VerificationCode.updateOne({_id : verifyCode._id}, {isUsed : true});
+	}
+	else {
+		throw new Error("Verification code is wrong.");
+	}
+	
+  }
+
+	if (user) {
+		res.status(201).json({
+			_id: user.id,
+			name: user.name,
+			surname: user.surname,
+      		aboutme: user.aboutme,
+			email: user.email,
+			accountType: user.accountType,
+			pic: user.pic,
+			isAdmin: user.isAdmin,
+			isVerified: user.isVerified,
+			isRequestSent: user.isRequestSent,
+			favorites_list: user.favorites_list,
+			playerProfile: user.playerProfile,
+			token: generateToken(user._id),
       following_sent: user.following_sent,
       following_approved: user.following_approved,
       following_request_waiting: user.following_request_waiting,
-    });
-  } else {
-    res.status(400);
-    throw new Error("Error occured.");
-  }
+		});
+	} else {
+		res.status(400);
+		throw new Error("Error occured.");
+	}
 });
 
 const loginUser = asyncHandler(async (req, res, next) => {
-  const { email, password } = req.body;
-
-  const user = await User.findOne({ email });
-  if (user && (await user.matchPassword(password))) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      surname: user.surname,
-      aboutme: user.aboutme,
-      email: user.email,
-      profile_type: user.profile_type,
-      pic: user.pic,
-      image: user.image,
-      isAdmin: user.isAdmin,
-      token: generateToken(user._id),
-      isVerified: user.isVerified,
-      isRequestSent: user.isRequestSent,
-      favorites_list: await Player.find({ _id: { $in: user.favorites_list } }),
+	const { email, password } = req.body;
+    
+	
+	const user = await User.findOne({ email });
+	if (user && (await user.matchPassword(password))) {
+		res.json({
+			_id: user._id,
+			name: user.name,
+			surname: user.surname,
+      		aboutme: user.aboutme,
+			email: user.email,
+			accountType: user.accountType,
+			pic: user.pic,
+			isAdmin: user.isAdmin,
+			token: generateToken(user._id),
+			isVerified: user.isVerified,
+			isRequestSent : user.isRequestSent,
+			playerProfile: user.playerProfile,
+			favorites_list: await Player.find({_id: { $in: user.favorites_list}}),
       following_sent: user.following_sent,
       following_approved: user.following_approved,
       following_request_waiting: user.following_request_waiting,
-    });
-  } else {
-    res.status(401);
-    throw new Error("Invalid Email or Password");
-  }
+		});
+	} else {
+		res.status(401);
+		throw new Error("Invalid Email or Password");
+	}
+
 });
 
 const updateUserProfile = asyncHandler(async (req, res, next) => {
@@ -87,7 +116,7 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
       user.name = req.body.name || user.name;
       user.surname = req.body.surname || user.surname;
       user.email = req.body.email || user.email;
-      user.profile_type = req.body.profile_type || user.profile_type;
+      user.accountType = req.body.accountType || user.accountType;
       user.pic = req.body.pic || user.pic;
       user.image = req.body.image || user.image;
       user.aboutme = req.body.aboutme || user.aboutme;
@@ -107,30 +136,32 @@ const updateUserProfile = asyncHandler(async (req, res, next) => {
         name: updatedUser.name,
         surname: updatedUser.surname,
         aboutme: user.aboutme,
-        email: updatedUser.email,
-        pic: updatedUser.pic,
-        image: updatedUser.image,
-        profile_type: user.profile_type,
-        favorites_list: user.favorites_list,
-        isRequestSent: user.isRequestSent,
-        isVerified: user.isVerified,
-        isAdmin: user.isAdmin,
-        token: generateToken(updatedUser._id),
+				email: updatedUser.email,
+				pic: updatedUser.pic,
+				accountType: user.accountType,
+				favorites_list : user.favorites_list,
+				isRequestSent: user.isRequestSent,
+		    isVerified: user.isVerified, 
+				isAdmin: user.isAdmin,
+				playerProfile: user.playerProfile,
+				token: generateToken(updatedUser._id),
         following_sent: user.following_sent,
         following_approved: user.following_approved,
         following_request_waiting: user.following_request_waiting,
-      });
-    } catch (error) {
-      // 11000 error code is DuplicateKey error
-      if (error.code === 11000) {
-        res.status(401);
-        throw new Error("Email already in use!");
-      }
-    }
-  } else {
-    res.status(404);
-    throw new Error("User not found!");
-  }
+			});
+		} catch (error) {
+			// 11000 error code is DuplicateKey error
+			if (error.code === 11000) {
+				res.status(401);
+				throw new Error("Email already in use!");
+			}
+		}
+		
+	} else {
+		res.status(404);
+		throw new Error("User not found!");
+	}
+
 });
 
 const deleteUser = asyncHandler(async (req, res, next) => {
@@ -514,37 +545,66 @@ const approveFollowingRequests = asyncHandler(async (req, res, next) => {
   });
 });
 
-const removeFollowingUser = asyncHandler(async (req, res, next) => {
-  // userin following approved'undan datayi sil
-  const { user_id, data_id } = req.body;
-  const user = await User.findOne({ _id: user_id });
+const addFavorites = asyncHandler(async(req,res,next) => {
+	const {goalkeeper_id, user_id} = req.body ;
+	
+	const goal_keeper_id = goalkeeper_id;
 
-  const following_already_approved = await user.following_approved.filter(
-    (following) => {
-      return following._id == data_id;
-    }
-  );
-  user.following_approved.pull(following_already_approved[0]);
-  const updatedUser = await user.save();
-  res.json({
-    _id: updatedUser._id,
-    name: updatedUser.name,
-    surname: updatedUser.surname,
-    email: updatedUser.email,
-    pic: updatedUser.pic,
-    profile_type: updatedUser.profile_type,
-    favorites_list: await Player.find({
-      _id: { $in: updatedUser.favorites_list },
-    }),
-    isRequestSent: updatedUser.isRequestSent,
-    isVerified: updatedUser.isVerified,
-    isAdmin: updatedUser.isAdmin,
-    token: generateToken(updatedUser._id),
+	const player = await Player.findOne({_id: goal_keeper_id});
+	const user = await User.findOne({_id: user_id});
+	
+	user.favorites_list.push(mongoose.Types.ObjectId(player._id));
+	const updatedUser = await user.save();
+
+	res.json({
+		_id: updatedUser._id,
+		name: updatedUser.name,
+		surname: updatedUser.surname,
+		email: updatedUser.email,
+		pic: updatedUser.pic,
+		accountType: updatedUser.accountType,
+		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
+		isRequestSent: updatedUser.isRequestSent,
+		isVerified: updatedUser.isVerified, 
+		isAdmin: updatedUser.isAdmin,
+		playerProfile: user.playerProfile,
+		token: generateToken(updatedUser._id),
     following_sent: updatedUser.following_sent,
     following_approved: updatedUser.following_approved,
     following_request_waiting: updatedUser.following_request_waiting,
-  });
-});
+	});
+
+})
+
+
+const deleteFavorites = asyncHandler(async(req,res,next) => {
+	const {goalkeeper_id, user_id} = req.body ;
+	
+	const goal_keeper_id = goalkeeper_id;
+    
+	const player = await Player.findById(mongoose.Types.ObjectId(goal_keeper_id));
+	const user = await User.findOne({_id: user_id});
+	user.favorites_list.pull(player._id);
+	const updatedUser = await user.save();
+	
+	res.json({
+		_id: updatedUser._id,
+		name: updatedUser.name,
+		surname: updatedUser.surname,
+		email: updatedUser.email,
+		pic: updatedUser.pic,
+		accountType: updatedUser.accountType,
+		favorites_list : await Player.find({_id: { $in: updatedUser.favorites_list}}),
+		isRequestSent: updatedUser.isRequestSent,
+		isVerified: updatedUser.isVerified, 
+		isAdmin: updatedUser.isAdmin,
+		playerProfile: user.playerProfile,
+		token: generateToken(updatedUser._id),
+    following_sent: updatedUser.following_sent,
+    following_approved: updatedUser.following_approved,
+    following_request_waiting: updatedUser.following_request_waiting,
+	});
+
 
 const getCurrentUserInfo = asyncHandler(async (req, res, next) => {
   const { _id } = req.body;
