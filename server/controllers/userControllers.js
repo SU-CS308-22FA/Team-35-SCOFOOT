@@ -516,7 +516,7 @@ const removeFollowingUser = asyncHandler(async(req,res,next) => {
     
 	const following_already_approved = await user.following_approved.filter(following => { return following._id == data_id});
 	user.following_approved.pull(following_already_approved[0]);
-	const updatedUser = user.save();
+	const updatedUser = await user.save();
 	res.json({
 		_id: updatedUser._id,
 		name: updatedUser.name,

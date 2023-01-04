@@ -33,6 +33,7 @@ const Requests = () => {
   }
 
   useEffect(() => {
+    console.log(userInfo._id);
     dispatch(seeAllFollowingRequests(userInfo._id));
     setRequest(userInfo.following_request_waiting);
   }, [userInfo, navigate])
@@ -46,7 +47,7 @@ const Requests = () => {
             <div className="underline"></div>
           </div>
           <div>
-            {(requests?.map((single) => {
+            { requests && (requests?.map((single) => {
               return <FRequest key = {single._id}{...single} removeRequest={removeRequest} approveRequest = {approveRequest} />;
             }))}
 

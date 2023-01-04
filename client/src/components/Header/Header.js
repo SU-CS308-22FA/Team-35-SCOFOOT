@@ -21,11 +21,11 @@ function Header() {
   const { userInfo } = userLogin;
   
   const allUsers = useSelector((state) => state.allUsers );
-  const [user,setUser] = useState(null);
+ // const [user,setUser] = useState(null);
 
   useEffect(()=>{
     dispatch(seeAllUsers());
-    setUser(userInfo);
+    //setUser(userInfo);
   },[])
 
 
@@ -71,7 +71,7 @@ function Header() {
                         
                 <Nav.Link href="/profilepage">My Profile </Nav.Link>
                 <NavDropdown
-                  title={`${user?.name}`}
+                  title={`${userInfo?.name}`}
                   id="collasible-nav-dropdown"
                 >
                   <NavDropdown.Item href="/profile">Settings</NavDropdown.Item>

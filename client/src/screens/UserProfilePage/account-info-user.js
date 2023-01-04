@@ -15,13 +15,14 @@ import {
   Divider,
   Button,
 } from "@mui/material";
-import { removeFollowedUser, sendFollowingRequest } from "../../actions/userActions";
+import { getCurrentUser, removeFollowedUser, sendFollowingRequest } from "../../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
 
 function AccountInfoUser({data}) {
   
   console.log(data);
   const dispatch = useDispatch();
+  
   function stringToColor(string) {
     let hash = 0;
     let i;
@@ -57,24 +58,34 @@ function AccountInfoUser({data}) {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
+
   const [user, setUser] = useState(null);
   console.log(userInfo);
 
   useEffect(() => {
     setUser(userInfo);
-    
+    console.log(user);
   }, [userInfo]);
 
   
-
+  /* useEffect(() => {
+    console.log(userInfo);
+    setUser(userInfo);
+    
+  }, []);
+  */
+ 
   /* function deleteRequest(){
      dispatch(deleteFollowingRequest(user._id, data._id));
 
   } */
 
-  const sendRequest = () =>  {
+  const sendRequest = (user_id, data_id) =>  {
     //console.log(_id);
-    dispatch(sendFollowingRequest(user._id, data._id));
+    console.log(user_id);
+    console.log(data_id);
+    dispatch(sendFollowingRequest(user_id, data_id));
+  
     
   }
 
@@ -136,10 +147,11 @@ function AccountInfoUser({data}) {
             <Typography color="textSecondary" variant="body2">
               {data.profile_type}
             </Typography>
+            
 
             <Typography color="textSecondary" variant="body2">
               {user && !(user?.following_sent?.some(following => following._id === data._id)) && !(user?.following_approved?.some(following =>  following._id === data._id)) && 
-              <Button onClick={() => sendRequest()}> 
+              <Button onClick={() => sendRequest(user._id, data._id)}> 
                   <PersonAddIcon/> 
               </Button> }
               {user && (user?.following_sent?.some(following =>   following._id === data._id)) && !(user?.following_approved?.some(following =>  following._id === data._id)) && <p> Following Request Already Sent</p> }

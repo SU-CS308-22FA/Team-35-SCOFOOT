@@ -28,16 +28,20 @@ function UserProfilePage() {
   }, [_id]);
 
   useEffect(()=> {
+    console.log("logging in");
     dispatch(getCurrentUser(userInfo._id));
     dispatch(getUserById(_id));
   }, []);
 
  
   useEffect(() => {
+    console.log(userData);
     setUser(userData);
   }, [userData])
 
-  
+
+
+
 
   return (
     <>

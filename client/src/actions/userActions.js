@@ -16,12 +16,11 @@ import {
 	ADMIN_VERIFICATION_REQUEST_FAIL,
 	ADMIN_VERIFICATION_REQUEST_SUCCESS,
 	INBOX_AFTER_DELETION_SUCCESS,
-	VERIFICATION_STATUS_UPDATE,
+	
 	ALL_USERS_SUCCESS,
 	FAVORITES_GET_SUCCESS,
 	GET_USER_BY_ID_SUCCESS,
-	SEND_FOLLOWING_REQUEST_SUCCESS,
-	WAITING_FOLLOWING_REQUESTS
+	
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -292,7 +291,7 @@ export const getUserById = (_id) => async(dispatch) => {
 	catch(error){
 	}
 
-}
+};
 
 export const sendFollowingRequest = (user_id, data_id ) => async(dispatch) => {
    try {
@@ -326,7 +325,9 @@ export const deleteFollowingRequest = (user_id, data_id) => async(dispatch) => {
 	//localStorage.setItem("followingRequestsInfo", JSON.stringify(data));
 
 	dispatch( {type: USER_LOGIN_SUCCESS, payload: data});
+	//dispatch( {type: GET_USER_BY_ID_SUCCESS, payload: data});
 	localStorage.setItem("userInfo", JSON.stringify(data));
+
 	console.log(data);
  }
  catch(error){
@@ -341,6 +342,7 @@ export const approveFollowingRequest = (user_id, data_id) => async(dispatch) => 
 	//localStorage.setItem("followingRequestsInfo", JSON.stringify(data));
 
 	dispatch( {type: USER_LOGIN_SUCCESS, payload: data});
+	//dispatch( {type: GET_USER_BY_ID_SUCCESS, payload: data});
 	localStorage.setItem("userInfo", JSON.stringify(data));
 	console.log(data);
  }
@@ -352,7 +354,9 @@ export const approveFollowingRequest = (user_id, data_id) => async(dispatch) => 
 export const getCurrentUser = (_id) => async(dispatch) => {
 	try {
 		const {data} = await axios.post("/api/users/currentUserInfo", {_id}) ;
+		console.log(data);
 		dispatch( {type: USER_LOGIN_SUCCESS, payload: data});
+		localStorage.setItem("userInfo", JSON.stringify(data));
 	}
 
 	catch(error){
@@ -361,8 +365,10 @@ export const getCurrentUser = (_id) => async(dispatch) => {
 
 export const removeFollowedUser = (user_id, data_id) => async(dispatch) => {
 	try{
-		const data = await axios.post("/api/users/removeFollowedUser", {user_id, data_id});
+		const {data} = await axios.post("/api/users/removeFollowedUser", {user_id, data_id});
+		console.log(data);
 		dispatch({type: USER_LOGIN_SUCCESS, payload: data});
+		localStorage.setItem("userInfo", JSON.stringify(data));
 	}
 
 	catch(error){}

@@ -3,7 +3,7 @@ import {  useSelector } from "react-redux";
 
 
 const FRequest = ({ _id, name, surname, email, removeRequest , approveRequest }) => {
-  
+  console.log(name);
   let nameAndsurname = name.concat(" ");
   nameAndsurname = nameAndsurname.concat(surname);
   
