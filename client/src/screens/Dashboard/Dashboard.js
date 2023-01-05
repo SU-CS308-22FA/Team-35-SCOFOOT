@@ -23,6 +23,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import Verification from './Verification/Verification';
+import ChangeRequests from './ChangeRequests/ChangeRequests';
 
 
 function Copyright(props) {
@@ -79,7 +80,7 @@ function DashboardContent() {
     setCurrentComponent(idx);
   }
 
-  const components = [<Verification />]
+  const components = [<Verification />, <ChangeRequests />]
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -124,11 +125,11 @@ function DashboardContent() {
               </ListItemIcon>
               <ListItemText primary="Verification" />
             </ListItemButton>
-            <ListItemButton>
+            <ListItemButton onClick={() => changeCurrentComponent(1)}>
               <ListItemIcon>
                 <PeopleIcon />
               </ListItemIcon>
-              <ListItemText primary="Customers" />
+              <ListItemText primary="Change Requests" />
             </ListItemButton>
             <ListItemButton>
               <ListItemIcon>

@@ -14,7 +14,7 @@ import {
 	seeRequestsReducer
 	
 } from "./reducers/userReducers";
-import { allPlayersGetReducer, playerGetReducer, playerSearchReducer } from "./reducers/playerReducers";
+import { allPlayersGetReducer, changeRequestReducer, getChangeRequestsReducer, playerGetReducer, playerSearchReducer, removeChangeRequestReducer } from "./reducers/playerReducers";
 import { allTeamsGetReducer, teamGetReducer } from "./reducers/teamReducers";
 import { generateVerificationCodeReducer, getVerificationCodesReducer } from "./reducers/adminReducers";
 import {
@@ -30,7 +30,7 @@ const reducer = combineReducers({
 	userDelete: userDeleteReducer,
 	seeVerification : seeVerificationReducer,
 	allUsers: allUsersReducer,
-  allPlayersGet: allPlayersGetReducer,
+  	allPlayersGet: allPlayersGetReducer,
 	playerGet: playerGetReducer,
 	allTeamsGet: allTeamsGetReducer,
 	teamGet: teamGetReducer,
@@ -40,9 +40,12 @@ const reducer = combineReducers({
 	getVerificationCodes: getVerificationCodesReducer,
 	otherUser : getUserReducer,
 	seeFollowingRequests: seeRequestsReducer,
-  postCreate: postCreateReducer,
-  getUserPosts: postGetReducer,
-  getFeedPosts: allPostsGetReducer,
+	postCreate: postCreateReducer,
+	getUserPosts: postGetReducer,
+	getFeedPosts: allPostsGetReducer,
+	changeRequest: changeRequestReducer,
+	getChangeRequests: getChangeRequestsReducer,
+	removeChangeRequest: removeChangeRequestReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
