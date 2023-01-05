@@ -10,6 +10,7 @@ import {
   ALL_POSTS_GET_FAIL,
   ALL_POSTS_SUCCESS,
   ALL_POSTS_FAIL,
+  ALL_POSTS_REQUEST,
 } from "../constants/postConstants";
 
 export const postCreateReducer = (state = {}, action) => {
@@ -39,26 +40,34 @@ export const postGetReducer = (state = {}, action) => {
   }
 };
 
+// export const allPostsGetReducer = (state = {}, action) => {
+//   switch (action.type) {
+//     case ALL_POSTS_GET_REQUEST:
+//       console.log("1");
+//       return { loading: true };
+//     case ALL_POSTS_GET_SUCCESS:
+//       console.log("2");
+//       return { loading: false, post: action.payload };
+//     case ALL_POSTS_GET_FAIL:
+//       console.log("3");
+//       return { loading: false, error: action.payload };
+
+//     default:
+//       return state;
+//   }
+// };
 export const allPostsGetReducer = (state = {}, action) => {
   switch (action.type) {
-    case ALL_POSTS_GET_REQUEST:
+    case ALL_POSTS_REQUEST:
       return { loading: true };
-    case ALL_POSTS_GET_SUCCESS:
-      return { loading: false, post: action.payload };
-    case ALL_POSTS_GET_FAIL:
-      return { loading: false, error: action.payload };
-
-    default:
-      return state;
-  }
-};
-export const allPostssReducer = (state = {}, action) => {
-  switch (action.type) {
     case ALL_POSTS_SUCCESS:
-      return { postsData: action.payload };
+      console.log("REDUCER SUCCES");
+      return { loading: false, postsInfo: action.payload };
     case ALL_POSTS_FAIL:
-      return { error: action.payload };
+      console.log("2");
+      return { loading: false, error: action.payload };
     default:
+      console.log("REDUCER ");
       return state;
   }
 };

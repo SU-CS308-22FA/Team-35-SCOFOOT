@@ -65,19 +65,22 @@ export const getUserPosts = async (req, res) => {
 
 export const getFeedPosts = async (req, res) => {
   try {
+    console.log("getfeedposts");
     const post = await Post.find();
     res.status(200).json(post);
   } catch (err) {
+    console.log("getfeedposts");
     res.status(404).json({ message: err.message });
   }
 };
 export const getAllPosts = asyncHandler(async (req, res, next) => {
-  const posts = await Post.find();
-  if (posts) {
-    res.json(posts);
-  } else {
-    res.status(404);
-    throw new Error("Users not found!");
+  try {
+    const posts = await Post.find();
+    console.log("getallposts1- controller");
+    res.status(200).json(posts);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
   }
 });
 
