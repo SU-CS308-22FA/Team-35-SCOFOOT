@@ -11,7 +11,15 @@ import {
   Avatar,
   Tabs,
   Tab,
+  Button,
 } from "@mui/material";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
+import Textarea from '@mui/joy/Textarea';
 import PropTypes from "prop-types";
 import PublicIcon from "@mui/icons-material/Public";
 import React, { useEffect, useState } from "react";
@@ -21,12 +29,13 @@ import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
 import HeightIcon from "@mui/icons-material/Height";
 import CakeIcon from "@mui/icons-material/Cake";
 import { useLocation, useNavigate } from "react-router-dom";
-import { playerGet } from "../../actions/playerActions";
+import { changeRequest, playerGet } from "../../actions/playerActions";
 import { useDispatch, useSelector } from "react-redux";
 import { ThemeProvider } from "react-bootstrap";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import IconButton from "@mui/material/IconButton";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import EditIcon from '@mui/icons-material/Edit';
 import { addToFavorites, deleteFromFavorites } from "../../actions/userActions";
 
 function TabPanel(props) {
@@ -70,8 +79,14 @@ export const PlayerHeaderInfo = (props) => {
   const playerResponse = useSelector((state) => state.playerGet);
   const { loading, error, playerInfo } = playerResponse;
 
+  const [open, setOpen] = React.useState(false);
+
   const { state } = useLocation();
   const { id } = state || {};
+  var { isOwner } = state || {};
+  if (!isOwner) {
+    isOwner = false;
+  }
   const [value, setValue] = useState(0);
 
   const [info, setInfo] = useState([]);
@@ -86,6 +101,10 @@ export const PlayerHeaderInfo = (props) => {
   const { userInfo } = userLogin;
 
   const [user, setUser] = useState(null);
+  const [title, setTitle] = useState("");
+  const [request, setRequest] = useState("");
+
+  const changeRequestResponse = useSelector((state) => state.changeRequest);
 
   const addFavorites = (goalKeeper_id, user_id) => {
     dispatch(addToFavorites(goalKeeper_id, user_id));
@@ -474,6 +493,23 @@ export const PlayerHeaderInfo = (props) => {
     setUser(userInfo);
   }, [userInfo]);
 
+  const setEditBox = (value) => {
+    console.log(value);
+  }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSend = () => {
+    dispatch(changeRequest(player._id, title, request));
+    handleClose();
+  }
+
   const theme = useTheme();
 
   return (
@@ -558,7 +594,7 @@ export const PlayerHeaderInfo = (props) => {
                             color="textPrimary"
                             variant="body1"
                           >
-                            {value}
+                          {value}
                           </Typography>
                         </Box>
                       ))}
@@ -593,6 +629,7 @@ export const PlayerHeaderInfo = (props) => {
                             variant="body1"
                           >
                             {value}
+                            
                           </Typography>
                         </Box>
                       ))}
@@ -603,6 +640,7 @@ export const PlayerHeaderInfo = (props) => {
 
               <Grid item lg={6} sm={12} xl={9} xs={12}>
                 <Card {...props}>
+
                   <CardHeader title={"Player Information"} />
 
                   <Divider />
@@ -724,8 +762,49 @@ export const PlayerHeaderInfo = (props) => {
                 </Card>
               </Grid>
             </Grid>
+            {
+                  isOwner ?
+                  <Button variant="contained" color="secondary" startIcon={<EditIcon />} onClick={handleClickOpen} >
+                    Request Information Update
+                  </Button>
+                            :
+                            <></>
+          }
           </Container>
+          <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Change Request</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please clearly indicate which statistics you would like to change in this player information page.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Title"
+              type="title"
+              fullWidth
+              variant="standard"
+              required
+              onChange={(event) => setTitle(event.target.value)}
+            />
+            <Textarea
+              required
+              color="neutral"
+              minRows={10}
+              size="lg"
+              variant="outlined"
+              placeholder="Type your request…"
+              onChange={(event) => setRequest(event.target.value)}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleSend}>Send</Button>
+          </DialogActions>
+        </Dialog>
         </Box>
+        
       ) : (
         <></>
       )}

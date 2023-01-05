@@ -10,6 +10,15 @@ import {
   PLAYER_SEARCH_REQUEST,
   PLAYER_SEARCH_SUCCESS,
   PLAYER_SEARCH_FAIL,
+  CHANGE_REQUEST_REQUEST,
+  CHANGE_REQUEST_SUCCESS,
+  CHANGE_REQUEST_FAIL,
+  GET_CHANGE_REQUESTS_REQUEST,
+  GET_CHANGE_REQUESTS_SUCCESS,
+  GET_CHANGE_REQUESTS_FAIL,
+  REMOVE_CHANGE_REQUEST_REQUEST,
+  REMOVE_CHANGE_REQUEST_SUCCESS,
+  REMOVE_CHANGE_REQUEST_FAIL,
 } from "../constants/playerConstants";
 
 /**
@@ -86,6 +95,70 @@ export const playerSearch = (searchKey, start, stop) => async (dispatch) => {
     console.log(error);
     dispatch({
       type: PLAYER_SEARCH_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const changeRequest = (player, title, request) => async (dispatch) => {
+  try {
+    dispatch({ type: CHANGE_REQUEST_REQUEST });
+    const { data } = await axios.post(`/api/players/changeRequest`, {
+      player,
+      title,
+      request
+    });
+
+    dispatch({ type: CHANGE_REQUEST_SUCCESS});
+    
+    
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: CHANGE_REQUEST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getChangeRequests = () => async (dispatch) => {
+  try {
+    dispatch({ type: GET_CHANGE_REQUESTS_REQUEST });
+    const { data } = await axios.get(`/api/players/allChangeRequests`);
+    dispatch({ type: GET_CHANGE_REQUESTS_SUCCESS, payload: data });
+    
+    
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: GET_CHANGE_REQUESTS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const removeChangeRequest = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: REMOVE_CHANGE_REQUEST_REQUEST });
+    const { data } = await axios.post(`/api/players/removeChangeRequest`, {
+      id
+    });
+    dispatch({ type: REMOVE_CHANGE_REQUEST_SUCCESS });
+    
+    
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: REMOVE_CHANGE_REQUEST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
