@@ -11,6 +11,7 @@ import {
   ALL_POSTS_GET_FAIL,
   ALL_POSTS_SUCCESS,
   ALL_POSTS_FAIL,
+  ALL_POSTS_REQUEST,
 } from "../constants/postConstants";
 
 export const createpost = (postedById, text, photo) => async (dispatch) => {
@@ -38,24 +39,19 @@ export const createpost = (postedById, text, photo) => async (dispatch) => {
   }
 };
 
-export const allPostsGet = () => async (dispatch) => {
-  try {
-    dispatch({ type: ALL_POSTS_GET_REQUEST });
-    const { data } = await axios.get(`/api/posts/feed`);
+// export const allPostsGet = () => async (dispatch) => {
+//   try {
+//     dispatch({ type: ALL_POSTS_GET_REQUEST });
+//     const { data } = await axios.get(`/api/posts/feed`);
+//     console.log(data);
+//     dispatch({ type: ALL_POSTS_GET_SUCCESS, payload: data });
 
-    dispatch({ type: ALL_POSTS_GET_SUCCESS, payload: data });
-
-    localStorage.setItem("allPosts", JSON.stringify(data));
-  } catch (error) {
-    dispatch({
-      type: ALL_POSTS_GET_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+//     localStorage.setItem("allPosts", JSON.stringify(data));
+//   } catch (error) {
+//     console.log(error);
+//     dispatch();
+//   }
+// };
 
 export const postGet = (id) => async (dispatch) => {
   try {
@@ -75,12 +71,20 @@ export const postGet = (id) => async (dispatch) => {
   }
 };
 
-export const seeAllPosts = () => async (dispatch) => {
+export const allPostsGet = () => async (dispatch) => {
   try {
-    const { data } = await axios.get("/api/users/allPosts");
-    dispatch({ type: ALL_POSTS_SUCCESS, payload: data });
+    dispatch({ type: ALL_POSTS_REQUEST });
+
+    console.log("ACTIONS");
+    const { data } = await axios.get("/api/posts/feed");
+    console.log("ACTION POSTS HERE!1");
     console.log(data);
+    console.log("ACTION POSTS HERE!2");
+
+    dispatch({ type: ALL_POSTS_SUCCESS, payload: data });
+    localStorage.setItem("allPostsInfo", JSON.stringify(data));
   } catch (error) {
+    console.log(error);
     dispatch({
       type: ALL_POSTS_FAIL,
       payload:

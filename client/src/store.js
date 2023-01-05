@@ -3,17 +3,17 @@ import { legacy_createStore as createStore } from "redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import {
-	userDeleteReducer,
-	userLoginReducer,
-	userRegisterReducer,
-	userUpdateReducer,
-	seeVerificationReducer,
-	allUsersReducer,
-	getFavoritesReducer,
-	getUserReducer,
-	seeRequestsReducer
-	
+  userDeleteReducer,
+  userLoginReducer,
+  userRegisterReducer,
+  userUpdateReducer,
+  seeVerificationReducer,
+  allUsersReducer,
+  getFavoritesReducer,
+  getUserReducer,
+  seeRequestsReducer,
 } from "./reducers/userReducers";
+
 import { allPlayersGetReducer, changeRequestReducer, getChangeRequestsReducer, playerGetReducer, playerSearchReducer, removeChangeRequestReducer } from "./reducers/playerReducers";
 import { allTeamsGetReducer, teamGetReducer } from "./reducers/teamReducers";
 import { generateVerificationCodeReducer, getVerificationCodesReducer } from "./reducers/adminReducers";
@@ -24,13 +24,15 @@ import {
 } from "./reducers/postReducers";
 
 const reducer = combineReducers({
+
+
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
 	userUpdate: userUpdateReducer,
 	userDelete: userDeleteReducer,
 	seeVerification : seeVerificationReducer,
 	allUsers: allUsersReducer,
-  	allPlayersGet: allPlayersGetReducer,
+  allPlayersGet: allPlayersGetReducer,
 	playerGet: playerGetReducer,
 	allTeamsGet: allTeamsGetReducer,
 	teamGet: teamGetReducer,
@@ -42,10 +44,11 @@ const reducer = combineReducers({
 	seeFollowingRequests: seeRequestsReducer,
 	postCreate: postCreateReducer,
 	getUserPosts: postGetReducer,
-	getFeedPosts: allPostsGetReducer,
+	allPostsGet: allPostsGetReducer,
 	changeRequest: changeRequestReducer,
 	getChangeRequests: getChangeRequestsReducer,
 	removeChangeRequest: removeChangeRequestReducer,
+
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
@@ -58,7 +61,7 @@ const connectionInfo = localStorage.getItem("followingRequestsInfo")
 
 const initialState = {
   userLogin: { userInfo: userInfoFromStorage },
-  seeFollowingRequests: { followingRequestsInfo: connectionInfo}
+  seeFollowingRequests: { followingRequestsInfo: connectionInfo },
 };
 
 const middleware = [thunk];
