@@ -166,14 +166,6 @@ const Profile = () => {
 
       <div>
         <Row className="profileContainer">
-          <Col md={6}>My Information</Col>
-          <Col
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          ></Col>
 
           <Col md={6}>
             <Form onSubmit={submitHandler}>
@@ -232,47 +224,6 @@ const Profile = () => {
                 ></Form.Control>
               </Form.Group>
 
-              <Form.Group controlId="profile_type">
-                <Form.Label>Account Type</Form.Label>
-                <Form.Control
-                  disabled
-                  type="profile_type"
-                  placeholder="Please Select Account Type"
-                  value={profile_type}
-                  onChange={(e) => setProfile_type(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-              <ToggleButtonGroup type="radio" name="options">
-                <ToggleButton
-                  style={{ mt: 10 }}
-                  id="Player"
-                  name="Player"
-                  value={"Player"}
-                  onChange={(e) => setProfile_type(e.target.value)}
-                  checked
-                >
-                  Player
-                </ToggleButton>
-                <ToggleButton
-                  style={{ mt: 10 }}
-                  id="Scout"
-                  name="Scout"
-                  value={"Scout"}
-                  onChange={(e) => setProfile_type(e.target.value)}
-                >
-                  Scout
-                </ToggleButton>
-                <ToggleButton
-                  style={{ mt: 10 }}
-                  id="Manager"
-                  name="Manager"
-                  value={"Manager"}
-                  onChange={(e) => setProfile_type(e.target.value)}
-                >
-                  Manager
-                </ToggleButton>
-              </ToggleButtonGroup>
-
               {/*
 							{picMessage && (
 								<ErrorMessage variant="danger">{picMessage}</ErrorMessage>
@@ -312,7 +263,6 @@ const Profile = () => {
                 <input type="file" name="myImage" onChange={handleImage} />
                 <img src={pic} className="profilePic" />
               </Form.Group>
-
               <Row>
                 <Col md={12}>
                   <Button

@@ -11,6 +11,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
+import { InputLabel, Select, MenuItem, FormControl } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +41,9 @@ export default function SignUp() {
 	const userRegister = useSelector((state) => state.userRegister);
 	const { loading, userInfo, error } = userRegister;
 
+	const [accountType, setAccountType] = useState(0);
+	const [verificationCode, setVerificationCode] = useState("");
+
 	useEffect(() => {
 		if (userInfo) {
 			navigate("/profile");
@@ -63,7 +67,11 @@ export default function SignUp() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		dispatch(register(name, surname, email, password, profile_type, pic));
+		dispatch(register(name, surname, email, password, pic, accountType, verificationCode));
+	};
+
+	const handleAccountTypeChange = (event) => {
+		setAccountType(event.target.value);
 	};
 	
 	return (
@@ -167,9 +175,35 @@ export default function SignUp() {
 								/>
 							</Grid>
 							<Grid item xs={12} sm={12}>
-							<Form.Label>Profile type</Form.Label>
-							
+							<FormControl fullWidth>
+								<InputLabel id="demo-simple-select-label">Account Type</InputLabel>
+								<Select
+									labelId="demo-simple-select-label"
+									id="demo-simple-select"
+									value={accountType}
+									label="Account Type"
+									onChange={handleAccountTypeChange}
+								>
+									<MenuItem value={0}>User</MenuItem>
+									<MenuItem value={1}>Player</MenuItem>
+								</Select>
+							</FormControl>
 							</Grid>
+							{
+								accountType === 1 && 
+								(
+									<Grid item xs={12}>
+									<TextField
+										fullWidth
+										id="verificationCode"
+										label="Verification Code"
+										name="verificationCode"
+										value={verificationCode}
+										onChange={(e) => setVerificationCode(e.target.value)}
+									/>
+									</Grid>
+								)
+							}
 							
 						</Grid>
 						<Box

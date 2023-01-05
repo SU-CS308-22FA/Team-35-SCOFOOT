@@ -13,9 +13,11 @@ import Verifications from "./screens/VerificationRequests/Verifications";
 import AllFollowingRequests from "./screens/UserProfilePage/AllFollowingRequestsPage";
 import { FavPlayers } from "./components/FavoritePlayers/FavPlayers";
 import ProfilePage from "./screens/ProfilePage/ProfilePage";
+import Dashboard from "./screens/Dashboard/Dashboard";
 import Feed from "./components/Feed";
 import UserProfilePage from "./screens/UserProfilePage/UserProfilePage" ;
 import ConnectionPage from "./components/ProfilePage/connections";
+
 const App = () => {
   return (
     // <div>
@@ -34,6 +36,7 @@ const App = () => {
         <Route path="/teamInfo" element={<TeamsInfo />} />
         <Route path="/playerInfo" element={<PlayersInfo />} />
         <Route path="/profilepage" element={<ProfilePage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/feed" element={<Feed />} />
         <Route path="/" element={<Home />} />
         <Route path= "/favorites" element={<FavPlayers/>} />

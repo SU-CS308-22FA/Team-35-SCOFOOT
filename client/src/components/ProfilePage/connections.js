@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { getCurrentUser, removeFollowedUser } from '../../actions/userActions';
 
-import '../../components/ProfilePage/connections.css';
+import '../../components/ProfilePage/connections.module.css';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 
 function List() {

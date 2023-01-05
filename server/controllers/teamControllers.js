@@ -1,8 +1,8 @@
 import Team from "../models/Team.js";
 import Player from "../models/Player.js";
-import generateToken from "../utils/generateToken.js";
 import asyncHandler from "express-async-handler";
 import mongoose from "mongoose";
+import ChangeRequest from "../models/ChangeRequest.js";
 
 const getAllPlayers = asyncHandler(async (req, res, next) => {
 
@@ -129,5 +129,46 @@ const getTeam = asyncHandler(async (req, res, next) => {
   
 });
 
+const changeRequest = asyncHandler(async (req, res, next) => {
+  try {
+    const { player, title, request } = req.body;
+    const changeRequest = await ChangeRequest.create({
+      player,
+      title,
+      request
+    });
+    res.status(201).json(changeRequest);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+  
+});
 
-export { getAllPlayers, getPlayer, searchPlayer, getAllTeams, getTeam };
+const allChangeRequests = asyncHandler(async (req, res, next) => {
+  try {
+    const changeRequests = await ChangeRequest.find();
+    for (let i = 0; i < changeRequests.length; i++) {
+      changeRequests[i] = changeRequests[i].toObject();
+      changeRequests[i].playerName = await Player.findById(changeRequests[i].player, 'name');
+    }
+    res.status(201).json(changeRequests);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+const removeChangeRequest = asyncHandler(async (req, res, next) => {
+  try {
+    const { id } = req.body;
+    const changeRequest = await ChangeRequest.findByIdAndRemove(id);
+    res.status(201).json(changeRequest);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+
+export { getAllPlayers, getPlayer, searchPlayer, getAllTeams, getTeam, changeRequest, allChangeRequests, removeChangeRequest };
