@@ -8,6 +8,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import { Avatar, Button, Grid, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { allPostsGet } from "../../actions/postActions";
+
 const PostWidget = () => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
@@ -87,7 +88,7 @@ const PostWidget = () => {
                         />
                       </Grid>
                       <Grid item xs={9}>
-                        <Typography color="textPrimary" gutterBottom>
+                        <Typography color="textSecondary" gutterBottom>
                           {`${name} ${surname}`}
                         </Typography>
                         <Typography color="textSecondary" variant="body2">
