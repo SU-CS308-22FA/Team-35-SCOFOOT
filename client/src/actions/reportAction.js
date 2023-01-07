@@ -18,7 +18,7 @@ export const createreport = (postedById, text, selectedOption) => async (dispatc
     try {
       dispatch({ type: REPORT_CREATE_REQUEST });
       console.log("hiiiii");
-      const { data } = await axios.post("/api/report/createreport", {
+      const { data } = await axios.post("/api/reports/createreport", {
         postedById,
         text,
         selectedOption,

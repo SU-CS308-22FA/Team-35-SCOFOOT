@@ -90,6 +90,10 @@ function Header() {
                     Dashboard  
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
+                  <NavDropdown.Item href="/report">
+                    Report  
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
                   <NavDropdown.Item onClick={logoutHandler}>
                     Logout
                   </NavDropdown.Item>

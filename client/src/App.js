@@ -17,6 +17,7 @@ import Dashboard from "./screens/Dashboard/Dashboard";
 import Feed from "./components/Feed";
 import UserProfilePage from "./screens/UserProfilePage/UserProfilePage" ;
 import ConnectionPage from "./components/ProfilePage/connections";
+import ReportPage from "./screens/Report/Report";
 
 const App = () => {
   return (
@@ -43,6 +44,8 @@ const App = () => {
         <Route path= "/userProfile" element={<UserProfilePage/> } />
         <Route path= "/followingRequests" element={<AllFollowingRequests/>} />
         <Route path= "/connections" element={<ConnectionPage/>} />
+        <Route path= "/report" element={<ReportPage/>} />
+
       </Routes>
     </Router>
   );

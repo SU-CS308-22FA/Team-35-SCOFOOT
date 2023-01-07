@@ -1,7 +1,7 @@
 import express from "express";
 import {
-  ,
-} from "../controllers/reportContoller.js";
+  createreport
+} from "../controllers/reportController.js";
 
 import { protect } from "../middlewares/auth.js";
 

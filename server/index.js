@@ -14,6 +14,7 @@ import { posts } from "./data.js";
 import Post from "./models/Post.js";
 import User from "./models/User.js";
 import postRoutes from "./routes/postRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js"
 
 const app = express();
 dotenv.config();
@@ -28,6 +29,7 @@ app.use("/api/players", playerRoutes);
 app.use("/api/teams", teamRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/reports",reportRoutes)
 
 // ----------- deployment -----------
 const __filename = fileURLToPath(import.meta.url);
