@@ -16,6 +16,7 @@ import {
 
 export const createreport = (postedById, text, selectedOption) => async (dispatch) => {
     try {
+      
       dispatch({ type: REPORT_CREATE_REQUEST });
       console.log("hiiiii");
       const { data } = await axios.post("/api/reports/createreport", {
@@ -23,9 +24,10 @@ export const createreport = (postedById, text, selectedOption) => async (dispatc
         text,
         selectedOption,
       });
+      
       console.log(data);
       dispatch({ type: REPORT_CREATE_SUCCESS, payload: data });
-  
+      
       localStorage.setItem("reportInfo", JSON.stringify(data));
     } catch (error) {
       console.log("error");

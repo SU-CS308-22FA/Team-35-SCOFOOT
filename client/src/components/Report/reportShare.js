@@ -26,21 +26,23 @@ const ReportShare = () => {
     const { userInfo } = userLogin;
     
 
-    /*const reportCreate = useSelector((state) => state.reportCreate);
-  const { loading, postInfo, error } = reportCreate;
-  
-    useEffect(() => {
-      if (postInfo) {
-        setText("");
-        setSelectedOption("");
-      }
-    }, [navigate, postInfo]);*/
+    const reportCreate = useSelector((state) => state.reportCreate);
+    const postInfo = reportCreate;
+    
+      useEffect(() => {
+        if (postInfo) {
+          
+          setText("");
+          setSelectedOption("");
+        }
+      }, [navigate, postInfo]);
   
    
   
     const submitHandler = async (e) => {
       e.preventDefault();
-      dispatch(createreport(postedById, text, selectedOption));
+    
+      dispatch(createreport(userInfo._id, text, selectedOption));
       setSharedReport(!sharedReport);
     };
   
