@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import { allPostsGet } from "../actions/postActions";
 import { set } from "mongoose";
 
+
 const Feed = () => {
   const posts2 = [
     { name: "John ", surname: "Doe", text: "post text", photo: "" },
@@ -24,6 +25,8 @@ const Feed = () => {
 
   const getPosts = useSelector((state) => state.allPostsGet);
   const { loading, error, postsInfo } = getPosts;
+
+
 
   // useEffect(() => {
   //   setPosts(getFeedPosts(allPosts));
@@ -47,6 +50,25 @@ const Feed = () => {
   useEffect(() => {
     dispatch(allPostsGet());
   }, []);
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+  const connections = []
+  const [user, setUser] = useState({});
+  <>
+      {user?.following_approved?.map((person) => {
+        const { _id, name, surname,email, pic } = person;
+        return (
+          <article key={_id} className='person'>  
+            <div> 
+              connections.push({name.concat(" ", surname)});
+            </div>
+          </article>
+        );
+      })}
+  </>
+  
+
 
   return (
     <Card>
