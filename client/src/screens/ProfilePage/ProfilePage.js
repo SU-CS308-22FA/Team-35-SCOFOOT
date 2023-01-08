@@ -8,6 +8,8 @@ import { useLocation } from 'react-router-dom'
 
 import PostShare from "../../components/ProfilePage/postShare";
 import PostWidget from "../../components/ProfilePage/postwidget";
+import ReportShare from "../../components/Report/reportShare";
+
 
 function ProfilePage() {
  
@@ -49,6 +51,7 @@ function ProfilePage() {
               <PostWidget></PostWidget>
             </Grid>
           </Grid>
+          
         </Container>
       </Box>
     </>

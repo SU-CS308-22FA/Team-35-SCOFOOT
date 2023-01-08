@@ -84,6 +84,8 @@ export const getAllPosts = asyncHandler(async (req, res, next) => {
   }
 });
 
+
+
 export const likePost = async (req, res) => {
   try {
     const { _id } = req.params; //postid

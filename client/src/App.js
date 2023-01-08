@@ -17,7 +17,8 @@ import Dashboard from "./screens/Dashboard/Dashboard";
 import Feed from "./components/Feed";
 import UserProfilePage from "./screens/UserProfilePage/UserProfilePage" ;
 import ConnectionPage from "./components/ProfilePage/connections";
-
+import ReportPage from "./screens/Report/Report";
+import DisplayReport from "./screens/Report/DisplayReport";
 const App = () => {
   return (
     // <div>
@@ -43,6 +44,10 @@ const App = () => {
         <Route path= "/userProfile" element={<UserProfilePage/> } />
         <Route path= "/followingRequests" element={<AllFollowingRequests/>} />
         <Route path= "/connections" element={<ConnectionPage/>} />
+        <Route path= "/report" element={<ReportPage/>} />
+        <Route path= "/allreports" element={<DisplayReport/>} />
+
+
       </Routes>
     </Router>
   );
