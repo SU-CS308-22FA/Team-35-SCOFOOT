@@ -48,10 +48,10 @@ export const createreport = (postedById, text, selectedOption) => async (dispatc
       dispatch({ type: ALL_REPORTS_REQUEST });
   
       console.log("ACTIONS");
-      const { data } = await axios.get("/api/report/createreport"); //feed'i değiştir
-      console.log("ACTION POSTS HERE!1");
+      const { data } = await axios.get("/api/reports/getreport"); //feed'i değiştir
+      console.log("ACTION erport HERE!1");
       console.log(data);
-      console.log("ACTION POSTS HERE!2");
+      console.log("ACTION erport HERE!2");
   
       dispatch({ type: ALL_REPORTS_SUCCESS, payload: data });
       localStorage.setItem("allReportsInfo", JSON.stringify(data));
