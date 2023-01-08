@@ -37,7 +37,7 @@ function Header() {
     dispatch(seeAllFollowingRequests(userInfo._id));
     navigate("/followingRequests", {replace:true});
   }
-  
+  const isAdmin = "g";
   
 
   return (
@@ -94,6 +94,9 @@ function Header() {
                     Report  
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
+                  {isAdmin == `${userInfo?.name}` ? (
+                    <NavDropdown.Item onClick={() => navigate("/allreports")}>All Reports</NavDropdown.Item>
+                  ) : (<></>)}
                   <NavDropdown.Item onClick={logoutHandler}>
                     Logout
                   </NavDropdown.Item>

@@ -68,7 +68,7 @@ const Feed = () => {
       })}
   </>
 const checkConnect = "g";
-const checkConnec = "ruya";
+const checkConnec = "ruya"; 
 function checkConnection(connections, post) {
   const exists = connections.some((connection) => connection.name === post.name);
   if (exists) {return true;} else {return false;}
