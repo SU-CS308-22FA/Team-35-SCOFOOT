@@ -28,9 +28,11 @@ export const createreport = asyncHandler(async (req, res, next) => {
 
 export const getreport = asyncHandler(async (req, res, next) => {
   try {
-    const posts = await Post.find();
     console.log("getallreports1- controller");
-    res.status(200).json(posts);
+
+    const report = await Report.find();
+    console.log(report);
+    res.status(200).json(report);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);

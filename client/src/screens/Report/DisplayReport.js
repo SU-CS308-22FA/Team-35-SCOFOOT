@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-
-
+import { useDispatch, useSelector } from "react-redux";
+import { allReportsGet } from '../../actions/reportAction';
 
 const DisplayReport = () => {
-  const [reportReason, setReportReason] = useState('');
-  const [text, setText] = useState('');
+  const [reports, setReports] = useState('');
+  const getAllReports = useSelector((state) => state.allReportsGet);
+  const reportInfo = getAllReports;
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (reportInfo) {
+      setReports(reportInfo);
+      console.log("SET");
+      console.log(reportInfo);
+    }
+  }, [reportInfo]);
 
   useEffect(() => {
-    // Fetch reportReason and text from database
-    async function fetchData() {
-      const res = await fetch('/api/report/createreport');
-      const data = await res.json();
-      setReportReason(data.reportReason);
-      setText(data.text);
-    }
-    fetchData();
+    dispatch(allReportsGet());
   }, []);
 
   return (
@@ -22,13 +24,19 @@ const DisplayReport = () => {
       <thead>
         <tr>
           <th>Category</th>
+          
           <th>Text</th>
+          reports.reverse().map((report) =>())
+          <td></td>
+          
+          <td></td>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>{reportReason}</td>
-          <td>{text}</td>
+          
+          <th>burası nasıl duruyo</th>
+          
         </tr>
       </tbody>
     </table>
